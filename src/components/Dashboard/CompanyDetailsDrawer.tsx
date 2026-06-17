@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Account, useSignalScout, getOfferCategory, Offer } from "@/context/SignalScoutContext";
-import { X, Target, Users2, Send, Lightbulb, Compass, Zap, Flame, Sparkles, MessageSquare, Clipboard, PhoneCall, Check, Loader2 } from "lucide-react";
+import { X, Users2, Send, Lightbulb, Compass, Zap, Sparkles, MessageSquare, Clipboard, PhoneCall, Check, Loader2, Shield } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface CompanyDetailsDrawerProps {
@@ -368,11 +368,12 @@ ${promptText ? `[Note: Custom instruction: "${promptText}"]` : ""}`;
               <div className="p-3 bg-violet-950/10 border border-violet-900/20 rounded-lg">
                 <span className="text-[9px] font-bold text-violet-400 uppercase tracking-wider block">Suggested Pitch Angle</span>
                 <p className="text-zinc-200 font-medium mt-1 leading-relaxed italic">
-                  "{account.gtmRecommendations.angle}"
+                  &ldquo;{account.gtmRecommendations.angle}&rdquo;
                 </p>
               </div>
             </div>
-              {/* AI Outreach Copilot Panel */}
+          </div>
+          {/* AI Outreach Copilot Panel */}
           <div className="border-t border-zinc-900 pt-6 space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-zinc-900">
               <div className="flex items-center space-x-2 text-zinc-350">
@@ -529,7 +530,7 @@ ${promptText ? `[Note: Custom instruction: "${promptText}"]` : ""}`;
                 )}
               </>
             )}
-          </div>        </div>
+          </div>
 
         </div>
       </motion.div>

@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 
 export type GtmCategory = "compliance" | "hr" | "sales" | "devtools" | "general";
+export type UserRole = "admin" | "sales" | "marketing";
 
 export function getOfferCategory(sell: string): GtmCategory {
   const sellLower = sell.toLowerCase();
@@ -98,7 +99,7 @@ export interface FeedEvent {
 }
 
 interface SignalScoutContextType {
-  step: number; // 1 to 5, 'research', 'dashboard'
+  step: number | "research" | "dashboard";
   setStep: (s: number | "research" | "dashboard") => void;
   offer: Offer;
   setOffer: (o: Offer) => void;
@@ -126,6 +127,7 @@ interface SignalScoutContextType {
   setUserRole: (r: UserRole) => void;
   credits: number;
   setCredits: (c: number) => void;
+  lastSignalAt: number; // Unix ms timestamp of last fired signal — used by charts to pulse
 }
 
 const SignalScoutContext = createContext<SignalScoutContextType | undefined>(undefined);
@@ -176,6 +178,7 @@ export const SignalScoutProvider = ({ children }: { children: ReactNode }) => {
 
   const [userRole, setUserRole] = useState<UserRole>("admin");
   const [credits, setCredits] = useState<number>(5);
+  const [lastSignalAt, setLastSignalAt] = useState<number>(0);
 
   // Credit refill loop for simulated AI Rate Limiting
   useEffect(() => {
@@ -199,6 +202,7 @@ export const SignalScoutProvider = ({ children }: { children: ReactNode }) => {
 
   const addFeedEvent = useCallback((e: FeedEvent) => {
     setFeedEvents((prev) => [e, ...prev].slice(0, 50));
+    setLastSignalAt(Date.now());
   }, []);
 
   // Recalculates Opportunity Score based on state config
@@ -521,7 +525,8 @@ export const SignalScoutProvider = ({ children }: { children: ReactNode }) => {
         userRole,
         setUserRole,
         credits,
-        setCredits
+        setCredits,
+        lastSignalAt
       }}
     >
       {children}
