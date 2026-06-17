@@ -14,8 +14,9 @@ export default function Stage1Offer() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!sell || !problem) return;
-    setOffer({ sell, problem, dealSize, salesCycle });
-    generateWorkspace();
+    const newOffer = { sell, problem, dealSize, salesCycle };
+    setOffer(newOffer);
+    generateWorkspace(newOffer);
     setStep(2);
   };
 
