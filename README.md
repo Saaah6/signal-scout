@@ -1,6 +1,6 @@
 # SignalScout AI: The GTM Operating System
 
-SignalScout is a premium, AI-powered GTM intelligence platform that acts as a GTM analyst, transforming raw company target lists into prioritized revenue opportunities.
+SignalScout is an AI GTM analyst that scans your list of target companies and tells you exactly who to contact first, why, and what to say.
 
 ![SignalScout Dashboard Console](docs/vanta_drawer_open.png)
 
