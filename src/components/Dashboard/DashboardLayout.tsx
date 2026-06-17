@@ -9,10 +9,12 @@ import AccountsTable from "./AccountsTable";
 import CompanyDetailsDrawer from "./CompanyDetailsDrawer";
 import IntelligenceFeed from "./IntelligenceFeed";
 import SettingsPanel from "./SettingsPanel";
-import { Account } from "@/context/SignalScoutContext";
+import { Account, useSignalScout } from "@/context/SignalScoutContext";
 import { AnimatePresence } from "framer-motion";
+import { Sparkles } from "lucide-react";
 
 export default function DashboardLayout() {
+  const { gtmSummary } = useSignalScout();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
@@ -30,6 +32,22 @@ export default function DashboardLayout() {
       case "dashboard":
         return (
           <div className="space-y-6 flex-1 flex flex-col">
+            {/* AI GTM Executive Summary Card */}
+            <div className="bg-gradient-to-r from-violet-950/20 to-zinc-900/40 border border-violet-900/20 rounded-xl p-4 flex items-start space-x-3.5 shadow-lg relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-6 opacity-[0.03] text-violet-400 pointer-events-none">
+                <Sparkles className="w-32 h-32" />
+              </div>
+              <div className="p-2 bg-violet-600/10 border border-violet-500/20 text-violet-400 rounded-lg shrink-0 mt-0.5 animate-pulse">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <div>
+                <span className="text-[9px] font-bold text-violet-400 uppercase tracking-widest block mb-0.5">AI GTM Executive Summary</span>
+                <p className="text-xs text-zinc-300 leading-relaxed font-medium">
+                  {gtmSummary}
+                </p>
+              </div>
+            </div>
+
             <KPIWidgets />
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 flex-1 items-start">
               <div className="xl:col-span-2 space-y-6 flex flex-col h-full">

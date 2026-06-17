@@ -102,6 +102,7 @@ interface SignalScoutContextType {
   clearConsoleLogs: () => void;
   generateWorkspace: () => void;
   recalculateScores: () => void;
+  gtmSummary: string;
 }
 
 const SignalScoutContext = createContext<SignalScoutContextType | undefined>(undefined);
@@ -146,6 +147,9 @@ export const SignalScoutProvider = ({ children }: { children: ReactNode }) => {
   const [isResearching, setIsResearching] = useState<boolean>(false);
   const [researchProgress, setResearchProgress] = useState<number>(0);
   const [consoleLogs, setConsoleLogs] = useState<string[]>([]);
+  const [gtmSummary, setGtmSummary] = useState<string>(
+    "Active GTM Strategy: Targeting growing B2B SaaS companies undergoing security audits (SOC2/ISO). The GTM engine crawls target domains looking for trust directories, job vacancies in cybersecurity, and enterprise pricing updates to capture buying timing windows."
+  );
 
   const setStep = useCallback((s: number | "research" | "dashboard") => {
     setStepState(s);
@@ -244,6 +248,11 @@ export const SignalScoutProvider = ({ children }: { children: ReactNode }) => {
         : "Improve customer acquisition efficiency and increase outbound meeting booking rates."
     };
     setPainMap(generatedPainMap);
+
+    const summary = isTech
+      ? `Active GTM Strategy: Targeting growing B2B SaaS companies undergoing security audits (SOC2/ISO). The GTM engine crawls target domains looking for trust directories, job vacancies in cybersecurity, and enterprise pricing updates to capture buying timing windows.`
+      : `Active GTM Strategy: Targeting retail and mid-market organizations looking to optimize customer acquisition. The GTM engine crawls job listings for growth/marketing hires and scans tech stacks to identify target integrations.`;
+    setGtmSummary(summary);
 
     // 3. Dynamically adjust signals config categories / naming if needed
     const customSignals = DEFAULT_SIGNALS.map((s) => {
@@ -356,7 +365,8 @@ export const SignalScoutProvider = ({ children }: { children: ReactNode }) => {
         addConsoleLog,
         clearConsoleLogs,
         generateWorkspace,
-        recalculateScores
+        recalculateScores,
+        gtmSummary
       }}
     >
       {children}
