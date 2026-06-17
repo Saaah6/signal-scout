@@ -1,14 +1,16 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { useSignalScout, Account } from "@/context/SignalScoutContext";
-import { ArrowLeft, Database, Download, FileText, UploadCloud, Play } from "lucide-react";
+import { useSignalScout, Account, getOfferCategory } from "@/context/SignalScoutContext";
+import { ArrowLeft, Database, Download, FileText, UploadCloud, Play, Globe, Search, Loader } from "lucide-react";
 
 export default function Stage5Import() {
   const { setAccounts, setStep, offer, signals } = useSignalScout();
   const [dragActive, setDragActive] = useState(false);
   const [fileName, setFileName] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [singleDomain, setSingleDomain] = useState("");
+  const [isAnalyzingSingle, setIsAnalyzingSingle] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Curated high-fidelity mock company list
@@ -29,23 +31,42 @@ export default function Stage5Import() {
 
   // Logic to process raw domains into full Qualified Account items
   const processImportedCompanies = (list: Array<{ name: string; domain: string }>) => {
-    const isTechOffer = offer.sell.toLowerCase().includes("ai") || offer.sell.toLowerCase().includes("tech") || offer.sell.toLowerCase().includes("software") || offer.sell.toLowerCase().includes("cyber");
+    const category = getOfferCategory(offer.sell);
+    const isTechOffer = category !== "general";
 
     const mappedAccounts: Account[] = list.map((item, index) => {
       // Find matching mock details or generate random firmographics
       const matchedMock = DEMO_COMPANIES.find(c => c.domain.toLowerCase() === item.domain.toLowerCase() || c.name.toLowerCase() === item.name.toLowerCase());
       
-      const industry = matchedMock?.industry || (isTechOffer ? "B2B SaaS" : "Professional Services");
+      let industry = matchedMock?.industry || "B2B SaaS";
+      let techStack = matchedMock?.tech || ["AWS", "GitHub Actions", "PostgreSQL"];
+
+      if (category === "compliance") {
+        industry = matchedMock?.industry || "B2B SaaS, FinTech, Enterprise Software";
+        techStack = matchedMock?.tech || ["AWS", "GitHub Actions", "Salesforce", "Vanta", "Drata", "Vercel"];
+      } else if (category === "hr") {
+        industry = "HR Tech, B2B SaaS, Talent Management Services";
+        techStack = ["Workday", "Greenhouse", "Slack", "Gusto", "BambooHR", "Lever"];
+      } else if (category === "sales") {
+        industry = "SalesTech, Marketing Automation, B2B SaaS, Agencies";
+        techStack = ["HubSpot", "Salesforce", "Marketo", "Segment", "Intercom", "Apollo"];
+      } else if (category === "devtools") {
+        industry = "DevTools, Infrastructure, Cloud Platform SaaS";
+        techStack = ["AWS", "GitHub Actions", "Vercel", "Sentry", "PostgreSQL", "Docker", "Kubernetes"];
+      } else {
+        industry = "E-commerce, Retail, Professional Services";
+        techStack = ["Shopify", "Google Analytics", "HubSpot", "Zendesk", "Stripe", "Clara"];
+      }
+
       const employeeCount = matchedMock?.size || Math.floor(Math.random() * 950) + 50;
       const revenue = matchedMock?.rev || `$${Math.floor(Math.random() * 90) + 10}M`;
       const fundingStage = matchedMock?.stage || ["Series A", "Series B", "Series C", "Seed"][Math.floor(Math.random() * 4)];
       const geography = matchedMock?.geo || "United States";
-      const techStack = matchedMock?.tech || (isTechOffer ? ["AWS", "GitHub Actions", "PostgreSQL"] : ["Shopify", "HubSpot"]);
 
       // Calculate Scores
       // Fit calculation: how well do industry, size, and location match ICP?
       let icpFit = 65; // Base
-      if (isTechOffer && (industry.includes("SaaS") || industry.includes("DevTools") || industry.includes("FinTech"))) icpFit += 15;
+      if (isTechOffer && (industry.includes("SaaS") || industry.includes("DevTools") || industry.includes("FinTech") || industry.includes("Tech"))) icpFit += 15;
       if (employeeCount >= 50 && employeeCount <= 1000) icpFit += 10;
       if (geography.includes("US") || geography.includes("Global")) icpFit += 10;
       icpFit = Math.min(100, icpFit);
@@ -75,32 +96,90 @@ export default function Stage5Import() {
       else if (opportunityScore >= 70) priorityTier = 2;
       else if (opportunityScore >= 50) priorityTier = 3;
 
-      // Explainable prioritization reasons
+      // Dynamic explainable prioritization reasons
       const reasons: string[] = [];
-      if (signalsDetected.includes("sec_hiring")) reasons.push("Currently recruiting for Security Engineers.");
-      if (signalsDetected.includes("trust_center")) reasons.push("Added secure trust center directory to landing domains.");
+      if (signalsDetected.includes("sec_hiring")) {
+        if (category === "compliance") reasons.push("Currently recruiting for 2+ Security Engineering positions.");
+        else if (category === "hr") reasons.push("Currently recruiting for Talent Recruiters & Sourcers.");
+        else if (category === "sales") reasons.push("Currently recruiting for 3+ Account Executives.");
+        else if (category === "devtools") reasons.push("Currently recruiting for DevOps & SRE Engineers.");
+        else reasons.push("Currently recruiting for Sales & Marketing Directors.");
+      }
+      if (signalsDetected.includes("trust_center")) {
+        if (category === "compliance") reasons.push("Added secure trust center directory to landing domains.");
+        else if (category === "hr") reasons.push("Integrated automated onboarding software to website.");
+        else if (category === "sales") reasons.push("Added self-serve Enterprise packages to billing pages.");
+        else if (category === "devtools") reasons.push("Added interactive API documentation and developer portal.");
+        else reasons.push("Upgraded digital checkout portal or tech integrations.");
+      }
       if (signalsDetected.includes("ent_pricing")) reasons.push("Updated billing structures to include Enterprise pricing tiers.");
       if (signalsDetected.includes("funding")) reasons.push("Announced a new capital venture round recently.");
       if (icpFit >= 90) reasons.push(`Fits core ICP matrix with employee count of ${employeeCount}.`);
       if (reasons.length === 0) reasons.push("Demonstrating baseline compliance signals.");
 
-      // Buying Committee Mapping
-      const economic = isTechOffer ? "Founder & CEO" : "Chief Commercial Officer";
-      const technical = isTechOffer ? "VP of Engineering / CTO" : "IT Infrastructure Director";
-      const champion = isTechOffer ? "Head of Information Security" : "Ops Manager";
-      const endUser = isTechOffer ? "DevOps & Security Engineers" : "Commercial Teams";
+      // Buying Committee Mapping dynamically by Category
+      let economic = "Founder & CEO";
+      let technical = "VP of Engineering / CTO";
+      let champion = "Head of Information Security";
+      let endUser = "DevOps & Security Engineers";
+
+      if (category === "hr") {
+        economic = "Chief People Officer";
+        technical = "Director of HR Operations";
+        champion = "VP of HR / Head of Talent";
+        endUser = "HR & Recruiting Teams";
+      } else if (category === "sales") {
+        economic = "Chief Revenue Officer (CRO)";
+        technical = "Head of Sales Operations";
+        champion = "VP of Sales / VP of Marketing";
+        endUser = "Account Executives & Growth Marketers";
+      } else if (category === "devtools") {
+        economic = "VP of Engineering";
+        technical = "Chief Technology Officer (CTO)";
+        champion = "Director of DevOps";
+        endUser = "Software Engineers & Cloud Architects";
+      } else if (category === "general") {
+        economic = "Founder & CEO";
+        technical = "IT Director / Operations Lead";
+        champion = "Commercial Operations Lead";
+        endUser = "Sales & Marketing Associates";
+      }
 
       // GTM Recommendations
-      const contact = isTechOffer ? "Head of Information Security" : "VP Marketing Operations";
-      const reason = signalsDetected.includes("sec_hiring") 
+      let contact = "Head of Information Security";
+      let reason = signalsDetected.includes("sec_hiring") 
         ? "Currently hiring security staff, likely scaling compliance requirements." 
         : "Matches technographic footprint and target firmographics.";
-      const pain = isTechOffer
-        ? "Engineers spends hundreds of manual hours prepping compliance reviews."
-        : "High customer acquisition costs and outdated tool tracking integrations.";
-      const angle = isTechOffer
-        ? `Pitch how ${offer.sell} can automate compliance logs, saving engineering cycles.`
-        : `Demonstrate how ${offer.sell} reduces CPA by automating targeted outbound operations.`;
+      let pain = "Engineers spend hundreds of manual hours prepping compliance reviews.";
+      let angle = `Pitch how ${offer.sell} can automate compliance logs, saving engineering cycles.`;
+
+      if (category === "hr") {
+        contact = "VP of HR / Head of Talent";
+        reason = signalsDetected.includes("sec_hiring")
+          ? "Recruiter hires and headcount growth indicating rapid scaling bottlenecks."
+          : "Matches rapid scaling triggers and target firmographics.";
+        pain = "Headcount expansion is breaking manual employee onboarding and compliance cycles.";
+        angle = `Pitch how ${offer.sell} simplifies automated onboarding workflows and speeds up time-to-hire.`;
+      } else if (category === "sales") {
+        contact = "Chief Revenue Officer (CRO)";
+        reason = signalsDetected.includes("sec_hiring")
+          ? "Hiring sales hires and adding CRM API tools; indicating pipeline scaling priority."
+          : "Matches active pipeline and marketing operations triggers.";
+        pain = "Outbound response rates have crashed due to generic cold outreach.";
+        angle = `Pitch how ${offer.sell} leverages buying triggers to personalize prospecting at scale.`;
+      } else if (category === "devtools") {
+        contact = "VP of Engineering";
+        reason = signalsDetected.includes("sec_hiring")
+          ? "Hiring DevOps / Cloud Engineers; indicating infrastructure scalability needs."
+          : "Matches developer workflow and infra signals.";
+        pain = "Developers waste hours maintaining custom CI/CD pipelines and manual configs.";
+        angle = `Pitch how ${offer.sell} optimizes database caching and reduces build times by 50%.`;
+      } else if (category === "general") {
+        contact = "Founder / Head of Commercial Operations";
+        reason = "Matches targeted firmographic growth profile and regional presence.";
+        pain = "Inefficient customer acquisition cost and lack of integrated sales tracking.";
+        angle = `Pitch how ${offer.sell} improves pipeline generation metrics and simplifies target engagement.`;
+      }
 
       return {
         id: Math.random().toString(36).substring(7),
@@ -234,6 +313,36 @@ export default function Stage5Import() {
     document.body.removeChild(link);
   };
 
+  const handleAnalyzeSingleDomain = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!singleDomain.trim()) return;
+
+    setIsAnalyzingSingle(true);
+
+    // Parse company name from domain
+    let rawDomain = singleDomain.trim();
+    // remove http/https/www
+    let cleanDomain = rawDomain.replace(/^(https?:\/\/)?(www\.)?/, "");
+    // remove trailing slashes or subpaths
+    cleanDomain = cleanDomain.split("/")[0].toLowerCase();
+
+    if (!cleanDomain.includes(".")) {
+      setErrorMsg("Please enter a valid domain format (e.g. airbnb.com)");
+      setIsAnalyzingSingle(false);
+      return;
+    }
+
+    const namePart = cleanDomain.split(".")[0];
+    const companyName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+
+    setTimeout(() => {
+      setErrorMsg("");
+      processImportedCompanies([{ name: companyName, domain: cleanDomain }]);
+      setIsAnalyzingSingle(false);
+      setStep("research");
+    }, 1200);
+  };
+
   return (
     <div className="w-full max-w-2xl bg-zinc-900/60 backdrop-blur-md border border-zinc-800 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -244,8 +353,51 @@ export default function Stage5Import() {
         </div>
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-white font-outfit">Import Accounts</h2>
-          <p className="text-sm text-zinc-400">Upload your target company list in CSV format to trigger the AI qualification engine.</p>
+          <p className="text-sm text-zinc-400">Define your targets to analyze. Enter a single target enterprise domain or upload a CSV file.</p>
         </div>
+      </div>
+
+      {/* Single Domain Search / Analysis Input */}
+      <div className="mb-6 bg-zinc-950/40 border border-zinc-800/80 rounded-xl p-5 relative overflow-hidden">
+        <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider block mb-2.5">Analyze Single Target Enterprise Domain</span>
+        <form onSubmit={handleAnalyzeSingleDomain} className="flex gap-2">
+          <div className="relative flex-1">
+            <Globe className="absolute left-3.5 top-3 w-4 h-4 text-zinc-500" />
+            <input
+              type="text"
+              placeholder="Enter domain (e.g. microsoft.com, airbnb.com, stripe.com)..."
+              value={singleDomain}
+              onChange={(e) => setSingleDomain(e.target.value)}
+              className="w-full bg-zinc-950 border border-zinc-850 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-violet-500/60 focus:ring-1 focus:ring-violet-500/60 transition"
+              required
+              disabled={isAnalyzingSingle}
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={isAnalyzingSingle || !singleDomain.trim()}
+            className="px-4 py-2.5 bg-violet-600 hover:bg-violet-500 disabled:opacity-50 text-white rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5 transition shrink-0 cursor-pointer font-outfit"
+          >
+            {isAnalyzingSingle ? (
+              <>
+                <Loader className="w-3.5 h-3.5 animate-spin" />
+                <span>Resolving...</span>
+              </>
+            ) : (
+              <>
+                <Search className="w-3.5 h-3.5" />
+                <span>Analyze Domain</span>
+              </>
+            )}
+          </button>
+        </form>
+      </div>
+
+      {/* Horizontal Divider */}
+      <div className="flex items-center my-6 text-[10px] font-bold text-zinc-650 uppercase tracking-widest">
+        <div className="flex-1 h-px bg-zinc-850" />
+        <span className="px-3">Or upload CSV file</span>
+        <div className="flex-1 h-px bg-zinc-850" />
       </div>
 
       {/* Drag & Drop Area */}

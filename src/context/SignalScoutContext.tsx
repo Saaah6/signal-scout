@@ -2,6 +2,25 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 
+export type GtmCategory = "compliance" | "hr" | "sales" | "devtools" | "general";
+
+export function getOfferCategory(sell: string): GtmCategory {
+  const sellLower = sell.toLowerCase();
+  if (sellLower.includes("compliance") || sellLower.includes("security") || sellLower.includes("cyber") || sellLower.includes("audit") || sellLower.includes("soc2")) {
+    return "compliance";
+  }
+  if (sellLower.includes("hr") || sellLower.includes("people") || sellLower.includes("recruiting") || sellLower.includes("hiring") || sellLower.includes("talent")) {
+    return "hr";
+  }
+  if (sellLower.includes("crm") || sellLower.includes("sales") || sellLower.includes("marketing") || sellLower.includes("revenue") || sellLower.includes("revops")) {
+    return "sales";
+  }
+  if (sellLower.includes("dev") || sellLower.includes("developer") || sellLower.includes("infra") || sellLower.includes("cloud") || sellLower.includes("git") || sellLower.includes("ci/cd") || sellLower.includes("caching")) {
+    return "devtools";
+  }
+  return "general";
+}
+
 export interface Offer {
   sell: string;
   problem: string;
@@ -393,11 +412,41 @@ export const SignalScoutProvider = ({ children }: { children: ReactNode }) => {
             const text = `${a.company_name} was detected for: "${randomSig.name}"`;
             
             // Add a log/reasons entry
+            const category = getOfferCategory(offer.sell);
             const updatedReasons = [...a.reasons];
-            if (randomSig.id === "sec_hiring") updatedReasons.unshift("Detected hiring for 2+ Security Engineering positions.");
-            else if (randomSig.id === "trust_center") updatedReasons.unshift("Added Trust / Security Center to main homepage.");
-            else if (randomSig.id === "ent_pricing") updatedReasons.unshift("Added 'Enterprise' package to standard pricing matrix.");
-            else updatedReasons.unshift(`Detected trigger: ${randomSig.name}`);
+            let reasonText = `Detected trigger: ${randomSig.name}`;
+
+            if (randomSig.id === "sec_hiring") {
+              if (category === "compliance") reasonText = "Detected hiring for 2+ Security Engineering positions.";
+              else if (category === "hr") reasonText = "Detected hiring for Talent Recruiters & Sourcers.";
+              else if (category === "sales") reasonText = "Detected hiring for 3+ Account Executives.";
+              else if (category === "devtools") reasonText = "Detected hiring for DevOps & SRE Engineers.";
+              else reasonText = "Detected hiring for Sales & Marketing Directors.";
+            } else if (randomSig.id === "comp_hiring") {
+              if (category === "compliance") reasonText = "Hiring for Compliance/Legal Counsel roles.";
+              else if (category === "hr") reasonText = "Hiring for HR Operations Specialists.";
+              else if (category === "sales") reasonText = "Hiring for Sales Operations Analysts.";
+              else if (category === "devtools") reasonText = "Hiring for Cloud Security Architects.";
+              else reasonText = "Hiring for Operations Managers.";
+            } else if (randomSig.id === "trust_center") {
+              if (category === "compliance") reasonText = "Added secure Trust / Security Center to domain portal.";
+              else if (category === "hr") reasonText = "Integrated automated onboarding software to website.";
+              else if (category === "sales") reasonText = "Added self-serve Enterprise packages to billing pages.";
+              else if (category === "devtools") reasonText = "Added interactive API documentation and developer portal.";
+              else reasonText = "Upgraded digital checkout portal or tech integrations.";
+            } else if (randomSig.id === "soc2_ment") {
+              if (category === "compliance") reasonText = "SOC2/HIPAA audit readiness mentioned in vacancies.";
+              else if (category === "hr") reasonText = "Rapid headcount targets mentioned in company press.";
+              else if (category === "sales") reasonText = "CRM API and integration needs mentioned in listings.";
+              else if (category === "devtools") reasonText = "CI/CD automation pipeline expansion mentioned in job posts.";
+              else reasonText = "New digital marketing tools listed in active jobs.";
+            } else if (randomSig.id === "funding") {
+              reasonText = "Announced a new venture capital funding round recently.";
+            } else if (randomSig.id === "ent_pricing") {
+              reasonText = "Added 'Enterprise' package to standard pricing matrix.";
+            }
+
+            updatedReasons.unshift(reasonText);
 
             return {
               ...a,
