@@ -23,12 +23,13 @@ export default function CosmosBackground() {
       }
     `;
 
-    // Fragment shader source
+    // Fragment shader source with interactive liquid ripples
     const fsSource = `
       precision mediump float;
       uniform vec2 u_resolution;
       uniform float u_time;
       uniform vec2 u_mouse;
+      uniform vec3 u_ripples[5]; // x, y: position, z: age (0.0 to 1.0)
 
       float hash(vec2 p) {
         p = fract(p * vec2(123.34, 456.21));
@@ -45,30 +46,63 @@ export default function CosmosBackground() {
       }
 
       void main() {
+        // Compute base coordinates
+        vec2 uv = gl_FragCoord.xy / u_resolution.xy;
         vec2 p = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
         
         // Mouse interactive drift
-        p += u_mouse * 0.05;
+        p += u_mouse * 0.03;
         
+        // Apply interactive ripple wave displacements to 'p'
+        // Each ripple warps space coordinates to simulate liquid refraction/ether wave
+        vec2 warp = vec2(0.0);
+        for (int i = 0; i < 5; i++) {
+          vec3 ripple = u_ripples[i];
+          float age = ripple.z;
+          if (age < 1.0) {
+            vec2 r_pos = ripple.xy;
+            // Adjust ripple center according to aspect ratio scaling of coordinates
+            vec2 diff = p - r_pos;
+            float dist = length(diff);
+            
+            // Outer wave radius moves out with age
+            float waveRadius = age * 0.75;
+            float distToWave = abs(dist - waveRadius);
+            float waveWidth = 0.18;
+            
+            if (distToWave < waveWidth) {
+              // Smooth envelope to fade the wave edge and fade with age
+              float envelope = smoothstep(waveWidth, 0.0, distToWave) * (1.0 - age);
+              // Sine wave oscillation
+              float wave = sin((dist - waveRadius) * 45.0 - age * 8.0) * 0.035 * envelope;
+              // Displace coords radially
+              if (dist > 0.001) {
+                warp += normalize(diff) * wave;
+              }
+            }
+          }
+        }
+        p += warp;
+
         // Deep cosmos background colors
-        vec3 color = vec3(0.02, 0.015, 0.035) * (1.0 - length(p) * 0.4);
+        vec3 color = vec3(0.02, 0.012, 0.032) * (1.0 - length(p) * 0.35);
         
         // FBM drifting gas nebulae
         float n = 0.0;
         vec2 q = p * 1.6;
-        n += 0.500 * noise(q + u_time * 0.025); q *= 2.02;
-        n += 0.250 * noise(q - u_time * 0.018); q *= 2.01;
-        n += 0.125 * noise(q + u_time * 0.012);
+        n += 0.500 * noise(q + u_time * 0.02); q *= 2.02;
+        n += 0.250 * noise(q - u_time * 0.015); q *= 2.01;
+        n += 0.125 * noise(q + u_time * 0.01);
         
-        vec3 nebula = mix(vec3(0.25, 0.08, 0.42), vec3(0.04, 0.22, 0.32), n);
-        color += nebula * smoothstep(0.28, 0.82, n) * 0.45;
+        vec3 nebula = mix(vec3(0.24, 0.06, 0.45), vec3(0.02, 0.2, 0.35), n);
+        color += nebula * smoothstep(0.26, 0.8, n) * 0.42;
         
         // Stars Layer 1: background stars
         vec2 st1 = p * 14.0;
         float stars1 = hash(floor(st1));
         if (stars1 > 0.988) {
           float twinkle = sin(u_time * 1.4 + stars1 * 6.28) * 0.5 + 0.5;
-          color += vec3(0.85, 0.9, 1.0) * twinkle * smoothstep(0.0, 0.08, fract(st1.x)) * smoothstep(0.0, 0.08, fract(st1.y)) * 0.35;
+          color += vec3(0.85, 0.9, 1.0) * twinkle * smoothstep(0.0, 0.08, fract(st1.x)) * smoothstep(0.0, 0.08, fract(st1.y)) * 0.3;
         }
         
         // Stars Layer 2: foreground brighter stars
@@ -77,7 +111,7 @@ export default function CosmosBackground() {
         if (stars2 > 0.993) {
           float twinkle = sin(u_time * 2.8 + stars2 * 6.28) * 0.5 + 0.5;
           float dist = length(fract(st2) - 0.5);
-          float glow = smoothstep(0.42, 0.0, dist) * 0.65;
+          float glow = smoothstep(0.42, 0.0, dist) * 0.6;
           color += vec3(0.9, 0.95, 1.0) * twinkle * glow;
         }
         
@@ -139,6 +173,7 @@ export default function CosmosBackground() {
     const resLoc = gl.getUniformLocation(program, "u_resolution");
     const timeLoc = gl.getUniformLocation(program, "u_time");
     const mouseLoc = gl.getUniformLocation(program, "u_mouse");
+    const ripplesLoc = gl.getUniformLocation(program, "u_ripples");
 
     // Track mouse coordinates
     let mouseX = 0;
@@ -159,8 +194,34 @@ export default function CosmosBackground() {
       }
     };
 
+    // Tracking ripple states
+    const MAX_RIPPLES = 5;
+    const ripples = Array(MAX_RIPPLES).fill(null).map(() => ({ x: 0, y: 0, age: 1.0 }));
+    let activeRippleIndex = 0;
+
+    const handlePointerDown = (e: PointerEvent) => {
+      // Calculate WebGL aspect-ratio normalized coordinates
+      const canvasWidth = window.innerWidth;
+      const canvasHeight = window.innerHeight;
+      const aspect = canvasWidth / canvasHeight;
+
+      let x = (e.clientX / canvasWidth) * 2 - 1;
+      let y = -(e.clientY / canvasHeight) * 2 + 1;
+
+      // Compensate for viewport ratio in shader coordinate space
+      if (aspect > 1.0) {
+        x *= aspect;
+      } else {
+        y /= aspect;
+      }
+
+      ripples[activeRippleIndex] = { x, y, age: 0.0 };
+      activeRippleIndex = (activeRippleIndex + 1) % MAX_RIPPLES;
+    };
+
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("touchmove", handleTouchMove);
+    window.addEventListener("pointerdown", handlePointerDown);
 
     // Resize handler
     const resize = () => {
@@ -192,6 +253,19 @@ export default function CosmosBackground() {
       gl.uniform1f(timeLoc, elapsedSeconds);
       gl.uniform2f(mouseLoc, mouseX, mouseY);
 
+      // Animate ripples age and populate float array
+      const ripplesData = new Float32Array(MAX_RIPPLES * 3);
+      for (let i = 0; i < MAX_RIPPLES; i++) {
+        if (ripples[i].age < 1.0) {
+          ripples[i].age += 0.016; // speed of wave expansion
+          if (ripples[i].age > 1.0) ripples[i].age = 1.0;
+        }
+        ripplesData[i * 3] = ripples[i].x;
+        ripplesData[i * 3 + 1] = ripples[i].y;
+        ripplesData[i * 3 + 2] = ripples[i].age;
+      }
+      gl.uniform3fv(ripplesLoc, ripplesData);
+
       gl.drawArrays(gl.TRIANGLES, 0, 6);
       animationFrameId = requestAnimationFrame(render);
     };
@@ -204,6 +278,7 @@ export default function CosmosBackground() {
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("pointerdown", handlePointerDown);
       if (gl) {
         gl.deleteProgram(program);
         gl.deleteShader(vs);

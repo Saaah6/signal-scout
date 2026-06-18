@@ -1,0 +1,126 @@
+"use client";
+
+import React, { useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+interface LiquidCurtainProps {
+  children: React.ReactNode;
+  stageKey: any; // Unique key representing the step/stage (trigger transition on change)
+}
+
+export default function LiquidCurtain({ children, stageKey }: LiquidCurtainProps) {
+  const [displayChildren, setDisplayChildren] = useState(children);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const prevStageKeyRef = useRef(stageKey);
+
+  useEffect(() => {
+    if (stageKey !== prevStageKeyRef.current) {
+      prevStageKeyRef.current = stageKey;
+      setIsTransitioning(true);
+      // Wait for the curtain to reach full cover before updating child content
+      const timer = setTimeout(() => {
+        setDisplayChildren(children);
+      }, 450); // Midpoint of the 900ms transition
+      return () => clearTimeout(timer);
+    } else {
+      setDisplayChildren(children);
+    }
+  }, [stageKey, children]);
+
+  // SVG path definitions for the liquid curtain morphing transition
+  const animCurtain = {
+    initial: {
+      d: "M 100 0 L 100 100 L 100 100 L 100 0 Z",
+    },
+    mid: {
+      d: [
+        "M 100 0 L 100 100 L 100 100 L 100 0 Z",
+        "M 100 0 L 100 100 L 40 100 Q -20 50 40 0 Z",
+        "M 100 0 L 100 100 L 0 100 L 0 0 Z",
+      ],
+      transition: {
+        duration: 0.45,
+        ease: [0.76, 0, 0.24, 1],
+      },
+    },
+    exit: {
+      d: [
+        "M 0 0 L 0 100 L 100 100 L 100 0 Z",
+        "M 0 0 L 0 100 L 60 100 Q 120 50 60 0 Z",
+        "M 0 0 L 0 100 L 0 100 L 0 0 Z",
+      ],
+      transition: {
+        duration: 0.45,
+        ease: [0.76, 0, 0.24, 1],
+      },
+    },
+  };
+
+  return (
+    <div className="relative w-full min-h-[420px] flex items-center justify-center">
+      {/* Content wrapper with scale/opacity fade */}
+      <motion.div
+        key={stageKey}
+        initial={{ opacity: 0, scale: 0.96, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96, y: -10 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="w-full"
+      >
+        {displayChildren}
+      </motion.div>
+
+      {/* SVG Liquid Curtain Wipe Overlay */}
+      <AnimatePresence>
+        {isTransitioning && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.9 }}
+            className="fixed inset-0 pointer-events-none z-50 w-full h-full"
+            onAnimationComplete={() => setIsTransitioning(false)}
+          >
+            <svg
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              className="absolute w-full h-full fill-none pointer-events-none"
+            >
+              {/* Outer Glow Liquid Wave Path */}
+              <motion.path
+                variants={animCurtain}
+                initial="initial"
+                animate="mid"
+                exit="exit"
+                fill="url(#curtain-gradient-glow)"
+                className="opacity-45"
+              />
+
+              {/* Solid Liquid Wave Path */}
+              <motion.path
+                variants={animCurtain}
+                initial="initial"
+                animate="mid"
+                exit="exit"
+                fill="url(#curtain-gradient)"
+              />
+
+              <defs>
+                <linearGradient id="curtain-gradient" x1="100%" y1="0%" x2="0%" y2="0%">
+                  <stop offset="0%" stopColor="#1e1b4b" />
+                  <stop offset="35%" stopColor="#4c1d95" />
+                  <stop offset="70%" stopColor="#6d28d9" />
+                  <stop offset="100%" stopColor="#4338ca" />
+                </linearGradient>
+                <linearGradient id="curtain-gradient-glow" x1="100%" y1="0%" x2="0%" y2="0%">
+                  <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.4" />
+                  <stop offset="50%" stopColor="#ec4899" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}

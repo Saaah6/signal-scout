@@ -12,6 +12,7 @@ import DashboardLayout from "@/components/Dashboard/DashboardLayout";
 import LandingPage from "@/components/LandingPage";
 import { Target, SignOut } from "@phosphor-icons/react";
 import CosmosBackground from "@/components/CosmosBackground";
+import LiquidCurtain from "@/components/LiquidCurtain";
 
 function OnboardingSteps() {
   const { step, user, logout } = useIntelScout();
@@ -99,7 +100,9 @@ function OnboardingSteps() {
 
       {/* Main Wizard Form Container */}
       <div className="w-full flex justify-center items-center">
-        {renderWizardStep()}
+        <LiquidCurtain stageKey={step}>
+          {renderWizardStep()}
+        </LiquidCurtain>
       </div>
 
     </div>
