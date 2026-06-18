@@ -72,7 +72,7 @@ Given your role as ${acc.buyingCommittee.champion}, I wanted to see if you'd be 
 Best regards,
 
 [Your Name]
-GTM Analyst, Signal Scout`;
+GTM Analyst, IntelScout`;
       } else if (t === "friendly") {
         body = `Hi ${championFirstName},
 
@@ -85,7 +85,7 @@ We developed ${off.sell} as a simple solution to automate that entire flow, savi
 Cheers,
 
 [Your Name]
-Signal Scout`;
+IntelScout`;
       } else if (t === "bold") {
         body = `Hi ${championFirstName},
 
@@ -98,7 +98,7 @@ Are you open to a direct 10-minute call this Thursday at 2 PM to see if we're a 
 Best,
 
 [Your Name]
-Outbound Lead, Signal Scout`;
+Outbound Lead, IntelScout`;
       } else { // value-first
         body = `Hi ${championFirstName},
 
@@ -114,7 +114,7 @@ We've automated these fixes via ${off.sell}. If you'd like, I can send over the 
 Warm regards,
 
 [Your Name]
-GTM Architect, Signal Scout`;
+GTM Architect, IntelScout`;
       }
 
       if (isShort) {
@@ -145,7 +145,7 @@ GTM Architect, Signal Scout`;
 [Target Info: ${company} | Champion: ${championName} (${acc.buyingCommittee.champion})]
 
 📞 INTRO:
-"Hi ${championName}, this is [Your Name] from Signal Scout. I know I caught you out of the blue, do you have 45 seconds to see if this is worth your time?"
+"Hi ${championName}, this is [Your Name] from IntelScout. I know I caught you out of the blue, do you have 45 seconds to see if this is worth your time?"
 
 🚀 ELEVATOR PITCH:
 "The reason I'm calling is I noticed ${company} is using ${detectedTech} and scaling active hiring. Typically, ${acc.buyingCommittee.champion}s tell us they are wasting hours of engineering cycles or sales time manually mapping compliance and outreach targets.

@@ -99,7 +99,7 @@ export default function LandingPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Signal Scout",
+    "name": "IntelScout AI",
     "operatingSystem": "All",
     "applicationCategory": "BusinessApplication",
     "description": "Real-time AI crawler, technographics parser, and account qualification scoring engine for enterprise GTM teams.",
@@ -179,13 +179,13 @@ export default function LandingPage() {
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-tight max-w-4xl font-outfit">
           Qualify B2B Accounts in Real-Time with{" "}
           <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-indigo-400 bg-clip-text text-transparent">
-            Signal Scout Crawler
+            IntelScout Crawler
           </span>
         </h1>
 
         {/* Hero Description */}
         <p className="mt-6 text-zinc-400 text-sm sm:text-base max-w-2xl leading-relaxed font-medium">
-          Signal Scout crawls target domains to monitor security changes, hiring activities, pricing expansions, and regional updates, scoring every account on automatic qualification vectors.
+          IntelScout crawls target domains to monitor security changes, hiring activities, pricing expansions, and regional updates, scoring every account on automatic qualification vectors.
         </p>
 
         {/* Google CTA Button */}
@@ -353,7 +353,7 @@ export default function LandingPage() {
       <footer className="w-full border-t border-zinc-900/60 py-8 text-center text-xs text-zinc-500 font-medium z-20 bg-zinc-950/80">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-[10px] text-zinc-650">
-            &copy; {new Date().getFullYear()} Signal Scout Inc. All rights reserved.
+            &copy; {new Date().getFullYear()} IntelScout AI Inc. All rights reserved.
           </div>
           <div className="flex space-x-6 text-[10px] uppercase tracking-wider font-bold">
             <a href="#features" className="hover:text-violet-400 transition">Features</a>
