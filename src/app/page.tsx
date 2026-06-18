@@ -9,8 +9,8 @@ import Stage4Weights from "@/components/Onboarding/Stage4Weights";
 import Stage5Import from "@/components/Onboarding/Stage5Import";
 import ResearchEngine from "@/components/Onboarding/ResearchEngine";
 import DashboardLayout from "@/components/Dashboard/DashboardLayout";
-import LandingPage from "@/components/LandingPage";
 import { Target, SignOut } from "@phosphor-icons/react";
+import CosmosBackground from "@/components/CosmosBackground";
 
 function OnboardingSteps() {
   const { step, user, logout } = useIntelScout();
@@ -41,6 +41,8 @@ function OnboardingSteps() {
 
   return (
     <div className="min-h-screen bg-zinc-950 flex flex-col justify-center items-center p-6 relative overflow-hidden font-sans">
+      {/* WebGL Cosmos Backdrop */}
+      <CosmosBackground />
       {/* Absolute positioned floating profile & signout */}
       {user && (
         <div className="absolute top-6 right-6 flex items-center space-x-2 sm:space-x-3 bg-zinc-900/40 border border-zinc-800 rounded-full py-1.5 px-2.5 sm:pl-2.5 sm:pr-4 shadow-lg backdrop-blur-md z-40">

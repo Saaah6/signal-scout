@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useIntelScout } from "@/context/IntelScoutContext";
 import { motion, AnimatePresence } from "framer-motion";
+import CosmosBackground from "./CosmosBackground";
 import { 
   Target, 
   EnvelopeSimple, 
@@ -114,6 +115,32 @@ export default function LandingPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
+      {/* WebGL Cosmos Backdrop */}
+      <CosmosBackground />
+
+      {/* Tech Grid Lines Overlay */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.025] z-0">
+        <div className="absolute h-px bg-white w-full" style={{ top: "12.5%" }} />
+        <div className="absolute h-px bg-white w-full" style={{ top: "25%" }} />
+        <div className="absolute h-px bg-white w-full" style={{ top: "37.5%" }} />
+        <div className="absolute h-px bg-white w-full" style={{ top: "50%" }} />
+        <div className="absolute h-px bg-white w-full" style={{ top: "62.5%" }} />
+        <div className="absolute h-px bg-white w-full" style={{ top: "75%" }} />
+        <div className="absolute h-px bg-white w-full" style={{ top: "87.5%" }} />
+        
+        <div className="absolute w-px bg-white h-full" style={{ left: "8.33%" }} />
+        <div className="absolute w-px bg-white h-full" style={{ left: "16.66%" }} />
+        <div className="absolute w-px bg-white h-full" style={{ left: "25%" }} />
+        <div className="absolute w-px bg-white h-full" style={{ left: "33.33%" }} />
+        <div className="absolute w-px bg-white h-full" style={{ left: "41.66%" }} />
+        <div className="absolute w-px bg-white h-full" style={{ left: "50%" }} />
+        <div className="absolute w-px bg-white h-full" style={{ left: "58.33%" }} />
+        <div className="absolute w-px bg-white h-full" style={{ left: "66.66%" }} />
+        <div className="absolute w-px bg-white h-full" style={{ left: "75%" }} />
+        <div className="absolute w-px bg-white h-full" style={{ left: "83.33%" }} />
+        <div className="absolute w-px bg-white h-full" style={{ left: "91.66%" }} />
+      </div>
+
       {/* Background Decorative Blurs */}
       <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-violet-600/10 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-emerald-600/5 rounded-full blur-[140px] pointer-events-none" />
