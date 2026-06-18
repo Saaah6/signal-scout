@@ -120,7 +120,7 @@ interface SignalScoutContextType {
   consoleLogs: string[];
   addConsoleLog: (l: string) => void;
   clearConsoleLogs: () => void;
-  generateWorkspace: () => void;
+  generateWorkspace: (customOffer?: Offer) => void;
   recalculateScores: () => void;
   gtmSummary: string;
   userRole: UserRole;
