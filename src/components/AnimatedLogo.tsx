@@ -92,8 +92,8 @@ export default function AnimatedLogo({ className = "w-6 h-6", showText = false }
 
       {/* Optional Text */}
       {showText && (
-        <span className="font-bold text-sm tracking-tight text-white font-outfit">
-          Intel<span className="text-violet-400">Scout</span>
+        <span className="font-bold text-sm tracking-tight text-foreground font-roboto">
+          Intel<span className="text-violet-500">Scout</span>
         </span>
       )}
     </div>
