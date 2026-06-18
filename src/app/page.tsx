@@ -9,6 +9,7 @@ import Stage4Weights from "@/components/Onboarding/Stage4Weights";
 import Stage5Import from "@/components/Onboarding/Stage5Import";
 import ResearchEngine from "@/components/Onboarding/ResearchEngine";
 import DashboardLayout from "@/components/Dashboard/DashboardLayout";
+import LandingPage from "@/components/LandingPage";
 import { Target, SignOut } from "@phosphor-icons/react";
 import CosmosBackground from "@/components/CosmosBackground";
 

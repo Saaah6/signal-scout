@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
+import { useUser, useAuth } from "@clerk/nextjs";
 
 export type GtmCategory = "compliance" | "hr" | "sales" | "devtools" | "general";
 export type UserRole = "admin" | "sales" | "marketing";
@@ -185,65 +186,25 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
   const [credits, setCredits] = useState<number>(5);
   const [lastSignalAt, setLastSignalAt] = useState<number>(0);
 
-  const [user, setUser] = useState<{ email: string; name: string; avatar: string } | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
+  const { user: clerkUser, isLoaded: isUserLoaded, isSignedIn } = useUser();
+  const { signOut, isLoaded: isAuthLoaded } = useAuth();
 
-  // Load auth state from localStorage on mount
-  useEffect(() => {
-    const savedUser = localStorage.getItem("intelscout_user");
-    if (savedUser) {
-      try {
-        const parsed = JSON.parse(savedUser);
-        setUser(parsed);
-        setIsAuthenticated(true);
-      } catch (e) {
-        console.error("Failed to parse saved user state", e);
-      }
-    }
-    setIsAuthLoading(false);
-  }, []);
+  const user = clerkUser ? {
+    email: clerkUser.primaryEmailAddress?.emailAddress || "",
+    name: clerkUser.fullName || clerkUser.username || "",
+    avatar: clerkUser.imageUrl || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(clerkUser.primaryEmailAddress?.emailAddress || "")}`
+  } : null;
+
+  const isAuthenticated = !!isSignedIn;
+  const isAuthLoading = !isUserLoaded || !isAuthLoaded;
 
   const loginWithGoogle = useCallback(async (email: string, name: string, avatar?: string) => {
-    setIsAuthLoading(true);
-    try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, name, avatar }),
-      });
-      const data = await response.json();
-      if (data.success && data.user) {
-        setUser(data.user);
-        setIsAuthenticated(true);
-        localStorage.setItem("intelscout_user", JSON.stringify(data.user));
-      } else {
-        throw new Error(data.error || "Failed to register user");
-      }
-    } catch (err) {
-      console.error("Authentication error:", err);
-      // Fallback: login client-side anyway if server is unreachable
-      const fallbackUser = {
-        email,
-        name,
-        avatar: avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(email)}`,
-        createdAt: new Date().toISOString()
-      };
-      setUser(fallbackUser);
-      setIsAuthenticated(true);
-      localStorage.setItem("intelscout_user", JSON.stringify(fallbackUser));
-    } finally {
-      setIsAuthLoading(false);
-    }
+    // Legacy support, OAuth is handled directly by Clerk triggers
   }, []);
 
   const logout = useCallback(() => {
-    setUser(null);
-    setIsAuthenticated(false);
-    localStorage.removeItem("intelscout_user");
-  }, []);
+    signOut();
+  }, [signOut]);
 
   // Credit refill loop for simulated AI Rate Limiting
   useEffect(() => {
