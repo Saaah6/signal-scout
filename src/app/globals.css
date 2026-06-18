@@ -17,6 +17,7 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* ── Font utilities ──────────────────────────────────────────────── */
@@ -24,17 +25,20 @@ body {
 .font-roboto-mono { font-family: 'Roboto Mono', monospace; }
 .font-outfit      { font-family: 'Roboto', sans-serif; }
 
-/* ── Marquee ─────────────────────────────────────────────────────── */
+/* ── Marquee — GPU-composited via transform only ─────────────────── */
 @keyframes marquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 .marquee {
+  will-change: transform;
+  transform: translateZ(0);           /* force GPU layer */
+  backface-visibility: hidden;
   animation: marquee 28s linear infinite;
 }
 .marquee:hover { animation-play-state: paused; }
 
-/* ── Char reveal ─────────────────────────────────────────────────── */
+/* ── Char reveal — GPU-composited ────────────────────────────────── */
 @keyframes char-in {
   0%   { opacity: 0; transform: translateY(60%) skewY(8deg); }
   100% { opacity: 1; transform: translateY(0) skewY(0deg); }
@@ -42,33 +46,41 @@ body {
 .animate-char-in {
   display: inline-block;
   opacity: 0;
+  will-change: transform, opacity;
   animation: char-in 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
 }
 
 /* ── Line reveal ─────────────────────────────────────────────────── */
 @keyframes line-in {
-  0%   { opacity: 0; transform: translateY(24px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0%   { opacity: 0; transform: translate3d(0, 24px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 .animate-line-in {
   opacity: 0;
+  will-change: transform, opacity;
   animation: line-in 0.7s cubic-bezier(0.16,1,0.3,1) forwards;
 }
 
 /* ── Code line reveal ────────────────────────────────────────────── */
 @keyframes code-line-in {
-  0%   { opacity: 0; transform: translateX(-8px); }
-  100% { opacity: 1; transform: translateX(0); }
+  0%   { opacity: 0; transform: translate3d(-8px, 0, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 .code-line-reveal {
   opacity: 0;
+  will-change: transform, opacity;
   animation: code-line-in 0.4s ease forwards;
 }
 
-/* ── Progress bar (how it works) ─────────────────────────────────── */
+/* ── Progress bar — scaleX avoids layout reflow ──────────────────── */
 @keyframes progress {
-  from { width: 0; }
-  to   { width: 100%; }
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.progress-bar {
+  transform-origin: left center;
+  will-change: transform;
+  animation: progress 5s linear forwards;
 }
 
 /* ── Noise overlay ───────────────────────────────────────────────── */
@@ -80,6 +92,12 @@ body {
   opacity: 0.018;
   pointer-events: none;
   z-index: 9998;
+  transform: translateZ(0);           /* own GPU layer — no repaint */
+}
+
+/* ── Section containment — isolate paint/layout per section ──────── */
+section {
+  contain: layout style;
 }
 
 /* ── Scrollbar ───────────────────────────────────────────────────── */
@@ -93,7 +111,24 @@ body {
   from { transform: rotate(360deg); }
   to   { transform: rotate(0deg); }
 }
-.animate-spin-reverse { animation: spin-reverse 2s linear infinite; }
+.animate-spin-reverse {
+  animation: spin-reverse 2s linear infinite;
+  will-change: transform;
+}
+
+/* ── Reduced motion — respect accessibility preference ───────────── */
+@media (prefers-reduced-motion: reduce) {
+  .marquee,
+  .animate-char-in,
+  .animate-line-in,
+  .code-line-reveal,
+  .progress-bar,
+  .animate-spin-reverse {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
 
 /* ── Tailwind 4 theme ────────────────────────────────────────────── */
 @theme inline {

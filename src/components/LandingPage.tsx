@@ -1,19 +1,117 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useSignIn } from "@clerk/nextjs";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, CheckCircle, CircleNotch, EnvelopeSimple, X } from "@phosphor-icons/react";
+import { ArrowRight, CheckCircle, CircleNotch, X } from "@phosphor-icons/react";
 import AnimatedLogo from "./AnimatedLogo";
 
-// ── Types ──────────────────────────────────────────────────────────
-interface HeroWord {
-  text: string;
-  animated: boolean;
-}
+// ── Static data (outside component — never recreated on render) ────
+const STATS = [
+  { val: "94.8%", label: "ICP match rate",    brand: "TIER 1" },
+  { val: "18×",   label: "signals detected",  brand: "DAILY"  },
+  { val: "< 3s",  label: "crawl latency",     brand: "P99"    },
+  { val: "1,200+",label: "revenue leaders",   brand: "USERS"  },
+] as const;
 
-// ── Char-by-char animated word ─────────────────────────────────────
-function AnimatedWord({ word, delay = 0 }: { word: string; delay?: number }) {
+const MARQUEE_ITEMS = [...STATS, ...STATS]; // pre-duplicated, stable reference
+
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "IntelScout AI",
+  operatingSystem: "All",
+  applicationCategory: "BusinessApplication",
+  description: "Real-time AI crawler, technographics parser, and account qualification scoring engine.",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+};
+
+const JSON_LD_STR = JSON.stringify(JSON_LD); // serialised once
+
+const GRID_ROWS  = [12.5, 25, 37.5, 50, 62.5, 75, 87.5];
+const GRID_COLS  = [8.33, 16.66, 25, 33.33, 41.66, 50, 58.33, 66.66, 75, 83.33, 91.66];
+
+const FEATURES = [
+  {
+    num: "01",
+    title: "Continuous Crawler Engine",
+    body: "Scrapes web infrastructure, hiring targets, corporate news, and pricing tables automatically. Eliminates manual research overhead entirely.",
+    delay: 0,
+  },
+  {
+    num: "02",
+    title: "Dynamic Intent Scoring",
+    body: "Set exact weights for compliance requirements, dev tool changes, or marketing roles. Watch matching profiles float straight to the top.",
+    delay: 0.08,
+  },
+  {
+    num: "03",
+    title: "GTM Contact Blueprints",
+    body: "Maps target accounts to buying committees and writes highly contextual, personalized email sequences tailored to exact active pain points.",
+    delay: 0.16,
+  },
+  {
+    num: "04",
+    title: "Real-time Signal Feed",
+    body: "Live alerts when a target account triggers a qualifying event — funding, headcount changes, tech adoption, or compliance filings.",
+    delay: 0.24,
+  },
+] as const;
+
+const STEPS = [
+  {
+    roman: "I",
+    title: "Define your ICP",
+    body: "Describe your offer and ideal customer. IntelScout compiles a full GTM blueprint — ICP fit, pain map, and signal weights.",
+    active: true,
+  },
+  {
+    roman: "II",
+    title: "Crawl & score accounts",
+    body: "The crawler monitors thousands of domains continuously, scoring each account against your qualification vectors in real-time.",
+    active: false,
+  },
+  {
+    roman: "III",
+    title: "Launch personalized outreach",
+    body: "Export AI-written email sequences, call scripts, and LinkedIn hooks tailored to each account's exact active signals.",
+    active: false,
+  },
+] as const;
+
+const CODE_LINES = [
+  { line: 1, delay: 0,   text: 'import { intelscout } from "@/core"' },
+  { line: 2, delay: 80,  text: '' },
+  { line: 3, delay: 160, text: 'intelscout.crawl({' },
+  { line: 4, delay: 240, text: "  source: 'your-domain.com'," },
+  { line: 5, delay: 320, text: '  sync: true,' },
+  { line: 6, delay: 400, text: '  signals: ["hiring","pricing"]' },
+  { line: 7, delay: 480, text: '})' },
+] as const;
+
+// ── Framer motion variants (stable object references) ─────────────
+const FADE_UP = {
+  initial:    { opacity: 0, y: 16 },
+  whileInView:{ opacity: 1, y: 0  },
+  viewport:   { once: true         },
+  transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
+};
+
+const MODAL_VARIANTS = {
+  initial:    { scale: 0.94, opacity: 0, y: 12 },
+  animate:    { scale: 1,    opacity: 1, y: 0  },
+  exit:       { scale: 0.94, opacity: 0, y: 12 },
+  transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] as const },
+};
+
+// ── Memoised sub-components ────────────────────────────────────────
+const AnimatedWord = React.memo(function AnimatedWord({
+  word,
+  delay = 0,
+}: {
+  word: string;
+  delay?: number;
+}) {
   return (
     <span className="relative inline-block">
       <span className="inline-flex">
@@ -27,14 +125,18 @@ function AnimatedWord({ word, delay = 0 }: { word: string; delay?: number }) {
           </span>
         ))}
       </span>
-      {/* Highlight bar beneath */}
       <span className="absolute -bottom-1 left-0 right-0 h-[6px] bg-foreground/8 rounded-sm" />
     </span>
   );
-}
+});
 
-// ── Underline nav link ─────────────────────────────────────────────
-function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+const NavLink = React.memo(function NavLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
   return (
     <a
       href={href}
@@ -44,10 +146,9 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
       <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-foreground transition-all duration-300 group-hover:w-full" />
     </a>
   );
-}
+});
 
-// ── Feature row ────────────────────────────────────────────────────
-function FeatureRow({
+const FeatureRow = React.memo(function FeatureRow({
   num,
   title,
   body,
@@ -77,28 +178,44 @@ function FeatureRow({
       </div>
     </motion.div>
   );
-}
+});
 
 // ── Main component ─────────────────────────────────────────────────
 export default function LandingPage() {
   const { signIn, isLoaded: isSignInLoaded } = useSignIn();
-  const [showAuth, setShowAuth] = useState(false);
+
+  // Auth state
+  const [showAuth,        setShowAuth]        = useState(false);
   const [loginSubmitting, setLoginSubmitting] = useState(false);
-  const [email, setEmail] = useState("");
+
+  // Newsletter state
+  const [email,                setEmail]                = useState("");
   const [newsletterSubmitting, setNewsletterSubmitting] = useState(false);
-  const [newsletterSuccess, setNewsletterSuccess] = useState(false);
-  const [newsletterError, setNewsletterError] = useState("");
+  const [newsletterSuccess,    setNewsletterSuccess]    = useState(false);
+  const [newsletterError,      setNewsletterError]      = useState("");
+
+  // UI state
   const [heroVisible, setHeroVisible] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled,    setScrolled]    = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setHeroVisible(true), 100);
+
+    // Passive listener — never blocks scroll paint
     const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
-    return () => { clearTimeout(t); window.removeEventListener("scroll", onScroll); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
-  const handleGoogleLogin = async () => {
+  // ── Stable callbacks (useCallback) ──────────────────────────────
+  const openAuth  = useCallback(() => setShowAuth(true),  []);
+  const closeAuth = useCallback(() => setShowAuth(false), []);
+
+  const handleGoogleLogin = useCallback(async () => {
     if (!isSignInLoaded) return;
     setLoginSubmitting(true);
     try {
@@ -110,9 +227,9 @@ export default function LandingPage() {
     } catch {
       setLoginSubmitting(false);
     }
-  };
+  }, [isSignInLoaded, signIn]);
 
-  const handleOktaLogin = async () => {
+  const handleOktaLogin = useCallback(async () => {
     if (!isSignInLoaded) return;
     setLoginSubmitting(true);
     try {
@@ -124,86 +241,78 @@ export default function LandingPage() {
     } catch {
       setLoginSubmitting(false);
     }
-  };
+  }, [isSignInLoaded, signIn]);
 
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+  const handleNewsletterSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
     setNewsletterSubmitting(true);
     try {
-      const res = await fetch("/api/newsletter/subscribe", {
-        method: "POST",
+      const res  = await fetch("/api/newsletter/subscribe", {
+        method:  "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body:    JSON.stringify({ email }),
       });
       const data = await res.json();
-      if (res.ok && data.success) { setNewsletterSuccess(true); setEmail(""); }
-      else setNewsletterError(data.error || "Something went wrong.");
+      if (res.ok && data.success) {
+        setNewsletterSuccess(true);
+        setEmail("");
+      } else {
+        setNewsletterError(data.error || "Something went wrong.");
+      }
     } catch {
       setNewsletterError("Failed to connect. Please try again.");
     } finally {
       setNewsletterSubmitting(false);
     }
-  };
+  }, [email]);
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "IntelScout AI",
-    operatingSystem: "All",
-    applicationCategory: "BusinessApplication",
-    description: "Real-time AI crawler, technographics parser, and account qualification scoring engine.",
-    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-  };
-
-  const stats = [
-    { val: "94.8%", label: "ICP match rate", brand: "TIER 1" },
-    { val: "18×",   label: "signals detected", brand: "DAILY" },
-    { val: "< 3s",  label: "crawl latency",   brand: "P99" },
-    { val: "1,200+",label: "revenue leaders", brand: "USERS" },
-  ];
+  const onEmailChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value),
+    [],
+  );
 
   return (
     <div className="relative min-h-screen bg-white text-foreground overflow-x-hidden noise-overlay font-roboto">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON_LD_STR }} />
 
-      {/* ── Subtle grid overlay ─────────────────────────────── */}
+      {/* ── Grid overlay — static, no JS rendering ───────────── */}
       <div className="fixed inset-0 pointer-events-none z-0 opacity-[0.35]" aria-hidden>
-        {[12.5, 25, 37.5, 50, 62.5, 75, 87.5].map((t) => (
+        {GRID_ROWS.map((t) => (
           <div key={t} className="absolute h-px bg-foreground/10 left-0 right-0" style={{ top: `${t}%` }} />
         ))}
-        {[8.33, 16.66, 25, 33.33, 41.66, 50, 58.33, 66.66, 75, 83.33, 91.66].map((l) => (
+        {GRID_COLS.map((l) => (
           <div key={l} className="absolute w-px bg-foreground/10 top-0 bottom-0" style={{ left: `${l}%` }} />
         ))}
       </div>
 
-      {/* ── Navigation ──────────────────────────────────────── */}
+      {/* ── Navigation ──────────────────────────────────────────── */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled ? "bg-white/90 backdrop-blur-md border-b border-foreground/8 shadow-sm" : ""
         }`}
       >
-        <nav className="max-w-[1400px] mx-auto px-6 lg:px-10 h-18 flex items-center justify-between" style={{ height: 72 }}>
-          {/* Logo */}
+        <nav
+          className="max-w-[1400px] mx-auto px-6 lg:px-10 flex items-center justify-between"
+          style={{ height: 72 }}
+        >
           <AnimatedLogo className="w-5 h-5" showText={true} />
 
-          {/* Center nav */}
           <div className="hidden md:flex items-center gap-10">
             <NavLink href="#features">Features</NavLink>
             <NavLink href="#how-it-works">How it works</NavLink>
             <NavLink href="#newsletter">GTM Digest</NavLink>
           </div>
 
-          {/* Right actions */}
           <div className="flex items-center gap-4">
             <button
-              onClick={() => setShowAuth(true)}
+              onClick={openAuth}
               className="text-sm text-foreground/60 hover:text-foreground transition-colors duration-300 font-roboto hidden md:block"
             >
               Sign in
             </button>
             <button
-              onClick={() => setShowAuth(true)}
+              onClick={openAuth}
               className="inline-flex items-center gap-2 bg-foreground hover:bg-foreground/85 text-white text-sm font-bold rounded-full px-6 h-10 transition-all duration-300 group font-roboto"
             >
               Get started
@@ -213,43 +322,32 @@ export default function LandingPage() {
         </nav>
       </header>
 
-      {/* ── Hero ─────────────────────────────────────────────── */}
+      {/* ── Hero ─────────────────────────────────────────────────── */}
       <section className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-20">
         <div className="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-10 py-32 lg:py-40">
 
-          {/* Eyebrow */}
-          <div
-            className="animate-line-in mb-8"
-            style={{ animationDelay: "200ms" }}
-          >
+          <div className="animate-line-in mb-8" style={{ animationDelay: "200ms" }}>
             <span className="inline-flex items-center gap-3 text-sm font-roboto-mono text-foreground/40">
               <span className="w-8 h-px bg-foreground/30 inline-block" />
               The GTM intelligence platform
             </span>
           </div>
 
-          {/* Giant headline */}
           <div className="mb-12">
             <h1
               className="font-black leading-[0.88] tracking-tight font-roboto"
               style={{ fontSize: "clamp(3.5rem, 11vw, 9.5rem)" }}
             >
-              <span
-                className="block animate-line-in"
-                style={{ animationDelay: "350ms" }}
-              >
+              <span className="block animate-line-in" style={{ animationDelay: "350ms" }}>
                 Qualify B2B
               </span>
               <span className="block">
                 accounts to{" "}
-                {heroVisible && (
-                  <AnimatedWord word="win." delay={550} />
-                )}
+                {heroVisible && <AnimatedWord word="win." delay={550} />}
               </span>
             </h1>
           </div>
 
-          {/* Sub-headline + CTA side-by-side */}
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-end">
             <p
               className="text-xl lg:text-2xl text-foreground/50 leading-relaxed max-w-xl font-light animate-line-in"
@@ -265,7 +363,7 @@ export default function LandingPage() {
               style={{ animationDelay: "620ms" }}
             >
               <button
-                onClick={() => setShowAuth(true)}
+                onClick={openAuth}
                 className="inline-flex items-center gap-2.5 bg-foreground hover:bg-foreground/85 text-white font-bold text-base rounded-full px-8 h-14 transition-all duration-300 group font-roboto"
               >
                 Start free trial
@@ -281,13 +379,13 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* ── Scrolling stats marquee ─────────────────────── */}
+        {/* ── Marquee stats strip ─────────────────────────────── */}
         <div
           className="absolute bottom-12 left-0 right-0 animate-line-in overflow-hidden"
           style={{ animationDelay: "800ms" }}
         >
           <div className="flex gap-16 marquee whitespace-nowrap select-none">
-            {[...stats, ...stats].map((s, i) => (
+            {MARQUEE_ITEMS.map((s, i) => (
               <div key={i} className="flex items-baseline gap-4 shrink-0">
                 <span
                   className="font-black font-roboto"
@@ -307,20 +405,16 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Features ─────────────────────────────────────────── */}
+      {/* ── Features ──────────────────────────────────────────────── */}
       <section id="features" className="relative py-24 lg:py-32 bg-white">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
-
           <div className="mb-16 lg:mb-24">
             <span className="inline-flex items-center gap-3 text-sm font-roboto-mono text-foreground/40 mb-6">
               <span className="w-8 h-px bg-foreground/30 inline-block" />
               Capabilities
             </span>
             <motion.h2
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              {...FADE_UP}
               className="text-4xl lg:text-6xl font-black tracking-tight font-roboto leading-tight"
             >
               Everything you need.<br />
@@ -329,37 +423,15 @@ export default function LandingPage() {
           </div>
 
           <div>
-            <FeatureRow
-              num="01"
-              title="Continuous Crawler Engine"
-              body="Scrapes web infrastructure, hiring targets, corporate news, and pricing tables automatically. Eliminates manual research overhead entirely."
-              delay={0}
-            />
-            <FeatureRow
-              num="02"
-              title="Dynamic Intent Scoring"
-              body="Set exact weights for compliance requirements, dev tool changes, or marketing roles. Watch matching profiles float straight to the top."
-              delay={0.08}
-            />
-            <FeatureRow
-              num="03"
-              title="GTM Contact Blueprints"
-              body="Maps target accounts to buying committees and writes highly contextual, personalized email sequences tailored to exact active pain points."
-              delay={0.16}
-            />
-            <FeatureRow
-              num="04"
-              title="Real-time Signal Feed"
-              body="Live alerts when a target account triggers a qualifying event — funding, headcount changes, tech adoption, or compliance filings."
-              delay={0.24}
-            />
+            {FEATURES.map((f) => (
+              <FeatureRow key={f.num} {...f} />
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── How it works — inverted black section ────────────── */}
+      {/* ── How it works ──────────────────────────────────────────── */}
       <section id="how-it-works" className="relative py-24 lg:py-32 bg-foreground text-white overflow-hidden">
-        {/* Diagonal stripe texture */}
         <div
           className="absolute inset-0 opacity-[0.03] pointer-events-none"
           style={{
@@ -387,28 +459,8 @@ export default function LandingPage() {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
-            {/* Steps */}
             <div className="space-y-0">
-              {[
-                {
-                  roman: "I",
-                  title: "Define your ICP",
-                  body: "Describe your offer and ideal customer. IntelScout compiles a full GTM blueprint — ICP fit, pain map, and signal weights.",
-                  active: true,
-                },
-                {
-                  roman: "II",
-                  title: "Crawl & score accounts",
-                  body: "The crawler monitors thousands of domains continuously, scoring each account against your qualification vectors in real-time.",
-                  active: false,
-                },
-                {
-                  roman: "III",
-                  title: "Launch personalized outreach",
-                  body: "Export AI-written email sequences, call scripts, and LinkedIn hooks tailored to each account's exact active signals.",
-                  active: false,
-                },
-              ].map((step) => (
+              {STEPS.map((step) => (
                 <div
                   key={step.roman}
                   className={`w-full text-left py-8 border-b border-white/10 transition-all duration-500 group ${
@@ -424,7 +476,8 @@ export default function LandingPage() {
                       <p className="text-white/50 leading-relaxed font-light font-roboto">{step.body}</p>
                       {step.active && (
                         <div className="mt-4 h-px bg-white/20 overflow-hidden">
-                          <div className="h-full bg-white" style={{ animation: "progress 5s linear forwards" }} />
+                          {/* scaleX avoids width layout reflow */}
+                          <div className="h-full bg-white progress-bar" />
                         </div>
                       )}
                     </div>
@@ -433,7 +486,6 @@ export default function LandingPage() {
               ))}
             </div>
 
-            {/* Terminal preview */}
             <div className="lg:sticky lg:top-32 self-start">
               <div className="border border-white/10 overflow-hidden">
                 <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between">
@@ -446,15 +498,7 @@ export default function LandingPage() {
                 </div>
                 <div className="p-7 font-roboto-mono text-sm min-h-[260px]">
                   <pre className="text-white/60 leading-loose">
-                    {[
-                      { line: 1, delay: 0,   text: 'import { intelscout } from "@/core"' },
-                      { line: 2, delay: 80,  text: '' },
-                      { line: 3, delay: 160, text: 'intelscout.crawl({' },
-                      { line: 4, delay: 240, text: "  source: 'your-domain.com'," },
-                      { line: 5, delay: 320, text: '  sync: true,' },
-                      { line: 6, delay: 400, text: '  signals: ["hiring","pricing"]' },
-                      { line: 7, delay: 480, text: '})' },
-                    ].map((l) => (
+                    {CODE_LINES.map((l) => (
                       <div
                         key={l.line}
                         className="code-line-reveal"
@@ -476,11 +520,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Newsletter ────────────────────────────────────────── */}
+      {/* ── Newsletter ─────────────────────────────────────────────── */}
       <section id="newsletter" className="relative py-24 lg:py-32 bg-white">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
           <div className="max-w-2xl mx-auto text-center">
-
             <span className="inline-flex items-center gap-3 text-sm font-roboto-mono text-foreground/40 mb-6">
               <span className="w-8 h-px bg-foreground/30 inline-block" />
               GTM Intelligence Digest
@@ -488,10 +531,7 @@ export default function LandingPage() {
             </span>
 
             <motion.h2
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
+              {...FADE_UP}
               className="text-4xl lg:text-6xl font-black tracking-tight font-roboto mb-6 leading-tight"
             >
               Join the GTM<br />Intelligence Circle
@@ -506,7 +546,7 @@ export default function LandingPage() {
                 placeholder="Work email"
                 value={email}
                 disabled={newsletterSubmitting || newsletterSuccess}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={onEmailChange}
                 className="flex-1 h-12 px-4 rounded-full border border-foreground/15 focus:border-foreground/40 focus:outline-none text-sm font-roboto text-foreground placeholder-foreground/30 bg-white transition"
               />
               <button
@@ -534,7 +574,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Footer ───────────────────────────────────────────── */}
+      {/* ── Footer ────────────────────────────────────────────────── */}
       <footer className="border-t border-foreground/8 py-8 bg-white">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-10 flex flex-col md:flex-row items-center justify-between gap-4">
           <AnimatedLogo className="w-4 h-4" showText={true} />
@@ -549,7 +589,7 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      {/* ── Auth modal ────────────────────────────────────────── */}
+      {/* ── Auth modal ─────────────────────────────────────────────── */}
       <AnimatePresence>
         {showAuth && (
           <div
@@ -557,14 +597,11 @@ export default function LandingPage() {
             style={{ background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)" }}
           >
             <motion.div
-              initial={{ scale: 0.94, opacity: 0, y: 12 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.94, opacity: 0, y: 12 }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              {...MODAL_VARIANTS}
               className="bg-white border border-foreground/10 rounded-2xl shadow-2xl w-full max-w-sm p-6 relative"
             >
               <button
-                onClick={() => setShowAuth(false)}
+                onClick={closeAuth}
                 className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-foreground/5 text-foreground/40 hover:text-foreground transition"
               >
                 <X className="w-4 h-4" />
@@ -585,7 +622,6 @@ export default function LandingPage() {
                     Select authentication provider
                   </p>
 
-                  {/* Google */}
                   <button
                     onClick={handleGoogleLogin}
                     className="w-full flex items-center gap-3 px-4 py-3.5 border border-foreground/10 hover:border-foreground/25 hover:bg-foreground/[0.02] rounded-xl transition duration-200 font-bold text-sm text-foreground font-roboto"
@@ -599,7 +635,6 @@ export default function LandingPage() {
                     Continue with Google
                   </button>
 
-                  {/* Okta */}
                   <button
                     onClick={handleOktaLogin}
                     className="w-full flex items-center gap-3 px-4 py-3.5 border border-foreground/10 hover:border-foreground/25 hover:bg-foreground/[0.02] rounded-xl transition duration-200 font-bold text-sm text-foreground font-roboto"
@@ -611,7 +646,7 @@ export default function LandingPage() {
                   </button>
 
                   <button
-                    onClick={() => setShowAuth(false)}
+                    onClick={closeAuth}
                     className="w-full text-center py-2 text-xs text-foreground/30 hover:text-foreground/60 transition font-roboto mt-2"
                   >
                     Cancel
