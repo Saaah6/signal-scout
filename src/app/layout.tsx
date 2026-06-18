@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SignalScout AI - Enterprise GTM Intelligence & Qualification",
+  title: "IntelScout AI - Enterprise GTM Intelligence & Qualification",
   description: "Real-time AI crawler, technographics parser, and account qualification scoring engine.",
 };
 

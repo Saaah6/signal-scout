@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { useSignalScout, Account, getOfferCategory } from "@/context/SignalScoutContext";
+import { useIntelScout, Account, getOfferCategory } from "@/context/IntelScoutContext";
 import { ArrowLeft, Database, Download, FileText, CloudArrowUp, Play, Globe, MagnifyingGlass, CircleNotch } from "@phosphor-icons/react";
 
 export default function Stage5Import() {
-  const { setAccounts, setStep, offer, signals } = useSignalScout();
+  const { setAccounts, setStep, offer, signals } = useIntelScout();
   const [dragActive, setDragActive] = useState(false);
   const [fileName, setFileName] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -307,7 +307,7 @@ export default function Stage5Import() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "signalscout_sample_import.csv");
+    link.setAttribute("download", "intelscout_sample_import.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

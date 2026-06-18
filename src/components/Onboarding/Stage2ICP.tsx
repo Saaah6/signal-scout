@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { useSignalScout } from "@/context/SignalScoutContext";
+import { useIntelScout } from "@/context/IntelScoutContext";
 import { ArrowLeft, ArrowRight, Buildings, Cpu, Sparkle, Users, Plus, X } from "@phosphor-icons/react";
 
 export default function Stage2ICP() {
-  const { icp, setIcp, setStep } = useSignalScout();
+  const { icp, setIcp, setStep } = useIntelScout();
   const [newTech, setNewTech] = useState("");
   const [newSignal, setNewSignal] = useState("");
 
@@ -56,7 +56,7 @@ export default function Stage2ICP() {
           </div>
           <div>
             <h2 className="text-2xl font-bold tracking-tight text-white font-outfit">Ideal Customer Profile (ICP)</h2>
-            <p className="text-sm text-zinc-400">SignalScout compiled this profile based on your business offer. Customize it below.</p>
+            <p className="text-sm text-zinc-400">IntelScout compiled this profile based on your business offer. Customize it below.</p>
           </div>
         </div>
       </div>
@@ -99,7 +99,7 @@ export default function Stage2ICP() {
             <Users className="w-5 h-5" />
             <h3 className="font-semibold text-white font-outfit">Buying Committee</h3>
           </div>
-          <p className="text-xs text-zinc-400 mb-3">Key decision makers and target personas SignalScout will identify:</p>
+          <p className="text-xs text-zinc-400 mb-3">Key decision makers and target personas IntelScout will identify:</p>
           <div className="flex flex-wrap gap-2">
             {icp.buyingCommittee.map((role, idx) => (
               <span 

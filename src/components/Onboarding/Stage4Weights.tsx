@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { useSignalScout } from "@/context/SignalScoutContext";
+import { useIntelScout } from "@/context/IntelScoutContext";
 import { ArrowLeft, ArrowRight, Sliders, ToggleLeft, ToggleRight } from "@phosphor-icons/react";
 
 export default function Stage4Weights() {
-  const { signals, setSignals, setStep } = useSignalScout();
+  const { signals, setSignals, setStep } = useIntelScout();
 
   const handleToggleSignal = (id: string) => {
     setSignals(

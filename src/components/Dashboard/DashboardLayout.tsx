@@ -10,12 +10,12 @@ import CompanyDetailsDrawer from "./CompanyDetailsDrawer";
 import IntelligenceFeed from "./IntelligenceFeed";
 import SettingsPanel from "./SettingsPanel";
 import AudiencePanel from "./AudiencePanel";
-import { Account, useSignalScout } from "@/context/SignalScoutContext";
+import { Account, useIntelScout } from "@/context/IntelScoutContext";
 import { AnimatePresence } from "framer-motion";
 import { Sparkle } from "@phosphor-icons/react";
 
 export default function DashboardLayout() {
-  const { gtmSummary } = useSignalScout();
+  const { gtmSummary } = useIntelScout();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);

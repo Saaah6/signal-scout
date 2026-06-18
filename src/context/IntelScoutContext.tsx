@@ -98,7 +98,7 @@ export interface FeedEvent {
   weight: number;
 }
 
-interface SignalScoutContextType {
+interface IntelScoutContextType {
   step: number | "research" | "dashboard";
   setStep: (s: number | "research" | "dashboard") => void;
   offer: Offer;
@@ -135,12 +135,12 @@ interface SignalScoutContextType {
   logout: () => void;
 }
 
-const SignalScoutContext = createContext<SignalScoutContextType | undefined>(undefined);
+const IntelScoutContext = createContext<IntelScoutContextType | undefined>(undefined);
 
-export const useSignalScout = () => {
-  const context = useContext(SignalScoutContext);
+export const useIntelScout = () => {
+  const context = useContext(IntelScoutContext);
   if (!context) {
-    throw new Error("useSignalScout must be used within a SignalScoutProvider");
+    throw new Error("useIntelScout must be used within a IntelScoutProvider");
   }
   return context;
 };
@@ -161,7 +161,7 @@ const DEFAULT_SIGNALS: SignalConfig[] = [
   { id: "gen_hiring", name: "General Sales / Marketing Hiring", category: "weak", weight: 2, enabled: true }
 ];
 
-export const SignalScoutProvider = ({ children }: { children: ReactNode }) => {
+export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
   const [step, setStepState] = useState<number | "research" | "dashboard">(1);
   const [offer, setOffer] = useState<Offer>({
     sell: "AI Compliance Platform",
@@ -191,7 +191,7 @@ export const SignalScoutProvider = ({ children }: { children: ReactNode }) => {
 
   // Load auth state from localStorage on mount
   useEffect(() => {
-    const savedUser = localStorage.getItem("signalscout_user");
+    const savedUser = localStorage.getItem("intelscout_user");
     if (savedUser) {
       try {
         const parsed = JSON.parse(savedUser);
@@ -218,7 +218,7 @@ export const SignalScoutProvider = ({ children }: { children: ReactNode }) => {
       if (data.success && data.user) {
         setUser(data.user);
         setIsAuthenticated(true);
-        localStorage.setItem("signalscout_user", JSON.stringify(data.user));
+        localStorage.setItem("intelscout_user", JSON.stringify(data.user));
       } else {
         throw new Error(data.error || "Failed to register user");
       }
@@ -233,7 +233,7 @@ export const SignalScoutProvider = ({ children }: { children: ReactNode }) => {
       };
       setUser(fallbackUser);
       setIsAuthenticated(true);
-      localStorage.setItem("signalscout_user", JSON.stringify(fallbackUser));
+      localStorage.setItem("intelscout_user", JSON.stringify(fallbackUser));
     } finally {
       setIsAuthLoading(false);
     }
@@ -242,7 +242,7 @@ export const SignalScoutProvider = ({ children }: { children: ReactNode }) => {
   const logout = useCallback(() => {
     setUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem("signalscout_user");
+    localStorage.removeItem("intelscout_user");
   }, []);
 
   // Credit refill loop for simulated AI Rate Limiting
@@ -561,7 +561,7 @@ export const SignalScoutProvider = ({ children }: { children: ReactNode }) => {
   }, [step, accounts, signals]);
 
   return (
-    <SignalScoutContext.Provider
+    <IntelScoutContext.Provider
       value={{
         step,
         setStep,
@@ -600,6 +600,6 @@ export const SignalScoutProvider = ({ children }: { children: ReactNode }) => {
       }}
     >
       {children}
-    </SignalScoutContext.Provider>
+    </IntelScoutContext.Provider>
   );
 };

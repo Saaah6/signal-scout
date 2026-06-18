@@ -1,6 +1,6 @@
-# Implementation Plan - SignalScout AI (Next.js & TypeScript)
+# Implementation Plan - IntelScout AI (Next.js & TypeScript)
 
-SignalScout AI will be built as a full-featured, interactive Next.js application using TypeScript, TailwindCSS, and Framer Motion. The code is modularized into separate, dedicated component files rather than combined into a single file, conforming to clean architecture and modern React design patterns.
+IntelScout AI will be built as a full-featured, interactive Next.js application using TypeScript, TailwindCSS, and Framer Motion. The code is modularized into separate, dedicated component files rather than combined into a single file, conforming to clean architecture and modern React design patterns.
 
 ## User Review Required
 
@@ -22,7 +22,7 @@ We will structure the React components under `src/` (or standard Next.js directo
 - `src/app/page.tsx` - Main router switching between the **Onboarding Wizard** and the **Dashboard / Workspace**.
 
 #### [NEW] State Management
-- `src/context/SignalScoutContext.tsx` - Custom React Context handling:
+- `src/context/IntelScoutContext.tsx` - Custom React Context handling:
   - Offer definition & sales cycles (Stage 1)
   - Ideal Customer Profile (Stage 2)
   - Pain mapping & triggers (Stage 3)

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useSignalScout, Account } from "@/context/SignalScoutContext";
+import { useIntelScout, Account } from "@/context/IntelScoutContext";
 import { MagnifyingGlass, Download, Funnel, Eye, ArrowSquareOut } from "@phosphor-icons/react";
 
 interface AccountsTableProps {
@@ -9,7 +9,7 @@ interface AccountsTableProps {
 }
 
 export default function AccountsTable({ onRevealInsights }: AccountsTableProps) {
-  const { accounts, signals, userRole } = useSignalScout();
+  const { accounts, signals, userRole } = useIntelScout();
   const isMarketing = userRole === "marketing";
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTierFilter, setActiveTierFilter] = useState<"all" | 1 | 2 | 3 | 4>("all");
@@ -98,7 +98,7 @@ export default function AccountsTable({ onRevealInsights }: AccountsTableProps) 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `signalscout_gtm_export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute("download", `intelscout_gtm_export_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

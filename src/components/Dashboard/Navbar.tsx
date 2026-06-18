@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useSignalScout } from "@/context/SignalScoutContext";
+import { useIntelScout } from "@/context/IntelScoutContext";
 import { List, Shield } from "@phosphor-icons/react";
 
 interface NavbarProps {
@@ -11,7 +11,7 @@ interface NavbarProps {
 }
 
 export default function Navbar({ activeTab, setSidebarCollapsed, sidebarCollapsed }: NavbarProps) {
-  const { offer, userRole, setUserRole } = useSignalScout();
+  const { offer, userRole, setUserRole } = useIntelScout();
 
   const getTitle = () => {
     switch (activeTab) {

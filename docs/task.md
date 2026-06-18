@@ -1,6 +1,6 @@
-# Task List: SignalScout AI
+# Task List: IntelScout AI
 
-- `[x]` Initialize Next.js App in `d:\demo\signal-scout`
+- `[x]` Initialize Next.js App in `d:\demo\intel-scout`
   - `[x]` Test `create-next-app` help option
   - `[x]` Run non-interactive initialization
   - `[x]` Configure TypeScript, Tailwind CSS, and App Router
@@ -11,7 +11,7 @@
   - `[x]` Configure `tailwind.config.ts` (Stripe/Linear dark-mode palette)
   - `[x]` Style globals in `src/app/globals.css` (scrollbar, glow effects, custom scroll transitions)
 - `[x]` Create Context & State Engine
-  - `[x]` `src/context/SignalScoutContext.tsx`
+  - `[x]` `src/context/IntelScoutContext.tsx`
   - `[x]` Custom rules for generating technographics, buying committees, and trigger events based on business offer inputs
   - `[x]` Client-side qualification scoring algorithm (Opportunity Score = Fit + Intent + Timing + Signals)
   - `[x]` CSV parser and default tech company dataset

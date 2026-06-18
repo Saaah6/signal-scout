@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useSignalScout } from "@/context/SignalScoutContext";
+import { useIntelScout } from "@/context/IntelScoutContext";
 import { 
   Buildings, 
   WarningCircle, 
@@ -12,7 +12,7 @@ import {
 } from "@phosphor-icons/react";
 
 export default function KPIWidgets() {
-  const { accounts, offer } = useSignalScout();
+  const { accounts, offer } = useIntelScout();
 
   // 1. Accounts Analyzed
   const totalAnalyzed = accounts.length;

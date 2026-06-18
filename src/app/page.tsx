@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { SignalScoutProvider, useSignalScout } from "@/context/SignalScoutContext";
+import { IntelScoutProvider, useIntelScout } from "@/context/IntelScoutContext";
 import Stage1Offer from "@/components/Onboarding/Stage1Offer";
 import Stage2ICP from "@/components/Onboarding/Stage2ICP";
 import Stage3Pain from "@/components/Onboarding/Stage3Pain";
@@ -13,7 +13,7 @@ import LandingPage from "@/components/LandingPage";
 import { Target, SignOut } from "@phosphor-icons/react";
 
 function OnboardingSteps() {
-  const { step, user, logout } = useSignalScout();
+  const { step, user, logout } = useIntelScout();
 
   const getStepTitle = (s: number) => {
     switch (s) {
@@ -73,7 +73,7 @@ function OnboardingSteps() {
       <div className="w-full max-w-xl flex flex-col items-center mb-8 text-center">
         <div className="flex items-center space-x-2 text-violet-400 mb-2">
           <Target className="w-6 h-6 animate-pulse" />
-          <span className="font-extrabold text-lg tracking-wider font-outfit uppercase">SignalScout AI</span>
+          <span className="font-extrabold text-lg tracking-wider font-outfit uppercase">IntelScout AI</span>
         </div>
         <h1 className="text-xl font-bold text-white mb-4 font-outfit">Campaign Configuration</h1>
         
@@ -104,14 +104,14 @@ function OnboardingSteps() {
 }
 
 function MainAppContent() {
-  const { step, isAuthenticated, isAuthLoading } = useSignalScout();
+  const { step, isAuthenticated, isAuthLoading } = useIntelScout();
 
   if (isAuthLoading) {
     return (
       <div className="min-h-screen bg-zinc-950 flex flex-col justify-center items-center p-6 font-sans">
         <div className="flex flex-col items-center space-y-3">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500"></div>
-          <span className="text-zinc-500 text-xs font-semibold">Initializing SignalScout Engine...</span>
+          <span className="text-zinc-500 text-xs font-semibold">Initializing IntelScout Engine...</span>
         </div>
       </div>
     );
@@ -138,8 +138,8 @@ function MainAppContent() {
 
 export default function Page() {
   return (
-    <SignalScoutProvider>
+    <IntelScoutProvider>
       <MainAppContent />
-    </SignalScoutProvider>
+    </IntelScoutProvider>
   );
 }

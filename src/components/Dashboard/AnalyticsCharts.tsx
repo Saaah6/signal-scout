@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSignalScout } from "@/context/SignalScoutContext";
+import { useIntelScout } from "@/context/IntelScoutContext";
 import { ChartBar, ChartPie, Radio, TrendUp } from "@phosphor-icons/react";
 
 export default function AnalyticsCharts() {
-  const { accounts, signals, feedEvents, lastSignalAt } = useSignalScout();
+  const { accounts, signals, feedEvents, lastSignalAt } = useIntelScout();
   const [hoveredBar, setHoveredBar] = useState<number | null>(null);
   const [hoveredTech, setHoveredTech] = useState<number | null>(null);
   const [hoveredSig, setHoveredSig] = useState<number | null>(null);

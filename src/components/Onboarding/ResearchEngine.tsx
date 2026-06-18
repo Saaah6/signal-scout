@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useSignalScout } from "@/context/SignalScoutContext";
+import { useIntelScout } from "@/context/IntelScoutContext";
 import { Terminal, ShieldCheck, CheckCircle } from "@phosphor-icons/react";
 
 export default function ResearchEngine() {
@@ -13,7 +13,7 @@ export default function ResearchEngine() {
     consoleLogs, 
     addConsoleLog, 
     clearConsoleLogs 
-  } = useSignalScout();
+  } = useIntelScout();
 
   useEffect(() => {
     clearConsoleLogs();

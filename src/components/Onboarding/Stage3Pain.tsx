@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { useSignalScout } from "@/context/SignalScoutContext";
+import { useIntelScout } from "@/context/IntelScoutContext";
 import { ArrowLeft, ArrowRight, Warning, Lightning, Eye, Lightbulb, TrendUp } from "@phosphor-icons/react";
 
 export default function Stage3Pain() {
-  const { painMap, setStep } = useSignalScout();
+  const { painMap, setStep } = useIntelScout();
 
   if (!painMap) return null;
 
@@ -20,7 +20,7 @@ export default function Stage3Pain() {
           </div>
           <div>
             <h2 className="text-2xl font-bold tracking-tight text-white font-outfit">Pain Mapping Blueprint</h2>
-            <p className="text-sm text-zinc-400">SignalScout maps core problem statements to operational pains, triggers, and motivations.</p>
+            <p className="text-sm text-zinc-400">IntelScout maps core problem statements to operational pains, triggers, and motivations.</p>
           </div>
         </div>
       </div>

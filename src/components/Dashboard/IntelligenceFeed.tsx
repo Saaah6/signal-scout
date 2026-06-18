@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { useSignalScout } from "@/context/SignalScoutContext";
+import { useIntelScout } from "@/context/IntelScoutContext";
 import { Pulse, ShieldCheck, Flame, Info } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function IntelligenceFeed() {
-  const { feedEvents } = useSignalScout();
+  const { feedEvents } = useIntelScout();
 
   const getEventIcon = (type: "strong" | "medium" | "weak") => {
     switch (type) {

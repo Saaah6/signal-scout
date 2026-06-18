@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { useSignalScout } from "@/context/SignalScoutContext";
+import { useIntelScout } from "@/context/IntelScoutContext";
 import { Sliders, ToggleLeft, ToggleRight, ArrowsCounterClockwise, CheckCircle } from "@phosphor-icons/react";
 
 export default function SettingsPanel() {
-  const { signals, setSignals, recalculateScores, userRole } = useSignalScout();
+  const { signals, setSignals, recalculateScores, userRole } = useIntelScout();
   const [saveSuccess, setSaveSuccess] = React.useState(false);
 
   const isSales = userRole === "sales";

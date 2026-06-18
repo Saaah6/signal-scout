@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useSignalScout } from "@/context/SignalScoutContext";
+import { useIntelScout } from "@/context/IntelScoutContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Target, 
@@ -17,7 +17,7 @@ import {
 } from "@phosphor-icons/react";
 
 export default function LandingPage() {
-  const { loginWithGoogle } = useSignalScout();
+  const { loginWithGoogle } = useIntelScout();
   
   // Local state for newsletter signup
   const [email, setEmail] = useState("");
@@ -108,7 +108,7 @@ export default function LandingPage() {
             <Target className="w-5 h-5" />
           </div>
           <span className="font-bold text-base tracking-tight text-white font-outfit">
-            SignalScout <span className="text-violet-400">AI</span>
+            IntelScout <span className="text-violet-400">AI</span>
           </span>
         </div>
 
@@ -139,7 +139,7 @@ export default function LandingPage() {
 
         {/* Hero Description */}
         <p className="mt-6 text-zinc-400 text-sm sm:text-base max-w-2xl leading-relaxed font-medium">
-          SignalScout crawls target domains to monitor security changes, hiring activities, pricing expansions, and regional updates, scoring every account on automatic qualification vectors.
+          IntelScout crawls target domains to monitor security changes, hiring activities, pricing expansions, and regional updates, scoring every account on automatic qualification vectors.
         </p>
 
         {/* Google CTA Button */}
@@ -304,7 +304,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="w-full border-t border-zinc-900/60 py-6 text-center text-[10px] text-zinc-600 font-medium z-20">
-        &copy; {new Date().getFullYear()} SignalScout AI Inc. All rights reserved.
+        &copy; {new Date().getFullYear()} IntelScout AI Inc. All rights reserved.
       </footer>
 
       {/* Google Account Selector Dialog (High Fidelity Popup Simulation) */}

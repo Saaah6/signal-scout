@@ -1,8 +1,8 @@
-# SignalScout AI: The GTM Operating System
+# IntelScout AI: The GTM Operating System
 
-SignalScout is an AI GTM analyst that scans your list of target companies and tells you exactly who to contact first, why, and what to say.
+IntelScout is an AI GTM analyst that scans your list of target companies and tells you exactly who to contact first, why, and what to say.
 
-![SignalScout Dashboard Console](docs/vanta_drawer_open.png)
+![IntelScout Dashboard Console](docs/vanta_drawer_open.png)
 
 ---
 
@@ -16,7 +16,7 @@ Every GTM team asks:
 6. What angle should we use?
 7. Which accounts should be prioritized first?
 
-SignalScout automates this entire qualification, scoring, and research lifecycle.
+IntelScout automates this entire qualification, scoring, and research lifecycle.
 
 ---
 
@@ -51,7 +51,7 @@ SignalScout automates this entire qualification, scoring, and research lifecycle
 
 ## 📂 Project Directory Structure
 ```
-signal-scout/
+intel-scout/
 ├── docs/                      # Verification reports and visual assets
 │   ├── implementation_plan.md
 │   ├── task.md
@@ -64,7 +64,7 @@ signal-scout/
 │   │   ├── layout.tsx         # HTML shell wrapper
 │   │   └── page.tsx           # Step router dispatcher
 │   ├── context/
-│   │   └── SignalScoutContext.tsx # Central GTM logic state and simulators
+│   │   └── IntelScoutContext.tsx # Central GTM logic state and simulators
 │   └── components/
 │       ├── Onboarding/        # Stages 1 to 6 setup wizard components
 │       │   ├── Stage1Offer.tsx

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useSignalScout } from "@/context/SignalScoutContext";
+import { useIntelScout } from "@/context/IntelScoutContext";
 import { 
   SquaresFour, 
   Table, 
@@ -22,7 +22,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ activeTab, setActiveTab, collapsed, setCollapsed }: SidebarProps) {
-  const { setStep, accounts, user, logout } = useSignalScout();
+  const { setStep, accounts, user, logout } = useIntelScout();
 
   const navItems = [
     { id: "dashboard", label: "Analytics Overview", icon: SquaresFour },
@@ -46,7 +46,7 @@ export default function Sidebar({ activeTab, setActiveTab, collapsed, setCollaps
           </div>
           {!collapsed && (
             <span className="font-bold text-sm tracking-tight text-white font-outfit truncate">
-              SignalScout <span className="text-violet-400">AI</span>
+              IntelScout <span className="text-violet-400">AI</span>
             </span>
           )}
         </div>
