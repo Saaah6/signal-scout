@@ -10,10 +10,10 @@ import Stage5Import from "@/components/Onboarding/Stage5Import";
 import ResearchEngine from "@/components/Onboarding/ResearchEngine";
 import DashboardLayout from "@/components/Dashboard/DashboardLayout";
 import LandingPage from "@/components/LandingPage";
-import { Target } from "@phosphor-icons/react";
+import { Target, SignOut } from "@phosphor-icons/react";
 
 function OnboardingSteps() {
-  const { step } = useSignalScout();
+  const { step, user, logout } = useSignalScout();
 
   const getStepTitle = (s: number) => {
     switch (s) {
@@ -41,6 +41,30 @@ function OnboardingSteps() {
 
   return (
     <div className="min-h-screen bg-zinc-950 flex flex-col justify-center items-center p-6 relative overflow-hidden font-sans">
+      {/* Absolute positioned floating profile & signout */}
+      {user && (
+        <div className="absolute top-6 right-6 flex items-center space-x-3 bg-zinc-900/40 border border-zinc-800 rounded-full py-1.5 pl-2.5 pr-4 shadow-lg backdrop-blur-md z-40">
+          <img 
+            src={user.avatar} 
+            alt={user.name} 
+            className="w-5 h-5 rounded-full ring-1 ring-violet-500/30"
+          />
+          <div className="flex flex-col text-left">
+            <span className="text-[10px] font-bold text-white max-w-[100px] truncate leading-tight font-outfit">{user.name}</span>
+            <span className="text-[8px] text-zinc-500 truncate leading-none max-w-[100px]">{user.email}</span>
+          </div>
+          <div className="w-px h-5 bg-zinc-800" />
+          <button
+            onClick={logout}
+            className="text-zinc-400 hover:text-red-400 transition text-[9px] font-bold flex items-center space-x-1.5 uppercase tracking-wider cursor-pointer"
+            title="Sign Out"
+          >
+            <SignOut className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Sign Out</span>
+          </button>
+        </div>
+      )}
+
       {/* Decorative Blur Backgrounds */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-violet-650/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-emerald-650/5 rounded-full blur-3xl pointer-events-none" />
@@ -51,7 +75,7 @@ function OnboardingSteps() {
           <Target className="w-6 h-6 animate-pulse" />
           <span className="font-extrabold text-lg tracking-wider font-outfit uppercase">SignalScout AI</span>
         </div>
-        <h1 className="text-xl font-bold text-white mb-4 font-outfit">Campaign Campaign Configuration</h1>
+        <h1 className="text-xl font-bold text-white mb-4 font-outfit">Campaign Configuration</h1>
         
         {/* Progress bar dots */}
         <div className="flex items-center space-x-2 w-full max-w-sm mt-2">
