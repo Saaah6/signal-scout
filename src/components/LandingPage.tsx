@@ -285,12 +285,11 @@ export default function LandingPage() {
       <section className="relative overflow-hidden pt-32 lg:pt-48 pb-16 lg:pb-24">
         <div className="relative z-10 max-w-[1100px] mx-auto w-full px-6 lg:px-8 flex flex-col md:items-center text-left md:text-center">
 
-          {/* Eyebrow */}
+          {/* Eyebrow Badge */}
           <div className="animate-line-in mb-6 w-full flex md:justify-center" style={{ animationDelay: "200ms" }}>
-            <span className="inline-flex items-center gap-3 text-[13px] md:text-sm font-roboto-mono text-[#888888]">
-              <span className="w-6 md:w-8 h-px bg-black/25 inline-block" />
-              The GTM intelligence platform
-            </span>
+            <div className="inline-flex items-center px-3.5 py-1.5 rounded-full bg-black/[0.03] border border-black/10 text-[13px] font-medium text-[#444] font-roboto">
+              Signal Intelligence for Revenue Teams
+            </div>
           </div>
 
           {/* Headline */}
