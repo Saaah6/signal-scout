@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useIntelScout } from "@/context/IntelScoutContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, CheckCircle, CircleNotch, X, GoogleLogo } from "@phosphor-icons/react";
+import { ArrowRight, CheckCircle, CircleNotch, X, GoogleLogo, WarningCircle } from "@phosphor-icons/react";
 import AnimatedLogo from "./AnimatedLogo";
 
 // ── Static data ────────────────────────────────────────────────────
@@ -146,6 +146,12 @@ export default function LandingPage() {
   const handleGoogleLogin = useCallback(async () => {
     setLoginSubmitting(true);
     await loginWithEmail("demo@google.com", "Google User");
+    setLoginSubmitting(false);
+  }, [loginWithEmail]);
+
+  const handleOktaLogin = useCallback(async () => {
+    setLoginSubmitting(true);
+    await loginWithEmail("okta@demo.com", "Okta User");
     setLoginSubmitting(false);
   }, [loginWithEmail]);
 
@@ -480,54 +486,39 @@ export default function LandingPage() {
                   <span className="text-sm text-[#888888] font-roboto">Redirecting…</span>
                 </div>
               ) : (
-                <form onSubmit={handleEmailLogin} className="space-y-4">
-                  <p className="text-[11px] font-roboto-mono text-[#aaaaaa] uppercase tracking-widest text-center mb-5">
-                    Sign in or create account
-                  </p>
+                <div className="space-y-4 w-full">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="h-px bg-black/10 flex-1" />
+                    <span className="text-[10px] uppercase font-roboto-mono text-[#aaaaaa]">Select authentication provider</span>
+                    <div className="h-px bg-black/10 flex-1" />
+                  </div>
 
                   <button
                     type="button"
                     onClick={handleGoogleLogin}
-                    className="w-full relative z-10 flex items-center justify-center gap-2 px-4 py-3.5 bg-white border border-black/10 hover:bg-black/5 text-black rounded-xl transition duration-200 font-bold text-sm font-roboto cursor-pointer"
+                    className="w-full relative z-10 flex items-center gap-3 px-4 py-3.5 bg-white border border-black/10 hover:bg-black/5 text-black rounded-xl transition duration-200 text-sm font-roboto font-medium cursor-pointer"
                   >
-                    <GoogleLogo className="w-5 h-5" weight="bold" />
+                    <GoogleLogo className="w-4 h-4 text-black" weight="bold" />
                     Continue with Google
                   </button>
 
-                  <div className="flex items-center gap-3 my-4">
-                    <div className="h-px bg-black/10 flex-1" />
-                    <span className="text-[10px] uppercase font-roboto-mono text-[#aaaaaa]">OR</span>
-                    <div className="h-px bg-black/10 flex-1" />
-                  </div>
-
-                  <div>
-                    <label className="sr-only">Email address</label>
-                    <input
-                      type="email"
-                      required
-                      value={authEmail}
-                      onChange={(e) => setAuthEmail(e.target.value)}
-                      placeholder="name@company.com"
-                      className="w-full bg-white border border-black/10 rounded-xl px-4 py-3.5 text-sm font-roboto focus:outline-none focus:border-black/30 transition"
-                    />
-                  </div>
-
                   <button
-                    type="submit"
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3.5 bg-black hover:bg-[#1a1a1a] text-white rounded-xl transition duration-200 font-bold text-sm font-roboto"
+                    type="button"
+                    onClick={handleOktaLogin}
+                    className="w-full relative z-10 flex items-center gap-3 px-4 py-3.5 bg-white border border-black/10 hover:bg-black/5 text-black rounded-xl transition duration-200 text-sm font-roboto font-medium cursor-pointer"
                   >
-                    Continue with Email
-                    <ArrowRight className="w-4 h-4" />
+                    <WarningCircle className="w-4 h-4 text-black" />
+                    Continue with Okta SSO
                   </button>
 
                   <button
                     type="button"
                     onClick={closeAuth}
-                    className="w-full text-center py-2 text-xs text-[#aaaaaa] hover:text-[#555555] transition font-roboto mt-2"
+                    className="w-full text-center pt-2 pb-1 text-[11px] text-[#aaaaaa] hover:text-[#555555] transition font-roboto mt-4"
                   >
                     Cancel
                   </button>
-                </form>
+                </div>
               )}
             </motion.div>
           </div>
