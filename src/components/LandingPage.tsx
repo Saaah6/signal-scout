@@ -213,7 +213,7 @@ const PanelOutreach = React.memo(function PanelOutreach() {
 
 function ScrollStep({ step, index, activeStep, onStepEnter }: { step: any, index: number, activeStep: number, onStepEnter: (i: number) => void }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { margin: "-45% 0px -45% 0px" });
+  const isInView = useInView(ref, { margin: "-30% 0px -30% 0px" });
 
   useEffect(() => {
     if (isInView) {
@@ -222,12 +222,12 @@ function ScrollStep({ step, index, activeStep, onStepEnter }: { step: any, index
   }, [isInView, index, onStepEnter]);
 
   return (
-    <div ref={ref} className="min-h-[55vh] flex flex-col justify-center py-10">
-      <div className={`w-full text-left py-8 transition-all duration-700 ${activeStep === index ? "opacity-100" : "opacity-20"}`}>
+    <div ref={ref} className="pb-24 flex flex-col justify-center">
+      <div className={`w-full text-left transition-all duration-700 ${activeStep === index ? "opacity-100" : "opacity-30"}`}>
         <div className="flex items-start gap-6">
           <span className="font-black text-3xl text-[#555] font-roboto shrink-0">{step.roman}</span>
           <div className="flex-1">
-            <h3 className={`text-2xl lg:text-3xl font-black mb-3 transition-all duration-500 font-roboto ${activeStep === index ? "text-white translate-x-2" : "text-white/80"}`}>
+            <h3 className={`text-2xl lg:text-3xl font-black mb-3 transition-all duration-500 font-roboto ${activeStep === index ? "text-white translate-x-1" : "text-white/60"}`}>
               {step.title}
             </h3>
             <p className="text-[#999] leading-relaxed font-normal font-roboto">{step.body}</p>
@@ -402,7 +402,7 @@ export default function LandingPage() {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 relative">
-            <div className="pb-[10vh]">
+            <div className="pt-8 pb-16">
               {STEPS.map((step, idx) => (
                 <ScrollStep 
                   key={step.roman} 
