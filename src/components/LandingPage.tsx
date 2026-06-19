@@ -188,21 +188,67 @@ const PanelOutreach = React.memo(function PanelOutreach() {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.4 }}
-      className="p-8 h-full flex flex-col justify-center min-h-[320px]"
+      className="p-6 h-full flex flex-col gap-4 min-h-[320px] bg-foreground dark:bg-[#0a0a0a]"
     >
-      <div className="bg-white/[0.03] border border-white/10 rounded-xl overflow-hidden">
-        <div className="px-5 py-3.5 border-b border-white/10 flex items-center gap-3 text-sm text-[#aaa] font-roboto">
-          <span className="text-white/50">To:</span> 
-          <span className="px-2 py-0.5 bg-white/10 rounded-md text-white border border-white/5">VP Security</span>
+      {/* Top Bar - Signal to Message Workflow */}
+      <div className="flex items-center justify-between w-full p-3 bg-white/5 border border-white/10 rounded-lg">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[11px] font-mono text-[#aaa] uppercase tracking-wider">Workflow: Signal → Sequence</span>
         </div>
-        <div className="p-6 text-[15px] text-[#ccc] leading-relaxed font-roboto">
-          Hi {'{{first_name}}'},<br/><br/>
-          Noticed you're preparing for <span className="bg-white/10 border border-white/5 text-white px-1.5 py-0.5 rounded text-[13px]">SOC2 compliance</span> and just hired a new <span className="bg-white/10 border border-white/5 text-white px-1.5 py-0.5 rounded text-[13px]">CISO</span>.<br/><br/>
-          Our platform automates evidence collection securely and efficiently.
+        <div className="flex gap-1">
+          <span className="px-2 py-1 bg-white/10 text-white text-[10px] rounded border border-white/5 font-mono">SOC2 INTENT</span>
+          <span className="px-2 py-1 bg-white/10 text-white text-[10px] rounded border border-white/5 font-mono">CISO HIRE</span>
         </div>
-        <div className="px-5 py-4 border-t border-white/10 flex justify-end bg-white/[0.02]">
-          <div className="px-4 py-2 bg-white hover:bg-[#e5e5e5] transition-colors cursor-pointer text-black text-[13px] font-bold rounded-lg shadow-sm font-roboto">
-            Launch Sequence
+      </div>
+
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Left Col - Email Preview */}
+        <div className="bg-white/[0.02] border border-white/10 rounded-xl flex flex-col h-full overflow-hidden">
+          <div className="px-4 py-2.5 border-b border-white/10 bg-white/[0.01] flex items-center gap-2 text-xs text-[#888] font-roboto">
+            <span className="w-2 h-2 rounded-full bg-red-400/50" />
+            <span className="w-2 h-2 rounded-full bg-amber-400/50" />
+            <span className="w-2 h-2 rounded-full bg-green-400/50" />
+            <span className="ml-2 font-mono">Email Generation</span>
+          </div>
+          <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between text-[11px] text-[#aaa]">
+            <div className="flex gap-2">
+              <span className="text-white/40">To:</span> 
+              <span className="text-white bg-white/10 px-1.5 py-0.5 rounded">alex@target.com</span>
+            </div>
+            <span className="text-white/40">Subj: Streamline SOC2</span>
+          </div>
+          <div className="p-4 text-[13px] text-[#ccc] leading-relaxed font-roboto flex-1 overflow-y-auto">
+            Hi Alex,<br/><br/>
+            Saw the news about your recent appointment as <span className="text-emerald-400 bg-emerald-400/10 px-1 rounded">CISO</span>—congrats!<br/><br/>
+            Noticed you are ramping up for a <span className="text-amber-400 bg-amber-400/10 px-1 rounded">SOC2 Type II</span> audit next quarter. Our engine automates the evidence collection, saving typical teams 400+ hours.<br/><br/>
+            Open to a brief chat to see how we could help?
+          </div>
+        </div>
+
+        {/* Right Col - LinkedIn & Controls */}
+        <div className="flex flex-col gap-4 h-full">
+          {/* LinkedIn Preview */}
+          <div className="bg-[#0A66C2]/10 border border-[#0A66C2]/30 rounded-xl flex-1 flex flex-col overflow-hidden relative">
+            <div className="px-4 py-2 bg-[#0A66C2]/20 border-b border-[#0A66C2]/30 text-[11px] font-bold text-white flex items-center gap-2">
+              <div className="w-3 h-3 bg-white rounded-sm flex justify-center items-center text-[#0A66C2] text-[8px]">in</div>
+              LinkedIn Connect
+            </div>
+            <div className="p-4 text-[12px] text-white/90 leading-relaxed font-roboto relative z-10">
+              "Hi Alex, massive congrats on taking the CISO role! I've been following your work since Stripe. Let's connect."
+            </div>
+            {/* Decorative background element */}
+            <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-[#0A66C2]/20 rounded-full blur-xl pointer-events-none" />
+          </div>
+
+          {/* Action Box */}
+          <div className="p-4 bg-white/[0.03] border border-white/10 rounded-xl flex flex-col justify-center items-center gap-3">
+            <div className="text-[11px] text-[#888] font-mono text-center">
+              Personalization confidence: <span className="text-emerald-400">98%</span>
+            </div>
+            <button className="w-full py-2.5 bg-white hover:bg-[#e5e5e5] text-black text-xs font-bold rounded-lg shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all transform hover:scale-[1.02]">
+              Launch Omni-Channel Sequence
+            </button>
           </div>
         </div>
       </div>
