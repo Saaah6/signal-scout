@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 
 export const NavLink = React.memo(function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <a href={href} className="text-[13px] font-medium text-foreground/60 hover:text-foreground hover:bg-foreground/5 px-3.5 py-1.5 rounded-full transition-all duration-200 font-roboto">
+    <a href={href} className="text-[13px] font-semibold text-foreground/70 hover:text-foreground hover:bg-foreground/[0.08] px-3 py-1.5 rounded-full transition-all duration-200 font-roboto flex items-center gap-1.5">
       {children}
     </a>
   );
@@ -46,11 +46,13 @@ export default function Navbar({ onOpenAuth }: { onOpenAuth: () => void }) {
           <AnimatedLogo className="w-5 h-5" showText={true} />
         </div>
 
-        {/* Nav links — perfectly centred */}
-        <div className="hidden md:flex items-center justify-center gap-1 flex-1">
-          <NavLink href="#features">Platform</NavLink>
-          <NavLink href="#how-it-works">Intelligence</NavLink>
-          <NavLink href="#newsletter">Digest</NavLink>
+        {/* Nav links — perfectly centred inside a pill group */}
+        <div className="hidden md:flex items-center justify-center flex-1">
+          <div className="flex items-center gap-0.5 p-1 bg-foreground/[0.03] border border-border-light rounded-full">
+            <NavLink href="#features">Signals</NavLink>
+            <NavLink href="#how-it-works">Workflow</NavLink>
+            <NavLink href="#newsletter">Digest</NavLink>
+          </div>
         </div>
 
         {/* Right */}
