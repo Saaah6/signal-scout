@@ -222,7 +222,7 @@ function ScrollStep({ step, index, activeStep, onStepEnter }: { step: any, index
   }, [isInView, index, onStepEnter]);
 
   return (
-    <div ref={ref} className="min-h-[40vh] flex flex-col justify-center py-8">
+    <div ref={ref} className="pb-[20vh] md:pb-[30vh]">
       <div className={`w-full text-left transition-all duration-700 ${activeStep === index ? "opacity-100" : "opacity-30"}`}>
         <div className="flex items-start gap-6">
           <span className={`font-black text-3xl font-roboto shrink-0 transition-colors duration-500 ${activeStep === index ? "text-white" : "text-[#555]"}`}>
