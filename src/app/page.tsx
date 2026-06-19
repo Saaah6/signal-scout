@@ -42,7 +42,7 @@ function OnboardingSteps() {
   if (typeof step === "string") return null;
 
   return (
-    <div className="min-h-screen bg-[#fafafa] flex flex-col justify-center items-center p-6 relative overflow-hidden font-sans selection:bg-black selection:text-white">
+    <div className="min-h-screen bg-transparent flex flex-col justify-center items-center p-6 relative overflow-hidden font-sans selection:bg-black selection:text-white">
       {/* Absolute positioned floating profile & signout */}
       {user && (
         <div className="absolute top-6 right-6 flex items-center space-x-2 sm:space-x-3 bg-white/80 border border-black/10 rounded-full py-1.5 px-2.5 sm:pl-2.5 sm:pr-4 shadow-sm backdrop-blur-md z-40">
@@ -66,10 +66,6 @@ function OnboardingSteps() {
           </button>
         </div>
       )}
-
-      {/* Decorative Blur Backgrounds */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-violet-500/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Setup Steps Wizard Header */}
       <div className="w-full max-w-xl flex flex-col items-center mb-8 text-center">
@@ -111,7 +107,7 @@ function MainAppContent() {
 
   if (isAuthLoading) {
     return (
-      <div className="min-h-screen bg-[#fafafa] flex flex-col justify-center items-center p-6 font-sans">
+      <div className="min-h-screen bg-transparent flex flex-col justify-center items-center p-6 font-sans">
         <div className="flex flex-col items-center space-y-3">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
           <span className="text-[#555] text-xs font-semibold">Initializing IntelScout Engine...</span>
@@ -126,7 +122,7 @@ function MainAppContent() {
 
   if (step === "research") {
     return (
-      <div className="min-h-screen bg-[#fafafa] flex flex-col justify-center items-center p-6 font-sans">
+      <div className="min-h-screen bg-transparent flex flex-col justify-center items-center p-6 font-sans">
         <ResearchEngine />
       </div>
     );

@@ -68,8 +68,7 @@ export default function Stage4Weights() {
   );
 
   return (
-    <div className="w-full max-w-4xl bg-white/60 backdrop-blur-md border border-black/10 rounded-2xl p-8 shadow-sm relative overflow-hidden">
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-violet-500/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="w-full max-w-4xl bg-white/80 backdrop-blur-md border border-black/10 rounded-2xl p-8 shadow-sm relative overflow-hidden">
       
       <div className="flex items-center justify-between mb-6 pb-4 border-b border-black/10">
         <div className="flex items-center space-x-3">
