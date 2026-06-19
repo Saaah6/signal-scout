@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { useSignIn } from "@clerk/nextjs";
+import { useIntelScout } from "@/context/IntelScoutContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, CheckCircle, CircleNotch, X } from "@phosphor-icons/react";
 import AnimatedLogo from "./AnimatedLogo";
@@ -116,10 +116,11 @@ const FeatureRow = React.memo(function FeatureRow({ num, title, body, delay = 0 
 
 // ── Main component ─────────────────────────────────────────────────
 export default function LandingPage() {
-  const { signIn, isLoaded: isSignInLoaded } = useSignIn();
+  const { loginWithEmail } = useIntelScout();
 
   const [showAuth,        setShowAuth]        = useState(false);
   const [loginSubmitting, setLoginSubmitting] = useState(false);
+  const [authEmail,       setAuthEmail]       = useState("");
   const [email,                setEmail]                = useState("");
   const [newsletterSubmitting, setNewsletterSubmitting] = useState(false);
   const [newsletterSuccess,    setNewsletterSuccess]    = useState(false);
@@ -134,33 +135,13 @@ export default function LandingPage() {
   const openAuth  = useCallback(() => setShowAuth(true),  []);
   const closeAuth = useCallback(() => setShowAuth(false), []);
 
-  const handleGoogleLogin = useCallback(async () => {
-    if (!isSignInLoaded) return;
+  const handleEmailLogin = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!authEmail) return;
     setLoginSubmitting(true);
-    try {
-      await signIn.authenticateWithRedirect({
-        strategy: "oauth_google",
-        redirectUrl: "/",
-        redirectUrlComplete: "/",
-      });
-    } catch {
-      setLoginSubmitting(false);
-    }
-  }, [isSignInLoaded, signIn]);
-
-  const handleOktaLogin = useCallback(async () => {
-    if (!isSignInLoaded) return;
-    setLoginSubmitting(true);
-    try {
-      await signIn.authenticateWithRedirect({
-        strategy: "oauth_okta",
-        redirectUrl: "/",
-        redirectUrlComplete: "/",
-      });
-    } catch {
-      setLoginSubmitting(false);
-    }
-  }, [isSignInLoaded, signIn]);
+    await loginWithEmail(authEmail, authEmail.split("@")[0]);
+    // It will automatically redirect when user state updates
+  }, [authEmail, loginWithEmail]);
 
   const handleNewsletterSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -200,7 +181,7 @@ export default function LandingPage() {
 
       {/* ── Navigation — always white, always visible ───────────── */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white" style={{ borderBottom: "1px solid rgba(0,0,0,0.1)" }}>
-        <nav className="max-w-[1400px] mx-auto px-8 lg:px-14 flex items-center justify-between" style={{ height: 68 }}>
+        <nav className="relative max-w-[1400px] mx-auto px-8 lg:px-14 flex items-center justify-between" style={{ height: 68 }}>
           {/* Logo — left */}
           <AnimatedLogo className="w-5 h-5" showText={true} />
 
@@ -253,7 +234,7 @@ export default function LandingPage() {
             </h1>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-end">
+          <div className="flex flex-col lg:flex-row gap-10 lg:gap-20 lg:items-center">
             <p
               className="text-xl lg:text-2xl text-[#444444] leading-relaxed max-w-xl font-normal animate-line-in"
               style={{ animationDelay: "500ms" }}
@@ -491,40 +472,39 @@ export default function LandingPage() {
                   <span className="text-sm text-[#888888] font-roboto">Redirecting…</span>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <form onSubmit={handleEmailLogin} className="space-y-4">
                   <p className="text-[11px] font-roboto-mono text-[#aaaaaa] uppercase tracking-widest text-center mb-5">
-                    Select authentication provider
+                    Sign in or create account
                   </p>
 
+                  <div>
+                    <label className="sr-only">Email address</label>
+                    <input
+                      type="email"
+                      required
+                      value={authEmail}
+                      onChange={(e) => setAuthEmail(e.target.value)}
+                      placeholder="name@company.com"
+                      className="w-full bg-white border border-black/10 rounded-xl px-4 py-3.5 text-sm font-roboto focus:outline-none focus:border-black/30 transition"
+                    />
+                  </div>
+
                   <button
-                    onClick={handleGoogleLogin}
-                    className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition duration-200 font-bold text-sm text-black font-roboto hover:bg-black/[0.03]"
-                    style={{ border: "1.5px solid rgba(0,0,0,0.12)" }}
+                    type="submit"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3.5 bg-black hover:bg-[#1a1a1a] text-white rounded-xl transition duration-200 font-bold text-sm font-roboto"
                   >
-                    <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.77c-.98.66-2.23 1.06-3.72 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                    </svg>
-                    Continue with Google
+                    Continue with Email
+                    <ArrowRight className="w-4 h-4" />
                   </button>
 
                   <button
-                    onClick={handleOktaLogin}
-                    className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition duration-200 font-bold text-sm text-black font-roboto hover:bg-black/[0.03]"
-                    style={{ border: "1.5px solid rgba(0,0,0,0.12)" }}
+                    type="button"
+                    onClick={closeAuth}
+                    className="w-full text-center py-2 text-xs text-[#aaaaaa] hover:text-[#555555] transition font-roboto mt-2"
                   >
-                    <svg className="w-4 h-4 shrink-0 fill-[#555555]" viewBox="0 0 24 24">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-                    </svg>
-                    Continue with Okta SSO
-                  </button>
-
-                  <button onClick={closeAuth} className="w-full text-center py-2 text-xs text-[#aaaaaa] hover:text-[#555555] transition font-roboto mt-2">
                     Cancel
                   </button>
-                </div>
+                </form>
               )}
             </motion.div>
           </div>

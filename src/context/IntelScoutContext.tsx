@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
-import { useUser, useAuth } from "@clerk/nextjs";
+
 
 export type GtmCategory = "compliance" | "hr" | "sales" | "devtools" | "general";
 export type UserRole = "admin" | "sales" | "marketing";
@@ -132,7 +132,7 @@ interface IntelScoutContextType {
   user: { email: string; name: string; avatar: string } | null;
   isAuthenticated: boolean;
   isAuthLoading: boolean;
-  loginWithGoogle: (email: string, name: string, avatar?: string) => Promise<void>;
+  loginWithEmail: (email: string, name: string, avatar?: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -186,25 +186,43 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
   const [credits, setCredits] = useState<number>(5);
   const [lastSignalAt, setLastSignalAt] = useState<number>(0);
 
-  const { user: clerkUser, isLoaded: isUserLoaded, isSignedIn } = useUser();
-  const { signOut, isLoaded: isAuthLoaded } = useAuth();
+  const [user, setUser] = useState<{ email: string; name: string; avatar: string } | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
-  const user = clerkUser ? {
-    email: clerkUser.primaryEmailAddress?.emailAddress || "",
-    name: clerkUser.fullName || clerkUser.username || "",
-    avatar: clerkUser.imageUrl || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(clerkUser.primaryEmailAddress?.emailAddress || "")}`
-  } : null;
+  useEffect(() => {
+    const storedUser = localStorage.getItem("intelscout_user");
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (e) {}
+    }
+    setIsAuthLoading(false);
+  }, []);
 
-  const isAuthenticated = !!isSignedIn;
-  const isAuthLoading = !isUserLoaded || !isAuthLoaded;
+  const isAuthenticated = !!user;
 
-  const loginWithGoogle = useCallback(async (email: string, name: string, avatar?: string) => {
-    // Legacy support, OAuth is handled directly by Clerk triggers
+  const loginWithEmail = useCallback(async (email: string, name: string, avatar?: string) => {
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, name, avatar })
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        setUser(data.user);
+        localStorage.setItem("intelscout_user", JSON.stringify(data.user));
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }, []);
 
   const logout = useCallback(() => {
-    signOut();
-  }, [signOut]);
+    setUser(null);
+    localStorage.removeItem("intelscout_user");
+    setStepState(1);
+  }, []);
 
   // Credit refill loop for simulated AI Rate Limiting
   useEffect(() => {
@@ -556,7 +574,7 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
         user,
         isAuthenticated,
         isAuthLoading,
-        loginWithGoogle,
+        loginWithEmail,
         logout
       }}
     >
