@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useIntelScout } from "@/context/IntelScoutContext";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { motion, AnimatePresence, useInView, useScroll, useMotionValueEvent } from "framer-motion";
 import { ArrowRight, CheckCircle, Robot, Target, ShieldCheck } from "@phosphor-icons/react";
 import AnimatedLogo from "./AnimatedLogo";
 import Navbar, { NavLink } from "./Navbar";
@@ -292,6 +292,22 @@ export default function LandingPage() {
   const [heroVisible, setHeroVisible] = useState(false);
   const [activeProcessStep, setActiveProcessStep] = useState(0);
 
+  const processRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: processRef,
+    offset: ["start start", "end end"]
+  });
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    if (latest < 0.33) {
+      if (activeProcessStep !== 0) setActiveProcessStep(0);
+    } else if (latest < 0.66) {
+      if (activeProcessStep !== 1) setActiveProcessStep(1);
+    } else {
+      if (activeProcessStep !== 2) setActiveProcessStep(2);
+    }
+  });
+
   useEffect(() => {
     console.log("[HMR] Scroll-story layout updated");
     const t = setTimeout(() => setHeroVisible(true), 100);
@@ -445,25 +461,42 @@ export default function LandingPage() {
             </motion.h2>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-            <div className="flex flex-col">
-              {STEPS.map((step, idx) => (
-                <ProcessStep 
-                  key={step.roman} 
-                  step={step} 
-                  index={idx} 
-                  activeStep={activeProcessStep} 
-                  onStepEnter={setActiveProcessStep} 
-                />
-              ))}
-            </div>
+          <div className="h-[300vh] relative" ref={processRef}>
+            <div className="sticky top-0 h-screen flex flex-col justify-center">
+              <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+                <div className="flex flex-col">
+                  {STEPS.map((step, idx) => (
+                    <div 
+                      key={step.roman} 
+                      className="py-6 transition-all duration-500 cursor-default"
+                    >
+                      <div className={`w-full text-left transition-all duration-500 ${activeProcessStep === idx ? "opacity-100" : "opacity-30"}`}>
+                        <div className="flex items-start gap-6">
+                          <span className={`font-black text-3xl font-roboto shrink-0 transition-colors duration-500 ${activeProcessStep === idx ? "text-foreground" : "text-[#555]"}`}>
+                            {step.roman}
+                          </span>
+                          <div className="flex-1">
+                            <h3 className={`text-2xl lg:text-3xl font-black mb-3 transition-all duration-500 font-roboto ${activeProcessStep === idx ? "text-foreground translate-x-1" : "text-foreground/60"}`}>
+                              {step.title}
+                            </h3>
+                            <p className={`leading-relaxed font-normal font-roboto transition-colors duration-500 ${activeProcessStep === idx ? "text-foreground/80" : "text-foreground/50"}`}>
+                              {step.body}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
-            <div className="relative w-full border border-white/10 rounded-2xl overflow-hidden bg-[#0a0a0a] shadow-[0_8px_30px_rgba(0,0,0,0.4)] aspect-[4/3] lg:aspect-auto lg:h-[450px]">
-              <AnimatePresence mode="wait">
-                {activeProcessStep === 0 && <PanelICP key="panel0" />}
-                {activeProcessStep === 1 && <PanelCrawl key="panel1" />}
-                {activeProcessStep === 2 && <PanelOutreach key="panel2" />}
-              </AnimatePresence>
+                <div className="relative w-full border border-border-light rounded-2xl overflow-hidden bg-background shadow-2xl aspect-[4/3] lg:aspect-auto lg:h-[450px]">
+                  <AnimatePresence mode="wait">
+                    {activeProcessStep === 0 && <PanelICP key="panel0" />}
+                    {activeProcessStep === 1 && <PanelCrawl key="panel1" />}
+                    {activeProcessStep === 2 && <PanelOutreach key="panel2" />}
+                  </AnimatePresence>
+                </div>
+              </div>
             </div>
           </div>
         </div>
