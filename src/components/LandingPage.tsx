@@ -502,49 +502,54 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Transition Layer (Final CTA & Trust Metrics) ─────────────────────────── */}
-      <section className="relative pt-24 pb-12 bg-transparent transition-colors duration-300 overflow-hidden">
+      {/* ── Pre-Footer (CTA, Newsletter, Trust) ─────────────────────────── */}
+      <section className="relative pt-12 pb-8 bg-transparent transition-colors duration-300 overflow-hidden">
         <div className="max-w-[1100px] mx-auto px-6 lg:px-8">
-          <div className="bg-[#fafafa] border border-black/10 rounded-3xl p-10 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-12">
+          <div className="bg-foreground/5 dark:bg-foreground/[0.02] border border-border-light rounded-3xl p-10 md:p-14 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-12">
             
-            <div className="relative z-10 max-w-xl">
-              <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#888] mb-4">
+            <div className="relative z-10 w-full max-w-xl">
+              <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-foreground/50 mb-4">
                 <Robot className="w-4 h-4" /> Autonomous Intelligence
               </span>
-              <h2 className="text-3xl md:text-4xl font-black tracking-tight font-roboto leading-tight text-foreground mb-6">
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight font-roboto leading-tight text-foreground mb-4">
                 Stop guessing. Start closing.
               </h2>
-              <p className="text-[#555] text-lg font-roboto mb-8">
-                Join 400+ revenue teams using IntelScout to identify high-intent buyers the moment they enter the market.
+              <p className="text-foreground/70 text-base font-roboto mb-8">
+                Join 1,200+ revenue leaders using IntelScout to identify high-intent buyers the moment they enter the market.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 w-full">
+                <input 
+                  type="email" 
+                  placeholder="Enter your work email" 
+                  className="flex-1 h-12 px-4 rounded-xl border border-border-light bg-background text-sm text-foreground focus:outline-none focus:border-foreground/30 shadow-sm"
+                />
                 <button
                   onClick={() => setShowAuth(true)}
-                  className="px-6 py-3.5 bg-black hover:bg-[#222] text-white rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2"
+                  className="px-6 h-12 bg-foreground hover:opacity-90 text-background rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 whitespace-nowrap"
                 >
-                  Configure Your GTM Signals <ArrowRight className="w-4 h-4" />
+                  Configure Signals <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
 
               <div className="flex flex-wrap items-center gap-6 mt-8">
                 <div className="flex items-center gap-2">
-                  <Target className="w-4 h-4 text-emerald-600" />
-                  <span className="text-xs font-mono text-[#666]">1.2M+ Accounts Scored</span>
+                  <Target className="w-4 h-4 text-emerald-500" />
+                  <span className="text-xs font-mono text-foreground/60">1.2M+ Accounts Scored</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                  <span className="text-xs font-mono text-[#666]">SOC2 Type II Certified</span>
+                  <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                  <span className="text-xs font-mono text-foreground/60">SOC2 Type II Certified</span>
                 </div>
               </div>
             </div>
 
             {/* Decorative Element */}
-            <div className="relative z-10 hidden md:block">
-               <div className="w-64 h-64 bg-black/[0.02] rounded-full border border-black/5 flex items-center justify-center relative">
-                 <div className="w-48 h-48 bg-black/[0.03] rounded-full border border-black/5 flex items-center justify-center">
-                   <div className="w-32 h-32 bg-black/[0.04] rounded-full border border-black/10 flex items-center justify-center">
-                     <AnimatedLogo className="w-12 h-12 text-black/20" showText={false} />
+            <div className="relative z-10 hidden md:flex flex-col items-center justify-center">
+               <div className="w-56 h-56 bg-foreground/[0.02] rounded-full border border-foreground/5 flex items-center justify-center relative">
+                 <div className="w-40 h-40 bg-foreground/[0.03] rounded-full border border-foreground/5 flex items-center justify-center">
+                   <div className="w-24 h-24 bg-foreground/[0.05] rounded-full border border-foreground/10 flex items-center justify-center">
+                     <AnimatedLogo className="w-10 h-10 text-foreground" showText={false} />
                    </div>
                  </div>
                </div>
@@ -555,40 +560,43 @@ export default function LandingPage() {
       </section>
 
       {/* ── Footer ────────────────────────────────────────────────── */}
-      <footer className="pt-12 pb-24 bg-transparent transition-colors duration-300" style={{ borderTop: "1px solid var(--border-light)" }}>
+      <footer className="pt-8 pb-12 bg-transparent transition-colors duration-300">
         <div className="w-full max-w-[1100px] mx-auto px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-16 md:gap-8">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-12">
             
             {/* Left Column: Product Identity */}
             <div className="max-w-sm">
-              <AnimatedLogo className="w-6 h-6 mb-6" showText={true} />
-              <p className="text-sm text-[#555] font-roboto leading-relaxed mb-6">
-                IntelScout is an autonomous scoring engine that maps real-time technographic and behavioral signals to your ideal customer profile.
+              <div className="flex items-center gap-2 mb-4">
+                <AnimatedLogo className="w-7 h-7 text-foreground" showText={false} />
+                <span className="text-lg font-black tracking-tight text-foreground font-roboto">IntelScout</span>
+              </div>
+              <p className="text-sm text-foreground/60 font-roboto leading-relaxed mb-6">
+                The autonomous scoring engine that maps real-time technographic and behavioral signals to your ideal customer profile.
               </p>
-              <div className="flex items-center gap-2 text-xs font-mono text-[#888]">
+              <div className="flex items-center gap-2 text-xs font-mono text-foreground/50">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 Systems operational
               </div>
             </div>
 
             {/* Right Column: Navigation */}
-            <div className="grid grid-cols-2 gap-12 sm:gap-24">
+            <div className="grid grid-cols-2 gap-16">
               <div>
-                <h4 className="font-bold text-[#111] mb-6 text-sm">Product</h4>
-                <ul className="space-y-4 text-sm text-[#777] font-roboto">
-                  <li><a href="#features" className="hover:text-black transition">Signal Engine</a></li>
-                  <li><a href="#how-it-works" className="hover:text-black transition">Qualification</a></li>
-                  <li><a href="#" className="hover:text-black transition">Integrations</a></li>
-                  <li><a href="#" className="hover:text-black transition">Pricing</a></li>
+                <h4 className="font-bold text-foreground mb-5 text-sm">Product</h4>
+                <ul className="space-y-3 text-[13px] text-foreground/60 font-roboto">
+                  <li><a href="#features" className="hover:text-foreground transition">Signal Engine</a></li>
+                  <li><a href="#how-it-works" className="hover:text-foreground transition">Qualification</a></li>
+                  <li><a href="#" className="hover:text-foreground transition">Integrations</a></li>
+                  <li><a href="#" className="hover:text-foreground transition">Pricing</a></li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-bold text-[#111] mb-6 text-sm">Company</h4>
-                <ul className="space-y-4 text-sm text-[#777] font-roboto">
-                  <li><a href="#" className="hover:text-black transition">About</a></li>
-                  <li><a href="#" className="hover:text-black transition">Blog</a></li>
-                  <li><a href="#" className="hover:text-black transition">Careers</a></li>
-                  <li><a href="#" className="hover:text-black transition">Contact</a></li>
+                <h4 className="font-bold text-foreground mb-5 text-sm">Company</h4>
+                <ul className="space-y-3 text-[13px] text-foreground/60 font-roboto">
+                  <li><a href="#" className="hover:text-foreground transition">About</a></li>
+                  <li><a href="#" className="hover:text-foreground transition">Blog</a></li>
+                  <li><a href="#" className="hover:text-foreground transition">Careers</a></li>
+                  <li><a href="#" className="hover:text-foreground transition">Contact</a></li>
                 </ul>
               </div>
             </div>
