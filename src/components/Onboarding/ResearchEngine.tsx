@@ -24,59 +24,87 @@ export default function ResearchEngine() {
       return;
     }
 
-    addConsoleLog(`Initialized GTM research engine. Queue depth: ${accounts.length} accounts.`);
-    addConsoleLog("Establishing secure connection gateways...");
-    addConsoleLog("Loading heuristics and technographic signatures...");
+    let isSubscribed = true;
 
-    let accountIdx = 0;
-    let stage = 0; // 0: crawl, 1: tech, 2: jobs, 3: score, 4: next
-    
-    const interval = setInterval(() => {
-      if (accountIdx >= accounts.length) {
-        clearInterval(interval);
-        setResearchProgress(100);
-        addConsoleLog("------------------------------------------------------------------");
-        addConsoleLog("🎉 qualification pipeline completed successfully.");
-        addConsoleLog(`Scanned: ${accounts.length} | Qualified: ${accounts.filter(a => a.opportunityScore >= 70).length} High Priority.`);
-        addConsoleLog("Redirecting to GTM Operating System Workspace...");
-        
-        // Auto transition after a brief pause
-        setTimeout(() => {
-          setStep("dashboard");
-        }, 2500);
-        return;
+    async function startCrawl() {
+      try {
+        const response = await fetch("/api/crawl", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            accounts,
+            productOffer: "AI Compliance Platform", // In a real app, pull from context
+            icp: "Mid-market to Enterprise SaaS",   // In a real app, pull from context
+          })
+        });
+
+        if (!response.ok) {
+          addConsoleLog(`Error: Backend returned ${response.status} ${response.statusText}`);
+          return;
+        }
+
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        if (!reader) return;
+
+        while (isSubscribed) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          
+          let eolIndex;
+          while ((eolIndex = buffer.indexOf("\n\n")) >= 0) {
+            const eventChunk = buffer.slice(0, eolIndex);
+            buffer = buffer.slice(eolIndex + 2);
+
+            const lines = eventChunk.split("\n");
+            let eventType = "message";
+            let data = "";
+
+            for (const line of lines) {
+              if (line.startsWith("event: ")) {
+                eventType = line.substring(7).trim();
+              } else if (line.startsWith("data: ")) {
+                data += line.substring(6);
+              }
+            }
+
+            if (data) {
+              if (eventType === "result") {
+                // Here you would typically update the specific account in context
+                // For now, we'll just log that it was received
+                const parsed = JSON.parse(data);
+                addConsoleLog(`[SYSTEM] Received structured intel for ${parsed.domain}`);
+              } else if (eventType === "done") {
+                setResearchProgress(100);
+                setTimeout(() => {
+                  if (isSubscribed) setStep("dashboard");
+                }, 2500);
+              } else {
+                // Regular log message
+                addConsoleLog(data);
+                
+                // Naive progress estimation based on log length
+                setResearchProgress(prev => Math.min(99, prev + (100 / (accounts.length * 5))));
+              }
+            }
+          }
+        }
+      } catch (err) {
+        if (isSubscribed) {
+          addConsoleLog(`Error: Failed to connect to GTM Engine (${err})`);
+        }
       }
+    }
 
-      const currentAcc = accounts[accountIdx];
-      const progressPercent = Math.round((accountIdx / accounts.length) * 100);
-      setResearchProgress(progressPercent);
+    startCrawl();
 
-      switch(stage) {
-        case 0:
-          addConsoleLog(`[SCAN] [${currentAcc.domain}] Fetching landing page and meta headers...`);
-          stage++;
-          break;
-        case 1:
-          addConsoleLog(`[TECH] [${currentAcc.domain}] Detected libraries: ${currentAcc.techStack.join(", ")}.`);
-          stage++;
-          break;
-        case 2:
-          addConsoleLog(`[JOBS] [${currentAcc.domain}] Scraping jobs listing board... ${currentAcc.signalsDetected.length} signals identified.`);
-          stage++;
-          break;
-        case 3:
-          addConsoleLog(`[QUAL] [${currentAcc.domain}] FIT: ${currentAcc.icpFit} | INTENT: ${currentAcc.intent} | TIMING: ${currentAcc.timing} -> OPP: ${currentAcc.opportunityScore}`);
-          stage++;
-          break;
-        case 4:
-          addConsoleLog(`[DONE] [${currentAcc.domain}] Priority assigned to Tier ${currentAcc.priorityTier}. Crawl node released.`);
-          stage = 0;
-          accountIdx++;
-          break;
-      }
-    }, 280); // Speed up log generation for premium fast responsiveness
-
-    return () => clearInterval(interval);
+    return () => {
+      isSubscribed = false;
+    };
   }, [accounts, setStep, setResearchProgress, clearConsoleLogs, addConsoleLog]);
 
   return (
