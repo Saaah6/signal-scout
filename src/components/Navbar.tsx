@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowRight } from "@phosphor-icons/react";
 import AnimatedLogo from "./AnimatedLogo";
+import { motion } from "framer-motion";
 
 export const NavLink = React.memo(function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
@@ -32,13 +33,16 @@ export default function Navbar({ onOpenAuth }: { onOpenAuth: () => void }) {
           <button onClick={onOpenAuth} className="text-sm font-medium text-[#333333] hover:text-black transition-colors duration-200 font-roboto hidden md:block">
             Sign in
           </button>
-          <button
+          <motion.button
             onClick={onOpenAuth}
-            className="inline-flex items-center justify-center gap-2 bg-black hover:bg-[#1a1a1a] text-white text-sm font-bold rounded-full px-5 sm:px-6 h-9 transition-all duration-200 group font-roboto shrink-0"
+            className="inline-flex items-center justify-center gap-2 text-white text-sm font-bold rounded-full px-5 sm:px-6 h-9 transition-all duration-200 group font-roboto shrink-0 bg-gradient-to-r from-[#000] via-[#555] to-[#000] shadow-sm hover:shadow-md"
+            style={{ backgroundSize: "200% auto" }}
+            animate={{ backgroundPosition: ["-200% center", "200% center"] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
           >
             Get started
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </button>
+          </motion.button>
         </div>
       </nav>
     </header>
