@@ -325,16 +325,22 @@ export default function LandingPage() {
       <NewsletterSection />
 
       {/* ── Footer ────────────────────────────────────────────────── */}
-      <footer className="py-8 bg-white" style={{ borderTop: "1px solid rgba(0,0,0,0.1)" }}>
-        <div className="max-w-[1400px] mx-auto px-8 lg:px-14 flex flex-col md:flex-row items-center justify-between gap-4">
-          <AnimatedLogo className="w-4 h-4" showText={true} />
-          <div className="flex gap-8 items-center">
+      <footer className="py-24 bg-white" style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+        <div className="w-full max-w-xl mx-auto px-6 flex flex-col items-center text-center gap-6">
+          <AnimatedLogo className="w-5 h-5" showText={true} />
+          
+          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8">
             <NavLink href="#features">Features</NavLink>
             <NavLink href="#how-it-works">How It Works</NavLink>
             <NavLink href="#newsletter">Subscribe</NavLink>
           </div>
-          <p className="text-xs text-[#aaaaaa] font-roboto-mono">
-            © {new Date().getFullYear()} IntelScout AI Inc.
+
+          <p className="text-sm text-[#777777] font-roboto leading-relaxed">
+            Real-time AI crawler, technographics parser, and account qualification scoring engine.
+          </p>
+
+          <p className="text-xs text-[#aaaaaa] font-roboto-mono mt-2">
+            © {new Date().getFullYear()} IntelScout AI Inc. All rights reserved.
           </p>
         </div>
       </footer>
