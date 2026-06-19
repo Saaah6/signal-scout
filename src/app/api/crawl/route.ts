@@ -1,6 +1,8 @@
 import { NextRequest } from "next/server";
 import * as cheerio from "cheerio";
 import OpenAI from "openai";
+import { proxyRotator } from "@/lib/proxyRotator";
+import { fetch as undiciFetch } from "undici";
 
 // Ensure this runs dynamically
 export const dynamic = "force-dynamic";
@@ -48,7 +50,12 @@ export async function POST(req: NextRequest) {
         
         let pageText = "";
         try {
-          const res = await fetch(url, {
+          const proxyAgent = proxyRotator.getRoundRobinAgent();
+          const dispatcherOpt = proxyAgent ? { dispatcher: proxyAgent } : {};
+
+          // Using undici fetch to support custom dispatchers (proxies)
+          const res = await undiciFetch(url, {
+            ...dispatcherOpt,
             headers: {
               "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
               "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
