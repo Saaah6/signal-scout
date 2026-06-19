@@ -5,6 +5,8 @@ import { useIntelScout } from "@/context/IntelScoutContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, CheckCircle, CircleNotch, X, GoogleLogo, WarningCircle } from "@phosphor-icons/react";
 import AnimatedLogo from "./AnimatedLogo";
+import Navbar from "./Navbar";
+import NewsletterSection from "./NewsletterSection";
 
 // ── Static data ────────────────────────────────────────────────────
 const STATS = [
@@ -83,15 +85,6 @@ const AnimatedWord = React.memo(function AnimatedWord({ word, delay = 0 }: { wor
   );
 });
 
-const NavLink = React.memo(function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <a href={href} className="relative text-sm font-medium text-[#111111] hover:text-black transition-colors duration-200 group font-roboto tracking-wide">
-      {children}
-      <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-black transition-all duration-300 group-hover:w-full" />
-    </a>
-  );
-});
-
 const FeatureRow = React.memo(function FeatureRow({ num, title, body, delay = 0 }: { num: string; title: string; body: string; delay?: number }) {
   return (
     <motion.div
@@ -121,10 +114,6 @@ export default function LandingPage() {
   const [showAuth,        setShowAuth]        = useState(false);
   const [loginSubmitting, setLoginSubmitting] = useState(false);
   const [authEmail,       setAuthEmail]       = useState("");
-  const [email,                setEmail]                = useState("");
-  const [newsletterSubmitting, setNewsletterSubmitting] = useState(false);
-  const [newsletterSuccess,    setNewsletterSuccess]    = useState(false);
-  const [newsletterError,      setNewsletterError]      = useState("");
   const [heroVisible, setHeroVisible] = useState(false);
 
   useEffect(() => {
@@ -155,28 +144,6 @@ export default function LandingPage() {
     setLoginSubmitting(false);
   }, [loginWithEmail]);
 
-  const handleNewsletterSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-    setNewsletterSubmitting(true);
-    try {
-      const res  = await fetch("/api/newsletter/subscribe", {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ email }),
-      });
-      const data = await res.json();
-      if (res.ok && data.success) { setNewsletterSuccess(true); setEmail(""); }
-      else setNewsletterError(data.error || "Something went wrong.");
-    } catch {
-      setNewsletterError("Failed to connect. Please try again.");
-    } finally {
-      setNewsletterSubmitting(false);
-    }
-  }, [email]);
-
-  const onEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value), []);
-
   return (
     <div className="relative min-h-screen bg-white text-black overflow-x-hidden noise-overlay font-roboto">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON_LD_STR }} />
@@ -191,36 +158,7 @@ export default function LandingPage() {
         ))}
       </div>
 
-      {/* ── Navigation — always white, always visible ───────────── */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white" style={{ borderBottom: "1px solid rgba(0,0,0,0.1)" }}>
-        <nav className="relative max-w-[1400px] mx-auto px-8 lg:px-14 flex items-center justify-between" style={{ height: 68 }}>
-          {/* Logo — left */}
-          <div className="flex-1">
-            <AnimatedLogo className="w-5 h-5" showText={true} />
-          </div>
-
-          {/* Nav links — perfectly centred */}
-          <div className="hidden md:flex items-center justify-center gap-12 flex-1">
-            <NavLink href="#features">Features</NavLink>
-            <NavLink href="#how-it-works">How it works</NavLink>
-            <NavLink href="#newsletter">GTM Digest</NavLink>
-          </div>
-
-          {/* Right */}
-          <div className="flex items-center justify-end gap-5 flex-1">
-            <button onClick={openAuth} className="text-sm font-medium text-[#333333] hover:text-black transition-colors duration-200 font-roboto hidden md:block">
-              Sign in
-            </button>
-            <button
-              onClick={openAuth}
-              className="inline-flex items-center gap-2 bg-black hover:bg-[#1a1a1a] text-white text-sm font-bold rounded-full px-6 h-9 transition-all duration-200 group font-roboto"
-            >
-              Get started
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-            </button>
-          </div>
-        </nav>
-      </header>
+      <Navbar onOpenAuth={openAuth} />
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <section className="relative min-h-screen flex flex-col justify-center overflow-hidden" style={{ paddingTop: 68 }}>
@@ -395,52 +333,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Newsletter ─────────────────────────────────────────────── */}
-      <section id="newsletter" className="relative py-24 lg:py-32 bg-white">
-        <div className="max-w-[1400px] mx-auto px-8 lg:px-14">
-          <div className="max-w-2xl mx-auto text-center">
-            <span className="inline-flex items-center gap-3 text-sm font-roboto-mono text-[#888888] mb-6">
-              <span className="w-8 h-px bg-black/25 inline-block" />
-              GTM Intelligence Digest
-              <span className="w-8 h-px bg-black/25 inline-block" />
-            </span>
-            <motion.h2 {...FADE_UP} className="text-4xl lg:text-6xl font-black tracking-tight font-roboto mb-6 leading-tight text-black">
-              Join the GTM<br />Intelligence Circle
-            </motion.h2>
-            <p className="text-xl text-[#555555] leading-relaxed mb-10 font-normal">
-              Weekly B2B signal crawling techniques, qualification frameworks, and outbound strategies. No spam.
-            </p>
-
-            <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 items-center justify-center mt-8">
-              <input
-                type="email"
-                placeholder="Work email"
-                value={email}
-                disabled={newsletterSubmitting || newsletterSuccess}
-                onChange={onEmailChange}
-                className="w-full sm:w-[320px] h-12 px-5 rounded-full text-sm font-roboto text-black placeholder-[#aaaaaa] bg-white transition focus:outline-none"
-                style={{ border: "1.5px solid rgba(0,0,0,0.15)" }}
-              />
-              <button
-                type="submit"
-                disabled={newsletterSubmitting || newsletterSuccess}
-                className="h-12 px-8 bg-black hover:bg-[#1a1a1a] text-white font-bold text-sm rounded-full transition-all duration-200 flex items-center justify-center gap-2 shrink-0 disabled:opacity-50 font-roboto"
-              >
-                {newsletterSubmitting ? (
-                  <CircleNotch className="w-4 h-4 animate-spin" />
-                ) : newsletterSuccess ? (
-                  <><CheckCircle className="w-4 h-4 text-green-400" /> Subscribed!</>
-                ) : "Subscribe"}
-              </button>
-            </form>
-
-            {newsletterError && <p className="text-sm text-red-500 mt-3 font-roboto">{newsletterError}</p>}
-            <p className="text-xs text-[#aaaaaa] mt-5 font-roboto-mono tracking-widest uppercase">
-              1,200+ revenue leaders · monthly
-            </p>
-          </div>
-        </div>
-      </section>
+      <NewsletterSection />
 
       {/* ── Footer ────────────────────────────────────────────────── */}
       <footer className="py-8 bg-white" style={{ borderTop: "1px solid rgba(0,0,0,0.1)" }}>
