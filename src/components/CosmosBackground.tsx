@@ -225,11 +225,25 @@ export default function CosmosBackground() {
 
     // Resize handler
     const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
+      // Limit DPR and max resolution to prevent WebGL crashing on mobile WebViews
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       const width = window.innerWidth;
       const height = window.innerHeight;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
+      
+      // Calculate target resolution
+      let targetWidth = width * dpr;
+      let targetHeight = height * dpr;
+      
+      // Cap at 1080p equivalent pixels to avoid Out-Of-Memory crashes
+      const MAX_PIXELS = 1920 * 1080;
+      if (targetWidth * targetHeight > MAX_PIXELS) {
+        const scale = Math.sqrt(MAX_PIXELS / (targetWidth * targetHeight));
+        targetWidth *= scale;
+        targetHeight *= scale;
+      }
+
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.useProgram(program);
       gl.uniform2f(resLoc, canvas.width, canvas.height);
