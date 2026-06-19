@@ -47,6 +47,16 @@ export default function Stage2ICP() {
     });
   };
 
+  const handleFirmoChange = (field: "industry" | "employeeCount" | "revenue" | "geography" | "fundingStage", value: string) => {
+    setIcp({
+      ...icp,
+      firmographics: {
+        ...icp.firmographics,
+        [field]: value
+      }
+    });
+  };
+
   const handleRefineWithAI = (e: React.FormEvent) => {
     e.preventDefault();
     if (!aiPrompt.trim()) return;
@@ -177,24 +187,87 @@ export default function Stage2ICP() {
           <div className="flex flex-col gap-2.5">
             <div className="bg-[#fafafa] border border-black/[0.04] rounded-lg p-3.5 transition-colors hover:bg-black/[0.02]">
               <span className="block text-[10px] uppercase font-bold tracking-[0.06em] text-[#888] mb-1.5 font-roboto-mono">Target Industry</span>
-              <span className="block text-[13px] font-semibold text-[#111] leading-snug">{icp.firmographics.industry}</span>
+              <select
+                value={icp.firmographics.industry}
+                onChange={(e) => handleFirmoChange("industry", e.target.value)}
+                className="w-full bg-transparent text-[13px] font-semibold text-[#111] leading-snug focus:outline-none cursor-pointer p-0 m-0"
+              >
+                <option value="B2B SaaS, FinTech, Enterprise Software">B2B SaaS, FinTech, Enterprise Software</option>
+                <option value="Healthcare, Medical Tech, Life Sciences">Healthcare, Medical Tech, Life Sciences</option>
+                <option value="E-commerce, Retail, Consumer Brands">E-commerce, Retail, Consumer Brands</option>
+                <option value="DevTools, Infrastructure, Cloud Platform SaaS">DevTools, Infrastructure, Cloud Platform SaaS</option>
+                <option value="HR Tech, Talent Management Services">HR Tech, Talent Management Services</option>
+                <option value="EdTech, Higher Education">EdTech, Higher Education</option>
+                <option value="Real Estate, PropTech">Real Estate, PropTech</option>
+                <option value="Manufacturing, Supply Chain, Logistics">Manufacturing, Supply Chain, Logistics</option>
+                <option value={icp.firmographics.industry}>{icp.firmographics.industry}</option>
+              </select>
             </div>
             <div className="grid grid-cols-2 gap-2.5">
               <div className="bg-[#fafafa] border border-black/[0.04] rounded-lg p-3.5 transition-colors hover:bg-black/[0.02]">
                 <span className="block text-[10px] uppercase font-bold tracking-[0.06em] text-[#888] mb-1.5 font-roboto-mono">Company Size</span>
-                <span className="block text-[13px] font-semibold text-[#111]">{icp.firmographics.employeeCount}</span>
+                <select
+                  value={icp.firmographics.employeeCount}
+                  onChange={(e) => handleFirmoChange("employeeCount", e.target.value)}
+                  className="w-full bg-transparent text-[13px] font-semibold text-[#111] focus:outline-none cursor-pointer p-0 m-0"
+                >
+                  <option value="1-10 employees">1-10 employees</option>
+                  <option value="11-50 employees">11-50 employees</option>
+                  <option value="50-1000 employees">50-1000 employees</option>
+                  <option value="200-500 employees">200-500 employees</option>
+                  <option value="500-1000 employees">500-1000 employees</option>
+                  <option value="1000+ employees">1000+ employees</option>
+                  <option value={icp.firmographics.employeeCount}>{icp.firmographics.employeeCount}</option>
+                </select>
               </div>
               <div className="bg-[#fafafa] border border-black/[0.04] rounded-lg p-3.5 transition-colors hover:bg-black/[0.02]">
                 <span className="block text-[10px] uppercase font-bold tracking-[0.06em] text-[#888] mb-1.5 font-roboto-mono">Target Revenue</span>
-                <span className="block text-[13px] font-semibold text-[#111]">{icp.firmographics.revenue}</span>
+                <select
+                  value={icp.firmographics.revenue}
+                  onChange={(e) => handleFirmoChange("revenue", e.target.value)}
+                  className="w-full bg-transparent text-[13px] font-semibold text-[#111] focus:outline-none cursor-pointer p-0 m-0"
+                >
+                  <option value="<$1M">&lt;$1M</option>
+                  <option value="$1M - $10M">$1M - $10M</option>
+                  <option value="$10M - $50M">$10M - $50M</option>
+                  <option value="$20M - $150M">$20M - $150M</option>
+                  <option value="$50M - $200M">$50M - $200M</option>
+                  <option value="$200M+">$200M+</option>
+                  <option value={icp.firmographics.revenue}>{icp.firmographics.revenue}</option>
+                </select>
               </div>
               <div className="bg-[#fafafa] border border-black/[0.04] rounded-lg p-3.5 transition-colors hover:bg-black/[0.02]">
                 <span className="block text-[10px] uppercase font-bold tracking-[0.06em] text-[#888] mb-1.5 font-roboto-mono">Geography</span>
-                <span className="block text-[13px] font-semibold text-[#111]">{icp.firmographics.geography}</span>
+                <select
+                  value={icp.firmographics.geography}
+                  onChange={(e) => handleFirmoChange("geography", e.target.value)}
+                  className="w-full bg-transparent text-[13px] font-semibold text-[#111] focus:outline-none cursor-pointer p-0 m-0"
+                >
+                  <option value="Global">Global</option>
+                  <option value="United States, Canada, Europe">United States, Canada, Europe</option>
+                  <option value="North America">North America</option>
+                  <option value="Europe">Europe</option>
+                  <option value="Asia-Pacific">Asia-Pacific</option>
+                  <option value="Latin America">Latin America</option>
+                  <option value="Middle East & Africa">Middle East & Africa</option>
+                  <option value={icp.firmographics.geography}>{icp.firmographics.geography}</option>
+                </select>
               </div>
               <div className="bg-[#fafafa] border border-black/[0.04] rounded-lg p-3.5 transition-colors hover:bg-black/[0.02]">
                 <span className="block text-[10px] uppercase font-bold tracking-[0.06em] text-[#888] mb-1.5 font-roboto-mono">Funding Phase</span>
-                <span className="block text-[13px] font-semibold text-[#111]">{icp.firmographics.fundingStage}</span>
+                <select
+                  value={icp.firmographics.fundingStage}
+                  onChange={(e) => handleFirmoChange("fundingStage", e.target.value)}
+                  className="w-full bg-transparent text-[13px] font-semibold text-[#111] focus:outline-none cursor-pointer p-0 m-0"
+                >
+                  <option value="Bootstrapped">Bootstrapped</option>
+                  <option value="Seed / Angel">Seed / Angel</option>
+                  <option value="Series A to Series D">Series A to Series D</option>
+                  <option value="Series B - C">Series B - C</option>
+                  <option value="Series D+">Series D+</option>
+                  <option value="Public">Public</option>
+                  <option value={icp.firmographics.fundingStage}>{icp.firmographics.fundingStage}</option>
+                </select>
               </div>
             </div>
           </div>
