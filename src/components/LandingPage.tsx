@@ -221,15 +221,19 @@ function ScrollStep({ step, index, activeStep, onStepEnter }: { step: any, index
   }, [isInView, index, onStepEnter]);
 
   return (
-    <div ref={ref} className="pb-24 flex flex-col justify-center">
+    <div ref={ref} className="pb-16 flex flex-col justify-center">
       <div className={`w-full text-left transition-all duration-700 ${activeStep === index ? "opacity-100" : "opacity-30"}`}>
         <div className="flex items-start gap-6">
-          <span className="font-black text-3xl text-[#555] font-roboto shrink-0">{step.roman}</span>
+          <span className={`font-black text-3xl font-roboto shrink-0 transition-colors duration-500 ${activeStep === index ? "text-white" : "text-[#555]"}`}>
+            {step.roman}
+          </span>
           <div className="flex-1">
             <h3 className={`text-2xl lg:text-3xl font-black mb-3 transition-all duration-500 font-roboto ${activeStep === index ? "text-white translate-x-1" : "text-white/60"}`}>
               {step.title}
             </h3>
-            <p className="text-[#999] leading-relaxed font-normal font-roboto">{step.body}</p>
+            <p className={`leading-relaxed font-normal font-roboto transition-colors duration-500 ${activeStep === index ? "text-[#ccc]" : "text-[#999]"}`}>
+              {step.body}
+            </p>
           </div>
         </div>
       </div>
