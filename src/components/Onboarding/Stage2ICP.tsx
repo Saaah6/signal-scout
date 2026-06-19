@@ -8,6 +8,8 @@ export default function Stage2ICP() {
   const { icp, setIcp, setStep, icpAnalysis, isAnalyzingIcp, analyzeBusinessIcp } = useIntelScout();
   const [newTech, setNewTech] = useState("");
   const [newSignal, setNewSignal] = useState("");
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [isRefining, setIsRefining] = useState(false);
 
   if (!icp) return null;
 
@@ -43,6 +45,48 @@ export default function Stage2ICP() {
       ...icp,
       growthSignals: icp.growthSignals.filter((_, i) => i !== index)
     });
+  };
+
+  const handleRefineWithAI = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!aiPrompt.trim()) return;
+    setIsRefining(true);
+    
+    // Simulate Machine Learning processing
+    setTimeout(() => {
+      const promptLower = aiPrompt.toLowerCase();
+      let updatedIndustry = icp.firmographics.industry;
+      let newRoles = [...icp.buyingCommittee];
+      
+      if (promptLower.includes("health") || promptLower.includes("medical")) {
+        updatedIndustry = "Healthcare, Medical Tech, Life Sciences";
+        newRoles.unshift("Chief Medical Officer");
+      } else if (promptLower.includes("finance") || promptLower.includes("fintech") || promptLower.includes("bank")) {
+        updatedIndustry = "FinTech, Banking, Financial Services";
+        newRoles.unshift("Chief Financial Officer (CFO)");
+      } else if (promptLower.includes("edu")) {
+        updatedIndustry = "EdTech, Higher Education";
+        newRoles.unshift("Provost / Dean");
+      } else {
+        const words = aiPrompt.split(" ").filter(w => w.length > 4);
+        if (words.length > 0) {
+           const cap = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+           updatedIndustry = `${cap} Operations, ${icp.firmographics.industry}`;
+           newRoles.unshift(`VP of ${cap}`);
+        }
+      }
+
+      setIcp({
+        ...icp,
+        firmographics: {
+          ...icp.firmographics,
+          industry: updatedIndustry
+        },
+        buyingCommittee: [...new Set(newRoles)].slice(0, 6)
+      });
+      setAiPrompt("");
+      setIsRefining(false);
+    }, 1500);
   };
 
   return (
@@ -88,6 +132,39 @@ export default function Stage2ICP() {
           ))}
         </div>
       )}
+
+      {/* AI Refinement Prompt */}
+      <div className="mb-8">
+        <form onSubmit={handleRefineWithAI} className="relative shadow-sm rounded-xl overflow-hidden group">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Brain className={`h-5 w-5 ${isRefining ? 'text-violet-500 animate-pulse' : 'text-violet-500'}`} />
+          </div>
+          <input
+            type="text"
+            value={aiPrompt}
+            onChange={(e) => setAiPrompt(e.target.value)}
+            disabled={isRefining}
+            className="block w-full pl-11 pr-28 py-4 border border-violet-200 bg-violet-50/30 placeholder-violet-400 focus:outline-none focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 sm:text-[15px] transition-all disabled:opacity-70 text-black font-medium"
+            placeholder="Refine with AI... (e.g., 'Focus strictly on enterprise healthcare' or 'We only sell to CTOs')"
+          />
+          <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+            <button
+              type="submit"
+              disabled={isRefining || !aiPrompt.trim()}
+              className="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold rounded-lg disabled:opacity-50 disabled:hover:bg-violet-600 transition flex items-center space-x-2"
+            >
+              {isRefining ? (
+                <>
+                  <CircleNotch className="w-4 h-4 animate-spin" />
+                  <span>Learning...</span>
+                </>
+              ) : (
+                <span>Improve</span>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         

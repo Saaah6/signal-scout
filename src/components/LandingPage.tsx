@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useIntelScout } from "@/context/IntelScoutContext";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { ArrowRight, CheckCircle, CircleNotch, X, GoogleLogo, WarningCircle } from "@phosphor-icons/react";
 import AnimatedLogo from "./AnimatedLogo";
 import Navbar, { NavLink } from "./Navbar";
@@ -107,6 +107,137 @@ const FeatureRow = React.memo(function FeatureRow({ num, title, body, delay = 0 
   );
 });
 
+// ── Scroll-driven components ───────────────────────────────────────
+const PanelICP = React.memo(function PanelICP() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.4 }}
+      className="p-8 h-full flex flex-col justify-center min-h-[320px]"
+    >
+      <div className="space-y-4">
+        <div className="p-4 bg-white/[0.03] border border-white/10 rounded-xl">
+          <div className="text-[11px] text-[#888] font-roboto-mono tracking-widest mb-1.5">TARGET_INDUSTRY</div>
+          <div className="text-sm font-semibold font-roboto text-white">B2B SaaS, FinTech, DevTools</div>
+        </div>
+        <div className="p-4 bg-white/[0.03] border border-white/10 rounded-xl">
+          <div className="text-[11px] text-[#888] font-roboto-mono tracking-widest mb-1.5">MANDATORY_SIGNALS</div>
+          <div className="flex flex-wrap gap-2 mt-2">
+            <span className="px-2 py-1 bg-white/10 border border-white/5 rounded text-[11px] font-roboto text-white">Security Audit (SOC2)</span>
+            <span className="px-2 py-1 bg-white/10 border border-white/5 rounded text-[11px] font-roboto text-white">Executive Hire</span>
+            <span className="px-2 py-1 bg-white/10 border border-white/5 rounded text-[11px] font-roboto text-white">Funding</span>
+          </div>
+        </div>
+        <div className="p-4 bg-white/[0.03] border border-white/10 rounded-xl">
+          <div className="flex justify-between items-center mb-1.5">
+            <div className="text-[11px] text-[#888] font-roboto-mono tracking-widest">ICP_FIT_THRESHOLD</div>
+            <div className="text-[11px] text-white font-roboto-mono">85%</div>
+          </div>
+          <div className="w-full h-1.5 bg-white/10 rounded-full mt-3 overflow-hidden">
+            <motion.div 
+              initial={{ width: 0 }} animate={{ width: "85%" }} transition={{ delay: 0.2, duration: 1, ease: "easeOut" }}
+              className="h-full bg-white rounded-full" 
+            />
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+});
+
+const PanelCrawl = React.memo(function PanelCrawl() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.4 }}
+      className="h-full flex flex-col min-h-[320px]"
+    >
+      <div className="px-5 py-3.5 flex items-center justify-between border-b border-white/10">
+        <div className="flex gap-2">
+          <div className="w-3 h-3 rounded-full bg-white/20" />
+          <div className="w-3 h-3 rounded-full bg-white/20" />
+          <div className="w-3 h-3 rounded-full bg-white/20" />
+        </div>
+        <span className="text-xs font-roboto-mono text-[#666]">intelscout.crawl.ts</span>
+      </div>
+      <div className="p-7 font-roboto-mono text-sm flex-1 flex flex-col justify-center">
+        <pre className="text-[#aaa] leading-loose">
+          {CODE_LINES.map((l) => (
+            <div key={l.line} className="code-line-reveal" style={{ animationDelay: `${l.delay}ms` }}>
+              <span className="text-[#444] select-none w-7 inline-block">{l.line}</span>
+              <span>{l.text}</span>
+            </div>
+          ))}
+        </pre>
+      </div>
+      <div className="px-5 py-3 flex items-center gap-3 border-t border-white/10">
+        <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+        <span className="text-xs font-roboto-mono text-[#666]">ICP_SCORE: 94.8 // 18 signals detected</span>
+      </div>
+    </motion.div>
+  );
+});
+
+const PanelOutreach = React.memo(function PanelOutreach() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.4 }}
+      className="p-8 h-full flex flex-col justify-center min-h-[320px]"
+    >
+      <div className="bg-white/[0.03] border border-white/10 rounded-xl overflow-hidden">
+        <div className="px-5 py-3.5 border-b border-white/10 flex items-center gap-3 text-sm text-[#aaa] font-roboto">
+          <span className="text-white/50">To:</span> 
+          <span className="px-2 py-0.5 bg-white/10 rounded-md text-white border border-white/5">VP Security</span>
+        </div>
+        <div className="p-6 text-[15px] text-[#ccc] leading-relaxed font-roboto">
+          Hi {'{{first_name}}'},<br/><br/>
+          Noticed you're preparing for <span className="bg-white/10 border border-white/5 text-white px-1.5 py-0.5 rounded text-[13px]">SOC2 compliance</span> and just hired a new <span className="bg-white/10 border border-white/5 text-white px-1.5 py-0.5 rounded text-[13px]">CISO</span>.<br/><br/>
+          Our platform automates evidence collection securely and efficiently.
+        </div>
+        <div className="px-5 py-4 border-t border-white/10 flex justify-end bg-white/[0.02]">
+          <div className="px-4 py-2 bg-white hover:bg-[#e5e5e5] transition-colors cursor-pointer text-black text-[13px] font-bold rounded-lg shadow-sm font-roboto">
+            Launch Sequence
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+});
+
+function ScrollStep({ step, index, activeStep, onStepEnter }: { step: any, index: number, activeStep: number, onStepEnter: (i: number) => void }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { margin: "-45% 0px -45% 0px" });
+
+  useEffect(() => {
+    if (isInView) {
+      onStepEnter(index);
+    }
+  }, [isInView, index, onStepEnter]);
+
+  return (
+    <div ref={ref} className="min-h-[55vh] flex flex-col justify-center py-10">
+      <div className={`w-full text-left py-8 transition-all duration-700 ${activeStep === index ? "opacity-100" : "opacity-20"}`}>
+        <div className="flex items-start gap-6">
+          <span className="font-black text-3xl text-[#555] font-roboto shrink-0">{step.roman}</span>
+          <div className="flex-1">
+            <h3 className={`text-2xl lg:text-3xl font-black mb-3 transition-all duration-500 font-roboto ${activeStep === index ? "text-white translate-x-2" : "text-white/80"}`}>
+              {step.title}
+            </h3>
+            <p className="text-[#999] leading-relaxed font-normal font-roboto">{step.body}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Main component ─────────────────────────────────────────────────
 export default function LandingPage() {
   const { loginWithEmail } = useIntelScout();
@@ -115,6 +246,7 @@ export default function LandingPage() {
   const [loginSubmitting, setLoginSubmitting] = useState(false);
   const [authEmail,       setAuthEmail]       = useState("");
   const [heroVisible, setHeroVisible] = useState(false);
+  const [activeProcessStep, setActiveProcessStep] = useState(0);
 
   useEffect(() => {
     const t = setTimeout(() => setHeroVisible(true), 100);
@@ -266,56 +398,26 @@ export default function LandingPage() {
             </motion.h2>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
-            <div>
-              {STEPS.map((step) => (
-                <div
-                  key={step.roman}
-                  className={`w-full text-left py-8 group transition-all duration-500 ${step.active ? "opacity-100" : "opacity-35 hover:opacity-70"}`}
-                  style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}
-                >
-                  <div className="flex items-start gap-6">
-                    <span className="font-black text-3xl text-[#555555] font-roboto shrink-0">{step.roman}</span>
-                    <div className="flex-1">
-                      <h3 className="text-2xl lg:text-3xl font-black mb-3 group-hover:translate-x-2 transition-transform duration-300 font-roboto text-white">
-                        {step.title}
-                      </h3>
-                      <p className="text-[#999999] leading-relaxed font-normal font-roboto">{step.body}</p>
-                      {step.active && (
-                        <div className="mt-4 h-px bg-white/15 overflow-hidden">
-                          <div className="h-full bg-white progress-bar" />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 relative">
+            <div className="pb-[10vh]">
+              {STEPS.map((step, idx) => (
+                <ScrollStep 
+                  key={step.roman} 
+                  step={step} 
+                  index={idx} 
+                  activeStep={activeProcessStep} 
+                  onStepEnter={setActiveProcessStep} 
+                />
               ))}
             </div>
 
-            <div className="lg:sticky lg:top-32 self-start">
-              <div style={{ border: "1px solid rgba(255,255,255,0.1)", overflow: "hidden" }}>
-                <div className="px-5 py-3.5 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
-                  <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-white/20" />
-                    <div className="w-3 h-3 rounded-full bg-white/20" />
-                    <div className="w-3 h-3 rounded-full bg-white/20" />
-                  </div>
-                  <span className="text-xs font-roboto-mono text-[#666666]">intelscout.crawl.ts</span>
-                </div>
-                <div className="p-7 font-roboto-mono text-sm min-h-[260px]">
-                  <pre className="text-[#aaaaaa] leading-loose">
-                    {CODE_LINES.map((l) => (
-                      <div key={l.line} className="code-line-reveal" style={{ animationDelay: `${l.delay}ms` }}>
-                        <span className="text-[#444444] select-none w-7 inline-block">{l.line}</span>
-                        <span>{l.text}</span>
-                      </div>
-                    ))}
-                  </pre>
-                </div>
-                <div className="px-5 py-3 flex items-center gap-3" style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-                  <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                  <span className="text-xs font-roboto-mono text-[#666666]">ICP_SCORE: 94.8 // 18 signals detected</span>
-                </div>
+            <div className="relative">
+              <div className="lg:sticky lg:top-[30vh] w-full border border-white/10 rounded-2xl overflow-hidden bg-[#0a0a0a] shadow-[0_8px_30px_rgba(0,0,0,0.4)] min-h-[350px]">
+                <AnimatePresence mode="wait">
+                  {activeProcessStep === 0 && <PanelICP key="panel0" />}
+                  {activeProcessStep === 1 && <PanelCrawl key="panel1" />}
+                  {activeProcessStep === 2 && <PanelOutreach key="panel2" />}
+                </AnimatePresence>
               </div>
             </div>
           </div>
