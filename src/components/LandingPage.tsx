@@ -283,7 +283,7 @@ export default function LandingPage() {
       <Navbar onOpenAuth={openAuth} />
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <section className="relative min-h-[90dvh] lg:min-h-screen flex flex-col justify-center overflow-hidden pt-28 lg:pt-32 pb-40 lg:pb-0">
+      <section className="relative min-h-[90dvh] lg:min-h-screen flex flex-col justify-center overflow-hidden pt-32 lg:pt-40 pb-16 lg:pb-24">
         <div className="relative z-10 max-w-[1400px] mx-auto w-full px-6 md:px-12 xl:px-16 flex flex-col md:items-center xl:items-start text-left md:text-center xl:text-left">
 
           {/* Eyebrow */}
@@ -342,7 +342,7 @@ export default function LandingPage() {
         </div>
 
         {/* Marquee stats */}
-        <div className="absolute bottom-12 left-0 right-0 animate-line-in overflow-hidden" style={{ animationDelay: "800ms" }}>
+        <div className="w-full mt-24 md:mt-28 xl:mt-36 animate-line-in overflow-hidden border-y border-black/[0.04] bg-[#fafafa] py-10 relative z-10" style={{ animationDelay: "800ms" }}>
           <div className="flex gap-16 marquee whitespace-nowrap select-none">
             {MARQUEE_ITEMS.map((s, i) => (
               <div key={i} className="flex items-baseline gap-4 shrink-0">
