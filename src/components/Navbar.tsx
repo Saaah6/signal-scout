@@ -5,9 +5,8 @@ import { motion } from "framer-motion";
 
 export const NavLink = React.memo(function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <a href={href} className="text-sm font-medium text-[#333333] hover:text-black transition-colors duration-200 group relative font-roboto">
+    <a href={href} className="text-[13px] font-medium text-black/50 hover:text-black hover:bg-black/5 px-3.5 py-1.5 rounded-full transition-all duration-200 font-roboto">
       {children}
-      <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-black transition-all duration-300 group-hover:w-full" />
     </a>
   );
 });
@@ -22,23 +21,20 @@ export default function Navbar({ onOpenAuth }: { onOpenAuth: () => void }) {
         </div>
 
         {/* Nav links — perfectly centred */}
-        <div className="hidden md:flex items-center justify-center gap-8 flex-1">
-          <NavLink href="#features">Features</NavLink>
-          <NavLink href="#how-it-works">How it works</NavLink>
-          <NavLink href="#newsletter">GTM Digest</NavLink>
+        <div className="hidden md:flex items-center justify-center gap-1 flex-1">
+          <NavLink href="#features">Platform</NavLink>
+          <NavLink href="#how-it-works">Intelligence</NavLink>
+          <NavLink href="#newsletter">Digest</NavLink>
         </div>
 
         {/* Right */}
-        <div className="flex items-center justify-end gap-6 flex-1 min-w-max">
-          <button onClick={onOpenAuth} className="text-sm font-medium text-[#333333] hover:text-black transition-colors duration-200 font-roboto hidden md:block">
+        <div className="flex items-center justify-end gap-8 flex-1 min-w-max">
+          <button onClick={onOpenAuth} className="text-[13px] font-medium text-black/60 hover:text-black transition-colors duration-200 font-roboto hidden md:block">
             Sign in
           </button>
           <motion.button
             onClick={onOpenAuth}
-            className="inline-flex items-center justify-center gap-2 text-white text-sm font-bold rounded-full px-5 h-9 transition-all duration-200 group font-roboto shrink-0 bg-gradient-to-r from-[#000] via-[#555] to-[#000] shadow-sm hover:shadow-md"
-            style={{ backgroundSize: "200% auto" }}
-            animate={{ backgroundPosition: ["-200% center", "200% center"] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+            className="inline-flex items-center justify-center gap-2 text-white text-[13px] font-semibold rounded-full px-5 h-9 transition-all duration-200 group font-roboto shrink-0 bg-[#111] hover:bg-black shadow-sm"
           >
             Get started
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
