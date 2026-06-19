@@ -174,26 +174,28 @@ export default function Stage2ICP() {
             <Buildings className="w-5 h-5" />
             <h3 className="font-semibold text-[#111] font-outfit">Firmographics</h3>
           </div>
-          <div className="space-y-3.5 text-sm">
-            <div className="flex justify-between border-b border-black/5 pb-2">
-              <span className="text-[#666]">Target Industry</span>
-              <span className="text-[#111] font-medium">{icp.firmographics.industry}</span>
+          <div className="flex flex-col gap-2.5">
+            <div className="bg-[#fafafa] border border-black/[0.04] rounded-lg p-3.5 transition-colors hover:bg-black/[0.02]">
+              <span className="block text-[10px] uppercase font-bold tracking-[0.06em] text-[#888] mb-1.5 font-roboto-mono">Target Industry</span>
+              <span className="block text-[13px] font-semibold text-[#111] leading-snug">{icp.firmographics.industry}</span>
             </div>
-            <div className="flex justify-between border-b border-black/5 pb-2">
-              <span className="text-[#666]">Company Size</span>
-              <span className="text-[#111] font-medium">{icp.firmographics.employeeCount}</span>
-            </div>
-            <div className="flex justify-between border-b border-black/5 pb-2">
-              <span className="text-[#666]">Target Revenue</span>
-              <span className="text-[#111] font-medium">{icp.firmographics.revenue}</span>
-            </div>
-            <div className="flex justify-between border-b border-black/5 pb-2">
-              <span className="text-[#666]">Geography</span>
-              <span className="text-[#111] font-medium">{icp.firmographics.geography}</span>
-            </div>
-            <div className="flex justify-between pb-1">
-              <span className="text-[#666]">Funding Phase</span>
-              <span className="text-[#111] font-medium">{icp.firmographics.fundingStage}</span>
+            <div className="grid grid-cols-2 gap-2.5">
+              <div className="bg-[#fafafa] border border-black/[0.04] rounded-lg p-3.5 transition-colors hover:bg-black/[0.02]">
+                <span className="block text-[10px] uppercase font-bold tracking-[0.06em] text-[#888] mb-1.5 font-roboto-mono">Company Size</span>
+                <span className="block text-[13px] font-semibold text-[#111]">{icp.firmographics.employeeCount}</span>
+              </div>
+              <div className="bg-[#fafafa] border border-black/[0.04] rounded-lg p-3.5 transition-colors hover:bg-black/[0.02]">
+                <span className="block text-[10px] uppercase font-bold tracking-[0.06em] text-[#888] mb-1.5 font-roboto-mono">Target Revenue</span>
+                <span className="block text-[13px] font-semibold text-[#111]">{icp.firmographics.revenue}</span>
+              </div>
+              <div className="bg-[#fafafa] border border-black/[0.04] rounded-lg p-3.5 transition-colors hover:bg-black/[0.02]">
+                <span className="block text-[10px] uppercase font-bold tracking-[0.06em] text-[#888] mb-1.5 font-roboto-mono">Geography</span>
+                <span className="block text-[13px] font-semibold text-[#111]">{icp.firmographics.geography}</span>
+              </div>
+              <div className="bg-[#fafafa] border border-black/[0.04] rounded-lg p-3.5 transition-colors hover:bg-black/[0.02]">
+                <span className="block text-[10px] uppercase font-bold tracking-[0.06em] text-[#888] mb-1.5 font-roboto-mono">Funding Phase</span>
+                <span className="block text-[13px] font-semibold text-[#111]">{icp.firmographics.fundingStage}</span>
+              </div>
             </div>
           </div>
         </div>
