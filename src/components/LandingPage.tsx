@@ -369,9 +369,9 @@ export default function LandingPage() {
               <span className="w-8 h-px bg-black/25 inline-block" />
               Capabilities
             </span>
-            <motion.h2 {...FADE_UP} className="text-4xl lg:text-5xl font-black tracking-tight font-roboto leading-[1.1] text-black">
-              Everything you need.<br />
-              <span className="text-[#aaaaaa]">Nothing you don&apos;t.</span>
+            <motion.h2 {...FADE_UP} className="text-4xl lg:text-5xl font-black tracking-tight font-roboto leading-[1.05] text-black">
+              Know who&apos;s buying.<br />
+              <span className="text-black/65">Before they tell you.</span>
             </motion.h2>
           </div>
           <div>
