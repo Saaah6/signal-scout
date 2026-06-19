@@ -105,7 +105,7 @@ export default function AccountsTable({ onRevealInsights }: AccountsTableProps) 
   };
 
   return (
-    <div className="bg-white border border-black/10 rounded-xl p-5 shadow-sm flex-1 flex flex-col overflow-hidden">
+    <div className="bg-white/80 backdrop-blur-md border border-black/10 rounded-xl p-5 shadow-sm flex-1 flex flex-col overflow-hidden">
       
       {/* Table Header Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5 pb-4 border-b border-black/10">
@@ -226,8 +226,14 @@ export default function AccountsTable({ onRevealInsights }: AccountsTableProps) 
           <tbody className="divide-y divide-black/5 text-xs">
             {filteredAccounts.length === 0 ? (
               <tr>
-                <td colSpan={5} className="py-12 text-center text-[#888]">
-                  No accounts found matching current query or filters.
+                <td colSpan={5} className="py-16 text-center">
+                  <div className="flex flex-col items-center justify-center opacity-60">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="mb-4 text-[#888]">
+                      <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      <line x1="10" y1="10" x2="10" y2="10" strokeWidth="2" />
+                    </svg>
+                    <p className="text-[#555] font-semibold">No accounts found matching current query or filters.</p>
+                  </div>
                 </td>
               </tr>
             ) : (

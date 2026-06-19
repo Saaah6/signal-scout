@@ -25,7 +25,7 @@ export default function IntelligenceFeed() {
   };
 
   return (
-    <div className="bg-white border border-black/10 rounded-xl p-5 shadow-sm flex flex-col h-full overflow-hidden min-h-[400px]">
+    <div className="bg-white/80 backdrop-blur-md border border-black/10 rounded-xl p-5 shadow-sm flex flex-col h-full overflow-hidden min-h-[400px]">
       
       {/* Title */}
       <div className="flex items-center space-x-2 mb-4 border-b border-black/10 pb-3">

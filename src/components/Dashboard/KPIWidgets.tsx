@@ -103,7 +103,7 @@ export default function KPIWidgets() {
         return (
           <div 
             key={idx} 
-            className="bg-white border border-black/10 rounded-xl p-4 flex flex-col justify-between hover:border-black/20 transition shadow-sm relative overflow-hidden group"
+            className="bg-white/80 backdrop-blur-md border border-black/10 rounded-xl p-4 flex flex-col justify-between hover:border-black/30 hover:shadow-md transition relative overflow-hidden group"
           >
             <div className="flex items-center justify-between mb-3">
               <span className="text-[10px] font-bold text-[#888] uppercase tracking-widest block truncate">
