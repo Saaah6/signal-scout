@@ -12,7 +12,6 @@ import DashboardLayout from "@/components/Dashboard/DashboardLayout";
 import LandingPage from "@/components/LandingPage";
 import AnimatedLogo from "@/components/AnimatedLogo";
 import { SignOut } from "@phosphor-icons/react";
-import CosmosBackground from "@/components/CosmosBackground";
 import LiquidCurtain from "@/components/LiquidCurtain";
 
 function OnboardingSteps() {
@@ -43,25 +42,23 @@ function OnboardingSteps() {
   if (typeof step === "string") return null;
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col justify-center items-center p-6 relative overflow-hidden font-sans">
-      {/* WebGL Cosmos Backdrop */}
-      <CosmosBackground />
+    <div className="min-h-screen bg-[#fafafa] flex flex-col justify-center items-center p-6 relative overflow-hidden font-sans selection:bg-black selection:text-white">
       {/* Absolute positioned floating profile & signout */}
       {user && (
-        <div className="absolute top-6 right-6 flex items-center space-x-2 sm:space-x-3 bg-zinc-900/40 border border-zinc-800 rounded-full py-1.5 px-2.5 sm:pl-2.5 sm:pr-4 shadow-lg backdrop-blur-md z-40">
+        <div className="absolute top-6 right-6 flex items-center space-x-2 sm:space-x-3 bg-white/80 border border-black/10 rounded-full py-1.5 px-2.5 sm:pl-2.5 sm:pr-4 shadow-sm backdrop-blur-md z-40">
           <img 
             src={user.avatar} 
             alt={user.name} 
-            className="w-5 h-5 rounded-full ring-1 ring-violet-500/30"
+            className="w-5 h-5 rounded-full ring-1 ring-black/10"
           />
           <div className="hidden sm:flex flex-col text-left">
-            <span className="text-[10px] font-bold text-white max-w-[100px] truncate leading-tight font-outfit">{user.name}</span>
-            <span className="text-[8px] text-zinc-550 truncate leading-none max-w-[100px]">{user.email}</span>
+            <span className="text-[10px] font-bold text-[#111] max-w-[100px] truncate leading-tight font-outfit">{user.name}</span>
+            <span className="text-[8px] text-[#666] truncate leading-none max-w-[100px]">{user.email}</span>
           </div>
-          <div className="hidden sm:block w-px h-5 bg-zinc-800" />
+          <div className="hidden sm:block w-px h-5 bg-black/10" />
           <button
             onClick={logout}
-            className="text-zinc-400 hover:text-red-400 transition text-[9px] font-bold flex items-center space-x-1.5 uppercase tracking-wider cursor-pointer"
+            className="text-[#555] hover:text-red-500 transition text-[9px] font-bold flex items-center space-x-1.5 uppercase tracking-wider cursor-pointer"
             title="Sign Out"
           >
             <SignOut className="w-3.5 h-3.5" />
@@ -71,15 +68,15 @@ function OnboardingSteps() {
       )}
 
       {/* Decorative Blur Backgrounds */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-violet-650/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-emerald-650/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-violet-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Setup Steps Wizard Header */}
       <div className="w-full max-w-xl flex flex-col items-center mb-8 text-center">
-        <div className="flex items-center justify-center mb-2">
+        <div className="flex items-center justify-center mb-2 text-black">
           <AnimatedLogo className="w-6 h-6" showText={true} />
         </div>
-        <h1 className="text-xl font-bold text-white mb-4 font-outfit">Campaign Configuration</h1>
+        <h1 className="text-xl font-bold text-[#111] mb-4 font-outfit tracking-tight">Campaign Configuration</h1>
         
         {/* Progress bar dots */}
         <div className="flex items-center space-x-2 w-full max-w-sm mt-2">
@@ -87,13 +84,13 @@ function OnboardingSteps() {
             <div key={s} className="flex-1 flex items-center">
               <div 
                 className={`h-1.5 w-full rounded-full transition-all duration-500 ${
-                  s <= step ? "bg-violet-500 shadow-md shadow-violet-500/25" : "bg-zinc-800"
+                  s <= step ? "bg-black shadow-sm" : "bg-black/10"
                 }`}
               />
             </div>
           ))}
         </div>
-        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-3.5">
+        <span className="text-[10px] font-bold text-[#666] uppercase tracking-widest mt-3.5">
           Step {step} of 5 &bull; {getStepTitle(step)}
         </span>
       </div>
@@ -114,10 +111,10 @@ function MainAppContent() {
 
   if (isAuthLoading) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex flex-col justify-center items-center p-6 font-sans">
+      <div className="min-h-screen bg-[#fafafa] flex flex-col justify-center items-center p-6 font-sans">
         <div className="flex flex-col items-center space-y-3">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500"></div>
-          <span className="text-zinc-500 text-xs font-semibold">Initializing IntelScout Engine...</span>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+          <span className="text-[#555] text-xs font-semibold">Initializing IntelScout Engine...</span>
         </div>
       </div>
     );
@@ -129,7 +126,7 @@ function MainAppContent() {
 
   if (step === "research") {
     return (
-      <div className="min-h-screen bg-zinc-950 flex flex-col justify-center items-center p-6 font-sans">
+      <div className="min-h-screen bg-[#fafafa] flex flex-col justify-center items-center p-6 font-sans">
         <ResearchEngine />
       </div>
     );

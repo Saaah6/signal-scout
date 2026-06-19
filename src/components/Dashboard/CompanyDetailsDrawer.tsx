@@ -202,12 +202,12 @@ ${promptText ? `[Note: Custom instruction: "${promptText}"]` : ""}`;
     }
   };
 
-  const getTierColor = (tier: 1 | 2 | 3 | 4) => {
+    const getTierColor = (tier: 1 | 2 | 3 | 4) => {
     switch(tier) {
-      case 1: return "text-emerald-400 border-emerald-900/40 bg-emerald-950/20";
-      case 2: return "text-amber-400 border-amber-900/40 bg-amber-950/20";
-      case 3: return "text-blue-400 border-blue-900/40 bg-blue-950/20";
-      default: return "text-zinc-400 border-zinc-850 bg-zinc-900";
+      case 1: return "text-emerald-600 border-emerald-500/20 bg-emerald-500/10";
+      case 2: return "text-amber-600 border-amber-500/20 bg-amber-500/10";
+      case 3: return "text-blue-600 border-blue-500/20 bg-blue-500/10";
+      default: return "text-[#666] border-black/10 bg-[#fafafa]";
     }
   };
 
@@ -229,76 +229,76 @@ ${promptText ? `[Note: Custom instruction: "${promptText}"]` : ""}`;
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
         transition={{ type: "spring", damping: 20, stiffness: 100 }}
-        className="relative w-full max-w-lg bg-zinc-950 border-l border-zinc-900 shadow-2xl h-full z-10 flex flex-col overflow-y-auto"
+        className="relative w-full max-w-lg bg-[#fafafa] border-l border-black/10 shadow-2xl h-full z-10 flex flex-col overflow-y-auto"
       >
         {/* Header */}
-        <div className="p-6 border-b border-zinc-900 flex items-center justify-between">
+        <div className="p-6 border-b border-black/10 flex items-center justify-between bg-white">
           <div>
             <span className={`px-2 py-0.5 border rounded-lg text-[9px] font-bold uppercase tracking-wider ${getTierColor(account.priorityTier)}`}>
               {getTierName(account.priorityTier)}
             </span>
-            <h2 className="text-xl font-bold text-white tracking-tight mt-1.5 font-outfit">
+            <h2 className="text-xl font-bold text-[#111] tracking-tight mt-1.5 font-outfit">
               {account.company_name}
             </h2>
-            <p className="text-xs text-zinc-500 font-medium">{account.domain}</p>
+            <p className="text-xs text-[#666] font-medium">{account.domain}</p>
           </div>
           <button 
             onClick={onClose}
-            className="p-1.5 hover:bg-zinc-900 rounded-lg text-zinc-500 hover:text-zinc-300 transition"
+            className="p-1.5 hover:bg-black/5 rounded-lg text-[#888] hover:text-[#111] transition"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content Body */}
-        <div className="p-6 space-y-6 flex-1">
+        <div className="p-6 space-y-6 flex-1 bg-white">
           
           {/* Score Formula Math Panel (Stage 7 & 8) */}
-          <div className="bg-zinc-900/40 border border-zinc-900 rounded-xl p-5">
+          <div className="bg-[#fafafa] border border-black/10 rounded-xl p-5">
             <div className="flex justify-between items-center mb-3">
-              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">Explainable Qualification Score</span>
-              <span className="text-2xl font-black font-outfit text-white">
-                {account.opportunityScore}<span className="text-xs font-normal text-zinc-500"> / 100</span>
+              <span className="text-[10px] font-bold text-[#888] uppercase tracking-wider block">Explainable Qualification Score</span>
+              <span className="text-2xl font-black font-outfit text-[#111]">
+                {account.opportunityScore}<span className="text-xs font-normal text-[#888]"> / 100</span>
               </span>
             </div>
             {/* Horizontal progress bar segmentation */}
-            <div className="h-2 w-full bg-zinc-950 border border-zinc-900 rounded-full overflow-hidden flex mb-4">
+            <div className="h-2 w-full bg-black/5 border border-black/10 rounded-full overflow-hidden flex mb-4">
               <div className="h-full bg-emerald-500" style={{ width: `${account.icpFit * 0.4}%` }} title="ICP Fit contribution" />
               <div className="h-full bg-amber-500" style={{ width: `${account.intent * 0.25}%` }} title="Intent contribution" />
               <div className="h-full bg-blue-500" style={{ width: `${account.timing * 0.15}%` }} title="Timing contribution" />
               <div className="h-full bg-purple-500" style={{ width: `${account.signalScore * 0.2}%` }} title="Signal contribution" />
             </div>
             {/* Score Grid Breakdown */}
-            <div className="grid grid-cols-4 gap-2 text-center text-[10px] text-zinc-400">
-              <div className="bg-zinc-950 border border-zinc-900/50 rounded-lg p-2">
-                <p className="font-bold text-emerald-400 font-mono">{account.icpFit}</p>
-                <p className="text-[8px] text-zinc-550 uppercase font-semibold mt-0.5">ICP Fit (40%)</p>
+            <div className="grid grid-cols-4 gap-2 text-center text-[10px] text-[#555]">
+              <div className="bg-white border border-black/10 rounded-lg p-2">
+                <p className="font-bold text-emerald-600 font-mono">{account.icpFit}</p>
+                <p className="text-[8px] text-[#888] uppercase font-semibold mt-0.5">ICP Fit (40%)</p>
               </div>
-              <div className="bg-zinc-950 border border-zinc-900/50 rounded-lg p-2">
-                <p className="font-bold text-amber-400 font-mono">{account.intent}</p>
-                <p className="text-[8px] text-zinc-550 uppercase font-semibold mt-0.5">Intent (25%)</p>
+              <div className="bg-white border border-black/10 rounded-lg p-2">
+                <p className="font-bold text-amber-600 font-mono">{account.intent}</p>
+                <p className="text-[8px] text-[#888] uppercase font-semibold mt-0.5">Intent (25%)</p>
               </div>
-              <div className="bg-zinc-950 border border-zinc-900/50 rounded-lg p-2">
-                <p className="font-bold text-blue-400 font-mono">{account.timing}</p>
-                <p className="text-[8px] text-zinc-550 uppercase font-semibold mt-0.5">Timing (15%)</p>
+              <div className="bg-white border border-black/10 rounded-lg p-2">
+                <p className="font-bold text-blue-600 font-mono">{account.timing}</p>
+                <p className="text-[8px] text-[#888] uppercase font-semibold mt-0.5">Timing (15%)</p>
               </div>
-              <div className="bg-zinc-950 border border-zinc-900/50 rounded-lg p-2">
-                <p className="font-bold text-purple-400 font-mono">{account.signalScore}</p>
-                <p className="text-[8px] text-zinc-550 uppercase font-semibold mt-0.5">Signals (20%)</p>
+              <div className="bg-white border border-black/10 rounded-lg p-2">
+                <p className="font-bold text-purple-600 font-mono">{account.signalScore}</p>
+                <p className="text-[8px] text-[#888] uppercase font-semibold mt-0.5">Signals (20%)</p>
               </div>
             </div>
           </div>
 
           {/* Why This Account (Stage 8) */}
           <div>
-            <div className="flex items-center space-x-2 text-zinc-300 mb-3 border-b border-zinc-900 pb-2">
-              <Lightbulb className="w-4 h-4 text-violet-400" />
-              <h3 className="text-xs font-bold uppercase tracking-wider text-white font-outfit">Qualification Reasons</h3>
+            <div className="flex items-center space-x-2 text-[#333] mb-3 border-b border-black/10 pb-2">
+              <Lightbulb className="w-4 h-4 text-violet-600" />
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#111] font-outfit">Qualification Reasons</h3>
             </div>
             <ul className="space-y-2.5">
               {account.reasons.map((reason, idx) => (
-                <li key={idx} className="flex items-start space-x-2.5 text-xs text-zinc-400">
-                  <span className="w-1.5 h-1.5 bg-violet-400 rounded-full mt-1.5 shrink-0" />
+                <li key={idx} className="flex items-start space-x-2.5 text-xs text-[#555]">
+                  <span className="w-1.5 h-1.5 bg-violet-600 rounded-full mt-1.5 shrink-0" />
                   <span>{reason}</span>
                 </li>
               ))}
@@ -307,13 +307,13 @@ ${promptText ? `[Note: Custom instruction: "${promptText}"]` : ""}`;
 
           {/* Technographic Match details */}
           <div>
-            <div className="flex items-center space-x-2 text-zinc-300 mb-3 border-b border-zinc-900 pb-2">
-              <Compass className="w-4 h-4 text-violet-400" />
-              <h3 className="text-xs font-bold uppercase tracking-wider text-white font-outfit">Technographics Detected</h3>
+            <div className="flex items-center space-x-2 text-[#333] mb-3 border-b border-black/10 pb-2">
+              <Compass className="w-4 h-4 text-violet-600" />
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#111] font-outfit">Technographics Detected</h3>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {account.techStack.map((tech, idx) => (
-                <span key={idx} className="px-2 py-1 bg-zinc-900 border border-zinc-850 rounded-lg text-xs font-medium text-zinc-300">
+                <span key={idx} className="px-2 py-1 bg-[#fafafa] border border-black/10 rounded-lg text-xs font-medium text-[#555]">
                   {tech}
                 </span>
               ))}
@@ -322,75 +322,75 @@ ${promptText ? `[Note: Custom instruction: "${promptText}"]` : ""}`;
 
           {/* Buying Committee Mapping (Stage 9) */}
           <div>
-            <div className="flex items-center space-x-2 text-zinc-300 mb-3 border-b border-zinc-900 pb-2">
-              <Users className="w-4 h-4 text-violet-400" />
-              <h3 className="text-xs font-bold uppercase tracking-wider text-white font-outfit">Buying Committee Map</h3>
+            <div className="flex items-center space-x-2 text-[#333] mb-3 border-b border-black/10 pb-2">
+              <Users className="w-4 h-4 text-violet-600" />
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#111] font-outfit">Buying Committee Map</h3>
             </div>
             <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="bg-zinc-950 border border-zinc-900/60 rounded-xl p-3">
-                <span className="text-[9px] font-bold text-zinc-550 uppercase tracking-wider">Economic Buyer</span>
-                <p className="font-semibold text-zinc-200 mt-0.5">{account.buyingCommittee.economic}</p>
+              <div className="bg-[#fafafa] border border-black/10 rounded-xl p-3">
+                <span className="text-[9px] font-bold text-[#888] uppercase tracking-wider">Economic Buyer</span>
+                <p className="font-semibold text-[#111] mt-0.5">{account.buyingCommittee.economic}</p>
               </div>
-              <div className="bg-zinc-950 border border-zinc-900/60 rounded-xl p-3">
-                <span className="text-[9px] font-bold text-zinc-550 uppercase tracking-wider">Technical Buyer</span>
-                <p className="font-semibold text-zinc-200 mt-0.5">{account.buyingCommittee.technical}</p>
+              <div className="bg-[#fafafa] border border-black/10 rounded-xl p-3">
+                <span className="text-[9px] font-bold text-[#888] uppercase tracking-wider">Technical Buyer</span>
+                <p className="font-semibold text-[#111] mt-0.5">{account.buyingCommittee.technical}</p>
               </div>
-              <div className="bg-zinc-950 border border-zinc-900/60 rounded-xl p-3">
-                <span className="text-[9px] font-bold text-zinc-550 uppercase tracking-wider">GTM Champion</span>
-                <p className="font-semibold text-zinc-200 mt-0.5">{account.buyingCommittee.champion}</p>
+              <div className="bg-[#fafafa] border border-black/10 rounded-xl p-3">
+                <span className="text-[9px] font-bold text-[#888] uppercase tracking-wider">GTM Champion</span>
+                <p className="font-semibold text-[#111] mt-0.5">{account.buyingCommittee.champion}</p>
               </div>
-              <div className="bg-zinc-950 border border-zinc-900/60 rounded-xl p-3">
-                <span className="text-[9px] font-bold text-zinc-550 uppercase tracking-wider">Target User</span>
-                <p className="font-semibold text-zinc-200 mt-0.5">{account.buyingCommittee.endUser}</p>
+              <div className="bg-[#fafafa] border border-black/10 rounded-xl p-3">
+                <span className="text-[9px] font-bold text-[#888] uppercase tracking-wider">Target User</span>
+                <p className="font-semibold text-[#111] mt-0.5">{account.buyingCommittee.endUser}</p>
               </div>
             </div>
           </div>
 
           {/* GTM Recommendations (Stage 10) */}
           <div>
-            <div className="flex items-center space-x-2 text-zinc-300 mb-3 border-b border-zinc-900 pb-2">
-              <PaperPlane className="w-4 h-4 text-violet-400" />
-              <h3 className="text-xs font-bold uppercase tracking-wider text-white font-outfit">Outbound GTM Recommendation</h3>
+            <div className="flex items-center space-x-2 text-[#333] mb-3 border-b border-black/10 pb-2">
+              <PaperPlane className="w-4 h-4 text-violet-600" />
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#111] font-outfit">Outbound GTM Recommendation</h3>
             </div>
-            <div className="bg-zinc-900/20 border border-zinc-900 rounded-xl p-4.5 space-y-3.5 text-xs">
+            <div className="bg-[#fafafa] border border-black/10 rounded-xl p-4.5 space-y-3.5 text-xs">
               <div>
-                <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-wider block">Recommended Contact Persona</span>
-                <p className="font-semibold text-zinc-200 mt-0.5">{account.gtmRecommendations.contact}</p>
+                <span className="text-[9px] font-bold text-[#888] uppercase tracking-wider block">Recommended Contact Persona</span>
+                <p className="font-semibold text-[#111] mt-0.5">{account.gtmRecommendations.contact}</p>
               </div>
               <div>
-                <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-wider block">Why They Care / Motivation Trigger</span>
-                <p className="text-zinc-300 mt-0.5 leading-relaxed">{account.gtmRecommendations.reason}</p>
+                <span className="text-[9px] font-bold text-[#888] uppercase tracking-wider block">Why They Care / Motivation Trigger</span>
+                <p className="text-[#333] mt-0.5 leading-relaxed">{account.gtmRecommendations.reason}</p>
               </div>
               <div>
-                <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-wider block">Identified Target Pain</span>
-                <p className="text-zinc-300 mt-0.5 leading-relaxed">{account.gtmRecommendations.pain}</p>
+                <span className="text-[9px] font-bold text-[#888] uppercase tracking-wider block">Identified Target Pain</span>
+                <p className="text-[#333] mt-0.5 leading-relaxed">{account.gtmRecommendations.pain}</p>
               </div>
-              <div className="p-3 bg-violet-950/10 border border-violet-900/20 rounded-lg">
-                <span className="text-[9px] font-bold text-violet-400 uppercase tracking-wider block">Suggested Pitch Angle</span>
-                <p className="text-zinc-200 font-medium mt-1 leading-relaxed italic">
+              <div className="p-3 bg-violet-50 border border-violet-100 rounded-lg">
+                <span className="text-[9px] font-bold text-violet-600 uppercase tracking-wider block">Suggested Pitch Angle</span>
+                <p className="text-[#111] font-medium mt-1 leading-relaxed italic">
                   &ldquo;{account.gtmRecommendations.angle}&rdquo;
                 </p>
               </div>
             </div>
           </div>
           {/* AI Outreach Copilot Panel */}
-          <div className="border-t border-zinc-900 pt-6 space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-zinc-900">
-              <div className="flex items-center space-x-2 text-zinc-350">
-                <Sparkle className="w-4 h-4 text-violet-400 animate-pulse" />
-                <h3 className="text-xs font-bold uppercase tracking-wider text-white font-outfit">AI Outreach Copilot</h3>
+          <div className="border-t border-black/10 pt-6 space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-black/10">
+              <div className="flex items-center space-x-2 text-[#555]">
+                <Sparkle className="w-4 h-4 text-violet-600 animate-pulse" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[#111] font-outfit">AI Outreach Copilot</h3>
               </div>
               <div className="flex items-center space-x-1">
-                <span className="text-[9px] font-mono text-zinc-550 uppercase">Limit:</span>
-                <span className={`px-2 py-0.5 rounded font-mono text-[9px] font-bold ${credits > 0 ? "bg-zinc-900 text-violet-400" : "bg-red-950/40 border border-red-900/30 text-red-400"}`}>
+                <span className="text-[9px] font-mono text-[#888] uppercase">Limit:</span>
+                <span className={`px-2 py-0.5 rounded font-mono text-[9px] font-bold ${credits > 0 ? "bg-[#fafafa] border border-black/10 text-violet-600" : "bg-red-50 border border-red-200 text-red-600"}`}>
                   {credits} / 5 req/min
                 </span>
               </div>
             </div>
 
             {isMarketing ? (
-              <div className="p-4 bg-red-950/20 border border-red-900/35 text-red-400 rounded-xl flex items-start space-x-3 text-xs leading-normal">
-                <Shield className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+              <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl flex items-start space-x-3 text-xs leading-normal">
+                <Shield className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold block uppercase tracking-wide mb-0.5">Access Restricted</span>
                   <span>AI outreach response generation is restricted to Sales and GTM Administrator roles. Switch your role in the navigation bar to proceed.</span>
@@ -400,14 +400,14 @@ ${promptText ? `[Note: Custom instruction: "${promptText}"]` : ""}`;
               <>
                 {/* Select Channel */}
                 <div>
-                  <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-2">Select Channel</span>
+                  <span className="text-[10px] font-bold text-[#888] uppercase tracking-wider block mb-2">Select Channel</span>
                   <div className="grid grid-cols-3 gap-1.5">
                     <button
                       onClick={() => { setChannel("email"); setAiResponse(null); }}
                       className={`py-2 px-3 border rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5 transition cursor-pointer ${
                         channel === "email" 
-                          ? "bg-violet-950/20 border-violet-900/60 text-violet-400" 
-                          : "bg-zinc-950 border-zinc-900 text-zinc-550 hover:border-zinc-800 hover:text-zinc-300"
+                          ? "bg-violet-50 border-violet-200 text-violet-600" 
+                          : "bg-white border-black/10 text-[#555] hover:border-black/30 hover:text-[#111]"
                       }`}
                     >
                       <PaperPlane className="w-3.5 h-3.5" />
@@ -417,8 +417,8 @@ ${promptText ? `[Note: Custom instruction: "${promptText}"]` : ""}`;
                       onClick={() => { setChannel("linkedin"); setAiResponse(null); }}
                       className={`py-2 px-3 border rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5 transition cursor-pointer ${
                         channel === "linkedin" 
-                          ? "bg-violet-950/20 border-violet-900/60 text-violet-400" 
-                          : "bg-zinc-950 border-zinc-900 text-zinc-550 hover:border-zinc-800 hover:text-zinc-300"
+                          ? "bg-violet-50 border-violet-200 text-violet-600" 
+                          : "bg-white border-black/10 text-[#555] hover:border-black/30 hover:text-[#111]"
                       }`}
                     >
                       <Chat className="w-3.5 h-3.5" />
@@ -428,8 +428,8 @@ ${promptText ? `[Note: Custom instruction: "${promptText}"]` : ""}`;
                       onClick={() => { setChannel("call"); setAiResponse(null); }}
                       className={`py-2 px-3 border rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5 transition cursor-pointer ${
                         channel === "call" 
-                          ? "bg-violet-950/20 border-violet-900/60 text-violet-400" 
-                          : "bg-zinc-950 border-zinc-900 text-zinc-550 hover:border-zinc-800 hover:text-zinc-300"
+                          ? "bg-violet-50 border-violet-200 text-violet-600" 
+                          : "bg-white border-black/10 text-[#555] hover:border-black/30 hover:text-[#111]"
                       }`}
                     >
                       <PhoneCall className="w-3.5 h-3.5" />
@@ -440,7 +440,7 @@ ${promptText ? `[Note: Custom instruction: "${promptText}"]` : ""}`;
 
                 {/* Select Tone */}
                 <div>
-                  <span className="text-[10px] font-bold text-zinc-555 uppercase tracking-wider block mb-2">Outreach Tone</span>
+                  <span className="text-[10px] font-bold text-[#888] uppercase tracking-wider block mb-2">Outreach Tone</span>
                   <div className="grid grid-cols-4 gap-1">
                     {(["professional", "friendly", "bold", "value"] as const).map((t) => (
                       <button
@@ -448,8 +448,8 @@ ${promptText ? `[Note: Custom instruction: "${promptText}"]` : ""}`;
                         onClick={() => { setTone(t); setAiResponse(null); }}
                         className={`py-1.5 border rounded-lg text-[9px] font-bold uppercase tracking-wider transition capitalize cursor-pointer ${
                           tone === t 
-                            ? "bg-zinc-900 border-zinc-700 text-white" 
-                            : "bg-zinc-950 border-zinc-900/50 text-zinc-500 hover:text-zinc-350 hover:bg-zinc-900/20"
+                            ? "bg-black border-black text-white" 
+                            : "bg-[#fafafa] border-black/10 text-[#555] hover:text-[#111] hover:bg-black/5"
                         }`}
                       >
                         {t}
@@ -460,21 +460,21 @@ ${promptText ? `[Note: Custom instruction: "${promptText}"]` : ""}`;
 
                 {/* Additional Custom Prompts */}
                 <div>
-                  <label htmlFor="custom-prompt" className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-2">Additional Instructions / Context</label>
+                  <label htmlFor="custom-prompt" className="text-[10px] font-bold text-[#888] uppercase tracking-wider block mb-2">Additional Instructions / Context</label>
                   <textarea
                     id="custom-prompt"
                     rows={2}
                     value={customPrompt}
                     onChange={(e) => setCustomPrompt(e.target.value)}
                     placeholder="e.g. Keep under 80 words, mention competitor is Stripe, focus on database caching speed..."
-                    className="w-full bg-zinc-955 border border-zinc-900 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-violet-500/60 focus:ring-1 focus:ring-violet-500/60 transition resize-none bg-zinc-950"
+                    className="w-full bg-white border border-black/10 rounded-xl px-3 py-2 text-xs text-[#111] focus:outline-none focus:border-violet-300 focus:ring-1 focus:ring-violet-300 transition resize-none"
                   />
                 </div>
 
                 {/* Rate limit warning */}
                 {credits <= 0 && (
-                  <div className="p-3 bg-amber-955/20 border border-amber-900/30 text-amber-500 rounded-xl flex items-start space-x-2.5 text-xs leading-normal">
-                    <Lightning className="w-4 h-4 text-amber-500 shrink-0 mt-0.5 animate-pulse" />
+                  <div className="p-3 bg-amber-50 border border-amber-200 text-amber-600 rounded-xl flex items-start space-x-2.5 text-xs leading-normal">
+                    <Lightning className="w-4 h-4 text-amber-600 shrink-0 mt-0.5 animate-pulse" />
                     <span>Rate limit exceeded (5 requests/min). AI quota resets in 15 seconds. Please wait or upgrade.</span>
                   </div>
                 )}
@@ -495,25 +495,25 @@ ${promptText ? `[Note: Custom instruction: "${promptText}"]` : ""}`;
 
                 {/* Simulated Agent progress */}
                 {isGenerating && (
-                  <div className="p-4 bg-zinc-950 border border-zinc-900 rounded-xl flex items-center space-x-3 text-xs text-zinc-400">
-                    <CircleNotch className="w-4 h-4 text-violet-500 animate-spin shrink-0" />
+                  <div className="p-4 bg-white border border-black/10 rounded-xl flex items-center space-x-3 text-xs text-[#555]">
+                    <CircleNotch className="w-4 h-4 text-violet-600 animate-spin shrink-0" />
                     <span className="animate-pulse font-medium">{loadingStep}</span>
                   </div>
                 )}
 
                 {/* Response Display Box */}
                 {aiResponse && !isGenerating && (
-                  <div className="bg-zinc-950 border border-zinc-900 rounded-xl p-4 relative group">
-                    <div className="flex justify-between items-center mb-2.5 pb-2 border-b border-zinc-900">
-                      <span className="text-[9px] font-bold text-violet-400 uppercase tracking-wider block">AI Generated Outbound Copy</span>
+                  <div className="bg-[#fafafa] border border-black/10 rounded-xl p-4 relative group">
+                    <div className="flex justify-between items-center mb-2.5 pb-2 border-b border-black/10">
+                      <span className="text-[9px] font-bold text-violet-600 uppercase tracking-wider block">AI Generated Outbound Copy</span>
                       <button
                         onClick={handleCopyEmail}
-                        className="text-[10px] text-zinc-400 hover:text-white font-semibold transition cursor-pointer flex items-center space-x-1"
+                        className="text-[10px] text-[#888] hover:text-[#111] font-semibold transition cursor-pointer flex items-center space-x-1"
                       >
                         {copySuccess ? (
                           <>
-                            <Check className="w-3.5 h-3.5 text-emerald-400" />
-                            <span className="text-emerald-400">Copied!</span>
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                            <span className="text-emerald-600">Copied!</span>
                           </>
                         ) : (
                           <>
@@ -523,7 +523,7 @@ ${promptText ? `[Note: Custom instruction: "${promptText}"]` : ""}`;
                         )}
                       </button>
                     </div>
-                    <pre className="text-[11px] text-zinc-350 leading-relaxed font-mono whitespace-pre-wrap break-words">
+                    <pre className="text-[11px] text-[#333] leading-relaxed font-mono whitespace-pre-wrap break-words">
                       {aiResponse}
                     </pre>
                   </div>

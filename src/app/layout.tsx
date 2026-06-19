@@ -31,7 +31,18 @@ export default function RootLayout({
       lang="en"
       className={`${roboto.variable} ${robotoMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col relative noise-overlay bg-white text-black">
+        {/* Global Premium Grid Overlay */}
+        <div className="fixed inset-0 pointer-events-none z-[-1] flex justify-center overflow-hidden">
+          <div className="w-full h-full grid-bg absolute inset-0" />
+          {/* Subtle gradient vignette to fade grid edges */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(255,255,255,0.8)_100%)]" />
+        </div>
+        
+        <div className="relative z-10 flex flex-col min-h-screen">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }

@@ -90,7 +90,7 @@ export default function LiquidCurtain({ children, stageKey }: LiquidCurtainProps
             <svg
               viewBox="0 0 100 100"
               preserveAspectRatio="none"
-              className="absolute w-full h-full fill-none pointer-events-none"
+              className="w-full h-[120vh] -mt-[10vh] fill-[#111]"
             >
               {/* Outer Glow Liquid Wave Path */}
               <motion.path
@@ -98,8 +98,7 @@ export default function LiquidCurtain({ children, stageKey }: LiquidCurtainProps
                 initial="initial"
                 animate="mid"
                 exit="exit"
-                fill="url(#curtain-gradient-glow)"
-                className="opacity-45"
+                className="opacity-10"
               />
 
               {/* Solid Liquid Wave Path */}
@@ -108,22 +107,7 @@ export default function LiquidCurtain({ children, stageKey }: LiquidCurtainProps
                 initial="initial"
                 animate="mid"
                 exit="exit"
-                fill="url(#curtain-gradient)"
               />
-
-              <defs>
-                <linearGradient id="curtain-gradient" x1="100%" y1="0%" x2="0%" y2="0%">
-                  <stop offset="0%" stopColor="#1e1b4b" />
-                  <stop offset="35%" stopColor="#4c1d95" />
-                  <stop offset="70%" stopColor="#6d28d9" />
-                  <stop offset="100%" stopColor="#4338ca" />
-                </linearGradient>
-                <linearGradient id="curtain-gradient-glow" x1="100%" y1="0%" x2="0%" y2="0%">
-                  <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.4" />
-                  <stop offset="50%" stopColor="#ec4899" stopOpacity="0.3" />
-                  <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
-                </linearGradient>
-              </defs>
             </svg>
           </motion.div>
         )}

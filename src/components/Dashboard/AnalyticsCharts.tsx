@@ -75,8 +75,8 @@ export default function AnalyticsCharts() {
 
   const emptyState = (
     <div className="flex-1 flex flex-col items-center justify-center py-12 text-center opacity-40">
-      <TrendUp className="w-7 h-7 text-zinc-500 mb-2" />
-      <p className="text-xs text-zinc-500">Import accounts to populate charts</p>
+      <TrendUp className="w-7 h-7 text-[#888] mb-2" />
+      <p className="text-xs text-[#666]">Import accounts to populate charts</p>
     </div>
   );
 
@@ -84,16 +84,16 @@ export default function AnalyticsCharts() {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
 
       {/* ── Chart 1: Score Distribution ── */}
-      <div className={`bg-zinc-900/40 border rounded-xl p-5 shadow-lg flex flex-col transition-all duration-500 ${pulsing ? "border-violet-500/40 shadow-violet-500/10" : "border-zinc-900 hover:border-zinc-800"}`}>
-        <div className="flex items-center justify-between mb-3 border-b border-zinc-850/60 pb-3">
+      <div className={`bg-white border rounded-xl p-5 shadow-sm flex flex-col transition-all duration-500 ${pulsing ? "border-violet-300 shadow-violet-500/10" : "border-black/10 hover:border-black/20"}`}>
+        <div className="flex items-center justify-between mb-3 border-b border-black/10 pb-3">
           <div className="flex items-center space-x-2">
-            <ChartBar className="w-4 h-4 text-violet-400" />
-            <h3 className="text-xs font-bold text-white uppercase tracking-wider font-outfit">Score Distribution</h3>
+            <ChartBar className="w-4 h-4 text-violet-600" />
+            <h3 className="text-xs font-bold text-[#111] uppercase tracking-wider font-outfit">Score Distribution</h3>
           </div>
           {accounts.length > 0 && (
             <div className="flex items-center space-x-1">
-              <span className="text-[9px] font-semibold text-zinc-500 uppercase tracking-wider">Avg</span>
-              <span className="text-xs font-black font-mono text-violet-400">{avgScore}</span>
+              <span className="text-[9px] font-semibold text-[#888] uppercase tracking-wider">Avg</span>
+              <span className="text-xs font-black font-mono text-violet-600">{avgScore}</span>
             </div>
           )}
         </div>
@@ -103,7 +103,7 @@ export default function AnalyticsCharts() {
             {/* Grid lines */}
             <div className="absolute inset-0 flex flex-col justify-between pointer-events-none pb-8">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="w-full border-t border-zinc-900/60" />
+                <div key={i} className="w-full border-t border-black/5" />
               ))}
             </div>
 
@@ -129,7 +129,7 @@ export default function AnalyticsCharts() {
                     )}
                     {/* Tooltip */}
                     {isHovered && (
-                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-zinc-950 border border-zinc-800 text-[10px] text-white font-mono px-2 py-0.5 rounded shadow-xl whitespace-nowrap z-50">
+                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-white border border-black/10 text-[10px] text-[#111] font-mono px-2 py-0.5 rounded shadow-sm whitespace-nowrap z-50">
                         {range.count} account{range.count !== 1 ? "s" : ""}
                       </div>
                     )}
@@ -148,7 +148,7 @@ export default function AnalyticsCharts() {
                   </div>
                   <div className="text-center mt-2">
                     <p className="text-[10px] font-bold font-mono" style={{ color: range.color }}>{range.label}</p>
-                    <p className="text-[9px] text-zinc-600 uppercase tracking-wide">{range.sublabel}</p>
+                    <p className="text-[9px] text-[#666] uppercase tracking-wide">{range.sublabel}</p>
                   </div>
                 </div>
               );
@@ -158,10 +158,10 @@ export default function AnalyticsCharts() {
       </div>
 
       {/* ── Chart 2: Top Tech Stack ── */}
-      <div className="bg-zinc-900/40 border border-zinc-900 rounded-xl p-5 hover:border-zinc-800 transition shadow-lg flex flex-col">
-        <div className="flex items-center space-x-2 mb-4 border-b border-zinc-850/60 pb-3">
-          <ChartPie className="w-4 h-4 text-violet-400" />
-          <h3 className="text-xs font-bold text-white uppercase tracking-wider font-outfit">Tech Stack Matches</h3>
+      <div className="bg-white border border-black/10 rounded-xl p-5 hover:border-black/20 transition shadow-sm flex flex-col">
+        <div className="flex items-center space-x-2 mb-4 border-b border-black/10 pb-3">
+          <ChartPie className="w-4 h-4 text-violet-600" />
+          <h3 className="text-xs font-bold text-[#111] uppercase tracking-wider font-outfit">Tech Stack Matches</h3>
         </div>
 
         {sortedTech.length === 0 ? emptyState : (
@@ -177,12 +177,12 @@ export default function AnalyticsCharts() {
                   onMouseLeave={() => setHoveredTech(null)}
                 >
                   <div className="flex justify-between items-center text-[11px] font-medium">
-                    <span className={`font-semibold transition-colors duration-150 ${isHovered ? "text-violet-300" : "text-zinc-300"}`}>{tech}</span>
-                    <span className="text-zinc-500 font-mono text-[10px]">{count}</span>
+                    <span className={`font-semibold transition-colors duration-150 ${isHovered ? "text-violet-600" : "text-[#333]"}`}>{tech}</span>
+                    <span className="text-[#888] font-mono text-[10px]">{count}</span>
                   </div>
-                  <div className="h-2 bg-zinc-950 border border-zinc-900 rounded-full overflow-hidden cursor-pointer">
+                  <div className="h-2 bg-[#fafafa] border border-black/10 rounded-full overflow-hidden cursor-pointer">
                     <div
-                      className={`h-full rounded-full transition-all duration-700 ease-out ${isHovered ? "bg-gradient-to-r from-violet-400 to-violet-300" : "bg-gradient-to-r from-violet-600 to-violet-500/70"}`}
+                      className={`h-full rounded-full transition-all duration-700 ease-out ${isHovered ? "bg-gradient-to-r from-violet-600 to-violet-500" : "bg-gradient-to-r from-violet-400 to-violet-300"}`}
                       style={{ width: `${widthPercent}%`, transitionDelay: `${idx * 60}ms` }}
                     />
                   </div>
@@ -194,14 +194,14 @@ export default function AnalyticsCharts() {
       </div>
 
       {/* ── Chart 3: Signal Category Breakdown ── */}
-      <div className="bg-zinc-900/40 border border-zinc-900 rounded-xl p-5 hover:border-zinc-800 transition shadow-lg flex flex-col">
-        <div className="flex items-center justify-between mb-3 border-b border-zinc-850/60 pb-3">
+      <div className="bg-white border border-black/10 rounded-xl p-5 hover:border-black/20 transition shadow-sm flex flex-col">
+        <div className="flex items-center justify-between mb-3 border-b border-black/10 pb-3">
           <div className="flex items-center space-x-2">
-            <Radio className={`w-4 h-4 text-violet-400 ${pulsing ? "animate-ping" : "animate-pulse"}`} />
-            <h3 className="text-xs font-bold text-white uppercase tracking-wider font-outfit">Signal Breakdown</h3>
+            <Radio className={`w-4 h-4 text-violet-600 ${pulsing ? "animate-ping" : "animate-pulse"}`} />
+            <h3 className="text-xs font-bold text-[#111] uppercase tracking-wider font-outfit">Signal Breakdown</h3>
           </div>
           {totalSignalsFired > 0 && (
-            <span className="text-[9px] font-bold font-mono text-zinc-500 uppercase">{totalSignalsFired} fired</span>
+            <span className="text-[9px] font-bold font-mono text-[#888] uppercase">{totalSignalsFired} fired</span>
           )}
         </div>
 
@@ -230,12 +230,12 @@ export default function AnalyticsCharts() {
                       <span className="text-[10px] font-mono font-bold" style={{ color: cat.color }}>
                         {cat.count}
                       </span>
-                      <span className="text-[9px] text-zinc-600 font-mono">
+                      <span className="text-[9px] text-[#666] font-mono">
                         {pct}%
                       </span>
                     </div>
                   </div>
-                  <div className="h-2.5 bg-zinc-950 border border-zinc-900 rounded-full overflow-hidden cursor-pointer">
+                  <div className="h-2.5 bg-[#fafafa] border border-black/10 rounded-full overflow-hidden cursor-pointer">
                     <div
                       className="h-full rounded-full transition-all duration-700 ease-out"
                       style={{
@@ -252,12 +252,12 @@ export default function AnalyticsCharts() {
             })}
 
             {/* Live ticker at bottom */}
-            <div className="mt-auto pt-3 border-t border-zinc-900 flex items-center space-x-2">
+            <div className="mt-auto pt-3 border-t border-black/10 flex items-center space-x-2">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
               </span>
-              <span className="text-[10px] text-zinc-500 font-medium">
+              <span className="text-[10px] text-[#888] font-medium">
                 {feedEvents.length > 0
                   ? `${feedEvents.length} live event${feedEvents.length !== 1 ? "s" : ""} captured`
                   : "Waiting for live triggers..."}

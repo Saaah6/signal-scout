@@ -57,42 +57,42 @@ export default function KPIWidgets() {
       value: totalAnalyzed, 
       desc: "Processed in current run", 
       icon: Buildings, 
-      color: "text-violet-400 bg-violet-600/10 border-violet-500/20" 
+      color: "text-violet-600 bg-violet-500/10 border-violet-500/20" 
     },
     { 
       label: "High Priority Accounts", 
       value: highPriorityCount, 
       desc: `${highPriorityPercent}% of total accounts`, 
       icon: WarningCircle, 
-      color: "text-emerald-400 bg-emerald-600/10 border-emerald-500/20" 
+      color: "text-emerald-600 bg-emerald-500/10 border-emerald-500/20" 
     },
     { 
       label: "Signals Detected", 
       value: totalSignals, 
       desc: "Dynamic triggers matched", 
       icon: Pulse, 
-      color: "text-blue-400 bg-blue-600/10 border-blue-500/20" 
+      color: "text-blue-600 bg-blue-500/10 border-blue-500/20" 
     },
     { 
       label: "ICP Match Rate", 
       value: `${avgFit}%`, 
       desc: "Average profile overlap", 
       icon: Compass, 
-      color: "text-amber-400 bg-amber-600/10 border-amber-500/20" 
+      color: "text-amber-600 bg-amber-500/10 border-amber-500/20" 
     },
     { 
       label: "Average Intent", 
       value: `${avgIntent}%`, 
       desc: "Signal weight index", 
       icon: Flame, 
-      color: "text-orange-400 bg-orange-600/10 border-orange-500/20" 
+      color: "text-orange-600 bg-orange-500/10 border-orange-500/20" 
     },
     { 
       label: "Pipeline Opportunities", 
       value: formatPipeline(totalPipeline), 
       desc: `Est. from ${offer.dealSize} ACV`, 
       icon: CurrencyDollar, 
-      color: "text-pink-400 bg-pink-600/10 border-pink-500/20" 
+      color: "text-pink-600 bg-pink-500/10 border-pink-500/20" 
     }
   ];
 
@@ -103,10 +103,10 @@ export default function KPIWidgets() {
         return (
           <div 
             key={idx} 
-            className="bg-zinc-900/40 border border-zinc-900 rounded-xl p-4 flex flex-col justify-between hover:border-zinc-800 transition shadow-lg relative overflow-hidden group"
+            className="bg-white border border-black/10 rounded-xl p-4 flex flex-col justify-between hover:border-black/20 transition shadow-sm relative overflow-hidden group"
           >
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block truncate">
+              <span className="text-[10px] font-bold text-[#888] uppercase tracking-widest block truncate">
                 {card.label}
               </span>
               <div className={`p-1.5 rounded-lg border shrink-0 ${card.color}`}>
@@ -114,10 +114,10 @@ export default function KPIWidgets() {
               </div>
             </div>
             <div>
-              <p className="text-xl font-bold font-outfit text-white leading-none tracking-tight mb-1 group-hover:text-violet-400 transition">
+              <p className="text-xl font-bold font-outfit text-[#111] leading-none tracking-tight mb-1 group-hover:text-violet-600 transition">
                 {card.value}
               </p>
-              <p className="text-[10px] text-zinc-500 font-medium truncate">{card.desc}</p>
+              <p className="text-[10px] text-[#555] font-medium truncate">{card.desc}</p>
             </div>
           </div>
         );

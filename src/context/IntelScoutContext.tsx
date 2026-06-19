@@ -43,6 +43,12 @@ export interface ICP {
   buyingCommittee: string[];
 }
 
+export interface IcpAnalysisResult {
+  status: "perfect" | "warning" | "critical";
+  message: string;
+  suggestion?: string;
+}
+
 export interface PainMap {
   problem: string;
   pain: string[];
@@ -114,6 +120,9 @@ interface IntelScoutContextType {
   setAccounts: (a: Account[]) => void;
   feedEvents: FeedEvent[];
   addFeedEvent: (e: FeedEvent) => void;
+  icpAnalysis: IcpAnalysisResult[] | null;
+  isAnalyzingIcp: boolean;
+  analyzeBusinessIcp: () => void;
   isResearching: boolean;
   setIsResearching: (r: boolean) => void;
   researchProgress: number;
@@ -171,6 +180,8 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
     salesCycle: "Medium"
   });
   const [icp, setIcp] = useState<ICP | null>(null);
+  const [icpAnalysis, setIcpAnalysis] = useState<IcpAnalysisResult[] | null>(null);
+  const [isAnalyzingIcp, setIsAnalyzingIcp] = useState<boolean>(false);
   const [painMap, setPainMap] = useState<PainMap | null>(null);
   const [signals, setSignals] = useState<SignalConfig[]>(DEFAULT_SIGNALS);
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -243,6 +254,61 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
   const clearConsoleLogs = useCallback(() => {
     setConsoleLogs([]);
   }, []);
+
+  const analyzeBusinessIcp = useCallback(() => {
+    if (!offer || !icp) return;
+    setIsAnalyzingIcp(true);
+    
+    setTimeout(() => {
+      const results: IcpAnalysisResult[] = [];
+      const ds = offer.dealSize;
+      const cycle = offer.salesCycle;
+      const size = icp.firmographics.employeeCount;
+      const committeeSize = icp.buyingCommittee.length;
+
+      if ((ds === "<$1,000" || ds === "$1,000-$5,000") && (size.includes("1000") || size.includes("Enterprise"))) {
+        results.push({
+          status: "critical",
+          message: "Your deal size is too small for Enterprise targets.",
+          suggestion: "Shift focus to SMBs or consider a Product-Led Growth (PLG) motion."
+        });
+      }
+
+      if (cycle === "Short" && committeeSize >= 4) {
+        results.push({
+          status: "warning",
+          message: "You have a short sales cycle, but targeting a large buying committee.",
+          suggestion: "Target a single champion or end-user to reduce consensus friction."
+        });
+      }
+
+      if (ds === "$100,000+" && cycle === "Short") {
+        results.push({
+          status: "warning",
+          message: "Enterprise $100k+ deals rarely close in a short sales cycle.",
+          suggestion: "Expect 6-9 months and adjust revenue forecasts accordingly."
+        });
+      }
+
+      if (ds === "$100,000+" && (size.includes("1-50") || size.includes("Startup"))) {
+        results.push({
+          status: "critical",
+          message: "Startups/SMBs rarely have the budget for $100k+ deals.",
+          suggestion: "Target mid-market to enterprise companies with >200 employees."
+        });
+      }
+
+      if (results.length === 0) {
+        results.push({
+          status: "perfect",
+          message: "Your ICP aligns well with your business offer and deal dynamics."
+        });
+      }
+
+      setIcpAnalysis(results);
+      setIsAnalyzingIcp(false);
+    }, 1500);
+  }, [offer, icp]);
 
   const addFeedEvent = useCallback((e: FeedEvent) => {
     setFeedEvents((prev) => [e, ...prev].slice(0, 50));
@@ -548,6 +614,9 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
         setOffer,
         icp,
         setIcp,
+        icpAnalysis,
+        isAnalyzingIcp,
+        analyzeBusinessIcp,
         painMap,
         setPainMap,
         signals,

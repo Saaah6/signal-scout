@@ -7,7 +7,16 @@
   --foreground: #0a0a0a;
   --text-secondary: #444444;
   --text-muted: #777777;
-  --border-light: rgba(0, 0, 0, 0.1);
+  --border-light: rgba(0, 0, 0, 0.08);
+  --grid-color: rgba(0, 0, 0, 0.04);
+}
+
+.grid-bg {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  background-position: top center;
 }
 
 body {

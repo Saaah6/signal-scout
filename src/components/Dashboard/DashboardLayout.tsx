@@ -44,16 +44,16 @@ export default function DashboardLayout() {
         return (
           <div className="space-y-6 flex-1 flex flex-col">
             {/* AI GTM Executive Summary Card */}
-            <div className="bg-gradient-to-r from-violet-950/20 to-zinc-900/40 border border-violet-900/20 rounded-xl p-4 flex items-start space-x-3.5 shadow-lg relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-6 opacity-[0.03] text-violet-400 pointer-events-none">
+            <div className="bg-white border border-black/10 rounded-xl p-4 flex items-start space-x-3.5 shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-6 opacity-[0.03] text-black pointer-events-none">
                 <Sparkle className="w-32 h-32" />
               </div>
-              <div className="p-2 bg-violet-600/10 border border-violet-500/20 text-violet-400 rounded-lg shrink-0 mt-0.5 animate-pulse">
+              <div className="p-2 bg-violet-500/10 border border-violet-500/20 text-violet-600 rounded-lg shrink-0 mt-0.5 animate-pulse">
                 <Sparkle className="w-4 h-4" />
               </div>
               <div>
-                <span className="text-[9px] font-bold text-violet-400 uppercase tracking-widest block mb-0.5">AI GTM Executive Summary</span>
-                <p className="text-xs text-zinc-300 leading-relaxed font-medium">
+                <span className="text-[9px] font-bold text-violet-600 uppercase tracking-widest block mb-0.5">AI GTM Executive Summary</span>
+                <p className="text-xs text-[#333] leading-relaxed font-medium">
                   {gtmSummary}
                 </p>
               </div>
@@ -89,17 +89,17 @@ export default function DashboardLayout() {
             <div className="md:col-span-2">
               <IntelligenceFeed />
             </div>
-            <div className="bg-zinc-900/40 border border-zinc-900 rounded-xl p-5 text-xs text-zinc-400 space-y-3">
-              <h4 className="font-bold text-white uppercase tracking-wider font-outfit">Feed Configuration</h4>
+            <div className="bg-white border border-black/10 rounded-xl p-5 text-xs text-[#555] space-y-3 shadow-sm">
+              <h4 className="font-bold text-[#111] uppercase tracking-wider font-outfit">Feed Configuration</h4>
               <p>
                 The intelligence feed displays alerts from our crawler as they happen.
               </p>
               <p>
                 As accounts trigger events in the background, they automatically get priority bumps and move up our prioritizations matrices.
               </p>
-              <div className="p-3 bg-zinc-950 border border-zinc-900 rounded-lg">
-                <span className="font-bold text-zinc-300 block mb-1">Active Crawler Gateways:</span>
-                <ul className="list-disc pl-4 space-y-1 text-zinc-500">
+              <div className="p-3 bg-[#fafafa] border border-black/10 rounded-lg">
+                <span className="font-bold text-[#333] block mb-1">Active Crawler Gateways:</span>
+                <ul className="list-disc pl-4 space-y-1 text-[#666]">
                   <li>sec_hiring (Security Positions)</li>
                   <li>comp_hiring (Compliance / GTM Positions)</li>
                   <li>soc2_ment (Job Specifications crawling)</li>
@@ -128,7 +128,7 @@ export default function DashboardLayout() {
   };
 
   return (
-    <div className="flex h-screen bg-zinc-950 text-zinc-200 overflow-hidden font-sans">
+    <div className="flex h-screen bg-[#fafafa] text-[#333] overflow-hidden font-sans selection:bg-black selection:text-white">
       
       {/* Sidebar Navigation */}
       <Sidebar 

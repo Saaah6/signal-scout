@@ -80,37 +80,37 @@ export default function ResearchEngine() {
   }, [accounts, setStep, setResearchProgress, clearConsoleLogs, addConsoleLog]);
 
   return (
-    <div className="w-full max-w-3xl bg-zinc-950 border border-zinc-850 rounded-2xl p-6 shadow-2xl relative overflow-hidden flex flex-col h-[520px]">
-      <div className="absolute top-0 left-0 right-0 h-1 bg-zinc-800">
+    <div className="w-full max-w-3xl bg-white border border-black/10 rounded-2xl p-6 shadow-sm relative overflow-hidden flex flex-col h-[520px]">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-black/10">
         <div 
-          className="h-full bg-gradient-to-r from-violet-500 to-emerald-500 transition-all duration-300"
+          className="h-full bg-black transition-all duration-300"
           style={{ width: `${researchProgress}%` }}
         />
       </div>
 
-      <div className="flex items-center justify-between border-b border-zinc-900 pb-4 mb-4">
-        <div className="flex items-center space-x-2 text-violet-400">
+      <div className="flex items-center justify-between border-b border-black/10 pb-4 mb-4">
+        <div className="flex items-center space-x-2 text-[#111]">
           <Terminal className="w-5 h-5" />
-          <h3 className="font-semibold text-white font-outfit text-sm">GTM Engine Crawler logs</h3>
+          <h3 className="font-semibold text-[#111] font-outfit text-sm">GTM Engine Crawler logs</h3>
         </div>
         <div className="flex items-center space-x-3 text-xs">
-          <span className="text-zinc-500">Progress:</span>
-          <span className="font-mono font-bold text-white bg-zinc-900 px-2 py-1 border border-zinc-850 rounded">
+          <span className="text-[#888]">Progress:</span>
+          <span className="font-mono font-bold text-[#111] bg-[#fafafa] px-2 py-1 border border-black/10 rounded">
             {researchProgress}%
           </span>
         </div>
       </div>
 
       {/* Terminal Output */}
-      <div className="flex-1 bg-black/40 border border-zinc-900 rounded-xl p-4 font-mono text-xs text-zinc-400 overflow-y-auto space-y-1.5 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
+      <div className="flex-1 bg-[#fafafa] border border-black/10 rounded-xl p-4 font-mono text-xs text-[#666] overflow-y-auto space-y-1.5 scrollbar-thin scrollbar-thumb-black/20 scrollbar-track-transparent">
         {consoleLogs.map((log, index) => {
-          let logColor = "text-zinc-400";
-          if (log.includes("[SCAN]")) logColor = "text-blue-400/90";
-          else if (log.includes("[TECH]")) logColor = "text-amber-400/90";
-          else if (log.includes("[JOBS]")) logColor = "text-violet-400/90";
-          else if (log.includes("[QUAL]")) logColor = "text-emerald-400/90";
-          else if (log.includes("[DONE]")) logColor = "text-zinc-200 font-semibold";
-          else if (log.includes("🎉")) logColor = "text-emerald-400 font-bold";
+          let logColor = "text-[#666]";
+          if (log.includes("[SCAN]")) logColor = "text-blue-600/90";
+          else if (log.includes("[TECH]")) logColor = "text-amber-600/90";
+          else if (log.includes("[JOBS]")) logColor = "text-violet-600/90";
+          else if (log.includes("[QUAL]")) logColor = "text-emerald-600/90";
+          else if (log.includes("[DONE]")) logColor = "text-[#222] font-semibold";
+          else if (log.includes("🎉")) logColor = "text-emerald-600 font-bold";
           
           return (
             <p key={index} className={logColor}>
@@ -122,14 +122,14 @@ export default function ResearchEngine() {
 
       {/* Finishing Status Overlay */}
       {researchProgress === 100 && (
-        <div className="mt-4 p-4 bg-emerald-950/20 border border-emerald-500/20 rounded-xl flex items-center justify-between animate-pulse">
-          <div className="flex items-center space-x-3 text-emerald-400 text-sm font-medium">
+        <div className="mt-4 p-4 bg-emerald-50 border border-emerald-500/20 rounded-xl flex items-center justify-between animate-pulse">
+          <div className="flex items-center space-x-3 text-emerald-700 text-sm font-medium">
             <ShieldCheck className="w-5 h-5" />
             <span>Research Audit Complete. Launching GTM Console...</span>
           </div>
           <button
             onClick={() => setStep("dashboard")}
-            className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs rounded-lg flex items-center space-x-1.5 transition"
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg flex items-center space-x-1.5 transition"
           >
             <CheckCircle className="w-4 h-4" />
             <span>Enter Console</span>

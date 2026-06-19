@@ -148,16 +148,6 @@ export default function LandingPage() {
     <div className="relative min-h-screen bg-white text-black overflow-x-hidden noise-overlay font-roboto">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON_LD_STR }} />
 
-      {/* Grid overlay */}
-      <div className="fixed inset-0 pointer-events-none z-0" style={{ opacity: 0.3 }} aria-hidden>
-        {GRID_ROWS.map((t) => (
-          <div key={t} className="absolute h-px left-0 right-0" style={{ top: `${t}%`, background: "rgba(0,0,0,0.08)" }} />
-        ))}
-        {GRID_COLS.map((l) => (
-          <div key={l} className="absolute w-px top-0 bottom-0" style={{ left: `${l}%`, background: "rgba(0,0,0,0.08)" }} />
-        ))}
-      </div>
-
       <Navbar onOpenAuth={openAuth} />
 
       {/* ── Hero ─────────────────────────────────────────────────── */}

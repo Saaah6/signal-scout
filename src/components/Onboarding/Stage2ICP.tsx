@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import { useIntelScout } from "@/context/IntelScoutContext";
-import { ArrowLeft, ArrowRight, Buildings, Cpu, Sparkle, Users, Plus, X } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, Buildings, Cpu, Sparkle, Users, Plus, X, WarningCircle, CheckCircle, Brain, CircleNotch } from "@phosphor-icons/react";
 
 export default function Stage2ICP() {
-  const { icp, setIcp, setStep } = useIntelScout();
+  const { icp, setIcp, setStep, icpAnalysis, isAnalyzingIcp, analyzeBusinessIcp } = useIntelScout();
   const [newTech, setNewTech] = useState("");
   const [newSignal, setNewSignal] = useState("");
 
@@ -46,65 +46,94 @@ export default function Stage2ICP() {
   };
 
   return (
-    <div className="w-full max-w-4xl bg-zinc-900/60 backdrop-blur-md border border-zinc-800 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="w-full max-w-4xl bg-white/60 backdrop-blur-md border border-black/10 rounded-2xl p-8 shadow-sm relative overflow-hidden">
+      <div className="absolute -top-24 -right-24 w-48 h-48 bg-violet-500/10 rounded-full blur-3xl pointer-events-none" />
       
-      <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-800/80">
+      <div className="flex items-center justify-between mb-8 pb-4 border-b border-black/10">
         <div className="flex items-center space-x-3">
-          <div className="p-2.5 bg-violet-600/10 border border-violet-500/20 text-violet-400 rounded-xl">
+          <div className="p-2.5 bg-black/5 border border-black/10 text-[#111] rounded-xl">
             <Sparkle className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold tracking-tight text-white font-outfit">Ideal Customer Profile (ICP)</h2>
-            <p className="text-sm text-zinc-400">IntelScout compiled this profile based on your business offer. Customize it below.</p>
+            <h2 className="text-2xl font-bold tracking-tight text-[#111] font-outfit">Ideal Customer Profile (ICP)</h2>
+            <p className="text-sm text-[#555]">IntelScout compiled this profile based on your business offer. Customize it below.</p>
           </div>
         </div>
+        <button
+          onClick={analyzeBusinessIcp}
+          disabled={isAnalyzingIcp}
+          className="flex items-center space-x-2 bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition disabled:opacity-70"
+        >
+          {isAnalyzingIcp ? <CircleNotch className="w-5 h-5 animate-spin" /> : <Brain className="w-5 h-5" />}
+          <span>{isAnalyzingIcp ? "Analyzing..." : "Analyze Fit"}</span>
+        </button>
       </div>
+
+      {icpAnalysis && icpAnalysis.length > 0 && (
+        <div className="mb-8 space-y-3">
+          <h3 className="text-xs font-semibold text-[#888] uppercase tracking-wider mb-2">AI Fit Analysis</h3>
+          {icpAnalysis.map((res, i) => (
+            <div key={i} className={`p-4 rounded-xl border ${res.status === 'perfect' ? 'bg-emerald-50/50 border-emerald-200' : res.status === 'critical' ? 'bg-red-50/50 border-red-200' : 'bg-amber-50/50 border-amber-200'} flex items-start space-x-3`}>
+              <div className="mt-0.5">
+                {res.status === 'perfect' ? <CheckCircle className="w-5 h-5 text-emerald-600" /> : <WarningCircle className={`w-5 h-5 ${res.status === 'critical' ? 'text-red-600' : 'text-amber-600'}`} />}
+              </div>
+              <div>
+                <p className={`text-sm font-medium ${res.status === 'perfect' ? 'text-emerald-900' : res.status === 'critical' ? 'text-red-900' : 'text-amber-900'}`}>{res.message}</p>
+                {res.suggestion && (
+                  <p className={`text-xs mt-1 ${res.status === 'critical' ? 'text-red-700' : 'text-amber-700'}`}>
+                    <strong>Suggestion:</strong> {res.suggestion}
+                  </p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         
         {/* Firmographics Card */}
-        <div className="bg-zinc-950/40 border border-zinc-800/80 rounded-xl p-5 hover:border-zinc-700/50 transition">
-          <div className="flex items-center space-x-2.5 text-violet-400 mb-4">
+        <div className="bg-white border border-black/10 rounded-xl p-5 hover:border-black/30 transition shadow-sm">
+          <div className="flex items-center space-x-2.5 text-[#333] mb-4">
             <Buildings className="w-5 h-5" />
-            <h3 className="font-semibold text-white font-outfit">Firmographics</h3>
+            <h3 className="font-semibold text-[#111] font-outfit">Firmographics</h3>
           </div>
           <div className="space-y-3.5 text-sm">
-            <div className="flex justify-between border-b border-zinc-800/60 pb-2">
-              <span className="text-zinc-400">Target Industry</span>
-              <span className="text-zinc-200 font-medium">{icp.firmographics.industry}</span>
+            <div className="flex justify-between border-b border-black/5 pb-2">
+              <span className="text-[#666]">Target Industry</span>
+              <span className="text-[#111] font-medium">{icp.firmographics.industry}</span>
             </div>
-            <div className="flex justify-between border-b border-zinc-800/60 pb-2">
-              <span className="text-zinc-400">Company Size</span>
-              <span className="text-zinc-200 font-medium">{icp.firmographics.employeeCount}</span>
+            <div className="flex justify-between border-b border-black/5 pb-2">
+              <span className="text-[#666]">Company Size</span>
+              <span className="text-[#111] font-medium">{icp.firmographics.employeeCount}</span>
             </div>
-            <div className="flex justify-between border-b border-zinc-800/60 pb-2">
-              <span className="text-zinc-400">Target Revenue</span>
-              <span className="text-zinc-200 font-medium">{icp.firmographics.revenue}</span>
+            <div className="flex justify-between border-b border-black/5 pb-2">
+              <span className="text-[#666]">Target Revenue</span>
+              <span className="text-[#111] font-medium">{icp.firmographics.revenue}</span>
             </div>
-            <div className="flex justify-between border-b border-zinc-800/60 pb-2">
-              <span className="text-zinc-400">Geography</span>
-              <span className="text-zinc-200 font-medium">{icp.firmographics.geography}</span>
+            <div className="flex justify-between border-b border-black/5 pb-2">
+              <span className="text-[#666]">Geography</span>
+              <span className="text-[#111] font-medium">{icp.firmographics.geography}</span>
             </div>
             <div className="flex justify-between pb-1">
-              <span className="text-zinc-400">Funding Phase</span>
-              <span className="text-zinc-200 font-medium">{icp.firmographics.fundingStage}</span>
+              <span className="text-[#666]">Funding Phase</span>
+              <span className="text-[#111] font-medium">{icp.firmographics.fundingStage}</span>
             </div>
           </div>
         </div>
 
         {/* Buying Committee Card */}
-        <div className="bg-zinc-950/40 border border-zinc-800/80 rounded-xl p-5 hover:border-zinc-700/50 transition">
-          <div className="flex items-center space-x-2.5 text-violet-400 mb-4">
+        <div className="bg-white border border-black/10 rounded-xl p-5 hover:border-black/30 transition shadow-sm">
+          <div className="flex items-center space-x-2.5 text-[#333] mb-4">
             <Users className="w-5 h-5" />
-            <h3 className="font-semibold text-white font-outfit">Buying Committee</h3>
+            <h3 className="font-semibold text-[#111] font-outfit">Buying Committee</h3>
           </div>
-          <p className="text-xs text-zinc-400 mb-3">Key decision makers and target personas IntelScout will identify:</p>
+          <p className="text-xs text-[#666] mb-3">Key decision makers and target personas IntelScout will identify:</p>
           <div className="flex flex-wrap gap-2">
             {icp.buyingCommittee.map((role, idx) => (
               <span 
                 key={idx} 
-                className="px-3 py-1.5 text-xs text-zinc-300 bg-zinc-900 border border-zinc-800 rounded-lg font-medium"
+                className="px-3 py-1.5 text-xs text-[#222] bg-[#f5f5f5] border border-black/10 rounded-lg font-medium"
               >
                 {role}
               </span>
@@ -113,23 +142,23 @@ export default function Stage2ICP() {
         </div>
 
         {/* Technographics Card */}
-        <div className="bg-zinc-950/40 border border-zinc-800/80 rounded-xl p-5 hover:border-zinc-700/50 transition md:col-span-1">
-          <div className="flex items-center space-x-2.5 text-violet-400 mb-3">
+        <div className="bg-white border border-black/10 rounded-xl p-5 hover:border-black/30 transition shadow-sm md:col-span-1">
+          <div className="flex items-center space-x-2.5 text-[#333] mb-3">
             <Cpu className="w-5 h-5" />
-            <h3 className="font-semibold text-white font-outfit">Technographics</h3>
+            <h3 className="font-semibold text-[#111] font-outfit">Technographics</h3>
           </div>
-          <p className="text-xs text-zinc-400 mb-3">Accounts using these tools will score higher:</p>
+          <p className="text-xs text-[#666] mb-3">Accounts using these tools will score higher:</p>
           <div className="flex flex-wrap gap-1.5 mb-4 max-h-[140px] overflow-y-auto pr-1">
             {icp.technographics.map((tech, idx) => (
               <span 
                 key={idx} 
-                className="inline-flex items-center space-x-1 px-2.5 py-1 text-xs text-violet-300 bg-violet-950/20 border border-violet-800/30 rounded-lg font-medium"
+                className="inline-flex items-center space-x-1 px-2.5 py-1 text-xs text-[#222] bg-[#f5f5f5] border border-black/10 rounded-lg font-medium"
               >
                 <span>{tech}</span>
                 <button 
                   type="button" 
                   onClick={() => handleRemoveTech(idx)}
-                  className="hover:text-red-400 hover:bg-violet-950/40 rounded transition p-0.5"
+                  className="hover:text-red-500 hover:bg-black/5 rounded transition p-0.5"
                 >
                   <X className="w-2.5 h-2.5" />
                 </button>
@@ -142,11 +171,11 @@ export default function Stage2ICP() {
               value={newTech}
               onChange={(e) => setNewTech(e.target.value)}
               placeholder="Add technology (e.g. Vercel)..."
-              className="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-violet-500/60"
+              className="flex-1 bg-white border border-black/10 rounded-lg px-3 py-1.5 text-xs text-[#111] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
             />
             <button 
               type="submit" 
-              className="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-750 text-white rounded-lg text-xs font-semibold flex items-center"
+              className="px-2.5 py-1.5 bg-black hover:bg-[#222] text-white rounded-lg text-xs font-semibold flex items-center"
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
@@ -154,23 +183,23 @@ export default function Stage2ICP() {
         </div>
 
         {/* Growth Signals Card */}
-        <div className="bg-zinc-950/40 border border-zinc-800/80 rounded-xl p-5 hover:border-zinc-700/50 transition md:col-span-1">
-          <div className="flex items-center space-x-2.5 text-violet-400 mb-3">
+        <div className="bg-white border border-black/10 rounded-xl p-5 hover:border-black/30 transition shadow-sm md:col-span-1">
+          <div className="flex items-center space-x-2.5 text-[#333] mb-3">
             <Sparkle className="w-5 h-5" />
-            <h3 className="font-semibold text-white font-outfit">Hiring & Growth Triggers</h3>
+            <h3 className="font-semibold text-[#111] font-outfit">Hiring & Growth Triggers</h3>
           </div>
-          <p className="text-xs text-zinc-400 mb-3">We look for these signals to determine timing:</p>
+          <p className="text-xs text-[#666] mb-3">We look for these signals to determine timing:</p>
           <div className="space-y-1.5 mb-4 max-h-[140px] overflow-y-auto pr-1">
             {icp.growthSignals.map((signal, idx) => (
               <div 
                 key={idx} 
-                className="flex items-center justify-between px-3 py-1.5 text-xs text-zinc-300 bg-zinc-900 border border-zinc-800 rounded-lg font-medium"
+                className="flex items-center justify-between px-3 py-1.5 text-xs text-[#222] bg-[#f5f5f5] border border-black/10 rounded-lg font-medium"
               >
                 <span className="line-clamp-1">{signal}</span>
                 <button 
                   type="button" 
                   onClick={() => handleRemoveSignal(idx)}
-                  className="text-zinc-500 hover:text-red-400 transition ml-2"
+                  className="text-[#888] hover:text-red-500 transition ml-2"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -183,11 +212,11 @@ export default function Stage2ICP() {
               value={newSignal}
               onChange={(e) => setNewSignal(e.target.value)}
               placeholder="Add hiring trigger (e.g. Hiring CMO)..."
-              className="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-violet-500/60"
+              className="flex-1 bg-white border border-black/10 rounded-lg px-3 py-1.5 text-xs text-[#111] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
             />
             <button 
               type="submit" 
-              className="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-750 text-white rounded-lg text-xs font-semibold flex items-center"
+              className="px-2.5 py-1.5 bg-black hover:bg-[#222] text-white rounded-lg text-xs font-semibold flex items-center"
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
@@ -197,11 +226,11 @@ export default function Stage2ICP() {
       </div>
 
       {/* Nav Buttons */}
-      <div className="flex justify-between mt-6 pt-4 border-t border-zinc-800/80">
+      <div className="flex justify-between mt-6 pt-4 border-t border-black/10">
         <button
           type="button"
           onClick={() => setStep(1)}
-          className="px-5 py-2.5 rounded-xl border border-zinc-800 hover:bg-zinc-800 text-zinc-300 font-medium text-sm flex items-center space-x-2 transition font-outfit"
+          className="px-5 py-2.5 rounded-xl border border-black/10 hover:bg-black/5 text-[#555] font-medium text-sm flex items-center space-x-2 transition font-outfit"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back</span>
@@ -209,7 +238,7 @@ export default function Stage2ICP() {
         <button
           type="button"
           onClick={() => setStep(3)}
-          className="px-6 py-2.5 bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm rounded-xl flex items-center space-x-2 transition shadow-lg shadow-violet-600/20 font-outfit"
+          className="px-6 py-2.5 bg-black hover:bg-[#222] text-white font-medium text-sm rounded-xl flex items-center space-x-2 transition shadow-sm font-outfit"
         >
           <span>Map Pain Points</span>
           <ArrowRight className="w-4 h-4" />

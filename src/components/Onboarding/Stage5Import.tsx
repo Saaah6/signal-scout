@@ -344,31 +344,31 @@ export default function Stage5Import() {
   };
 
   return (
-    <div className="w-full max-w-2xl bg-zinc-900/60 backdrop-blur-md border border-zinc-800 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="w-full max-w-2xl bg-white/60 backdrop-blur-md border border-black/10 rounded-2xl p-8 shadow-sm relative overflow-hidden">
+      <div className="absolute -top-24 -right-24 w-48 h-48 bg-violet-500/10 rounded-full blur-3xl pointer-events-none" />
       
       <div className="flex items-center space-x-3 mb-6">
-        <div className="p-2.5 bg-violet-600/10 border border-violet-500/20 text-violet-400 rounded-xl">
+        <div className="p-2.5 bg-black/5 border border-black/10 text-[#111] rounded-xl">
           <Database className="w-6 h-6" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-white font-outfit">Import Accounts</h2>
-          <p className="text-sm text-zinc-400">Define your targets to analyze. Enter a single target enterprise domain or upload a CSV file.</p>
+          <h2 className="text-2xl font-bold tracking-tight text-[#111] font-outfit">Import Accounts</h2>
+          <p className="text-sm text-[#555]">Define your targets to analyze. Enter a single target enterprise domain or upload a CSV file.</p>
         </div>
       </div>
 
       {/* Single Domain Search / Analysis Input */}
-      <div className="mb-6 bg-zinc-950/40 border border-zinc-800/80 rounded-xl p-5 relative overflow-hidden">
-        <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider block mb-2.5">Analyze Single Target Enterprise Domain</span>
+      <div className="mb-6 bg-white border border-black/10 rounded-xl p-5 relative overflow-hidden shadow-sm">
+        <span className="text-xs font-semibold text-[#888] uppercase tracking-wider block mb-2.5">Analyze Single Target Enterprise Domain</span>
         <form onSubmit={handleAnalyzeSingleDomain} className="flex gap-2">
           <div className="relative flex-1">
-            <Globe className="absolute left-3.5 top-3 w-4 h-4 text-zinc-500" />
+            <Globe className="absolute left-3.5 top-3 w-4 h-4 text-[#555]" />
             <input
               type="text"
               placeholder="Enter domain (e.g. microsoft.com, airbnb.com, stripe.com)..."
               value={singleDomain}
               onChange={(e) => setSingleDomain(e.target.value)}
-              className="w-full bg-zinc-950 border border-zinc-850 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-violet-500/60 focus:ring-1 focus:ring-violet-500/60 transition"
+              className="w-full bg-white border border-black/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-[#111] focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition"
               required
               disabled={isAnalyzingSingle}
             />
@@ -376,7 +376,7 @@ export default function Stage5Import() {
           <button
             type="submit"
             disabled={isAnalyzingSingle || !singleDomain.trim()}
-            className="px-4 py-2.5 bg-violet-600 hover:bg-violet-500 disabled:opacity-50 text-white rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5 transition shrink-0 cursor-pointer font-outfit"
+            className="px-4 py-2.5 bg-black hover:bg-[#222] disabled:opacity-50 disabled:hover:bg-black text-white rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5 transition shrink-0 cursor-pointer font-outfit"
           >
             {isAnalyzingSingle ? (
               <>
@@ -394,10 +394,10 @@ export default function Stage5Import() {
       </div>
 
       {/* Horizontal Divider */}
-      <div className="flex items-center my-6 text-[10px] font-bold text-zinc-650 uppercase tracking-widest">
-        <div className="flex-1 h-px bg-zinc-850" />
+      <div className="flex items-center my-6 text-[10px] font-bold text-[#888] uppercase tracking-widest">
+        <div className="flex-1 h-px bg-black/10" />
         <span className="px-3">Or upload CSV file</span>
-        <div className="flex-1 h-px bg-zinc-850" />
+        <div className="flex-1 h-px bg-black/10" />
       </div>
 
       {/* Drag & Drop Area */}
@@ -409,8 +409,8 @@ export default function Stage5Import() {
         onClick={() => fileInputRef.current?.click()}
         className={`border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition ${
           dragActive 
-            ? "border-violet-500 bg-violet-950/10" 
-            : "border-zinc-800 bg-zinc-950/20 hover:border-zinc-700 hover:bg-zinc-950/40"
+            ? "border-black/50 bg-black/5" 
+            : "border-black/10 bg-white hover:border-black/30 hover:bg-[#fafafa]"
         }`}
       >
         <input
@@ -420,22 +420,22 @@ export default function Stage5Import() {
           accept=".csv"
           className="hidden"
         />
-        <CloudArrowUp className="w-10 h-10 text-zinc-500 mb-3" />
-        <p className="text-sm font-semibold text-zinc-200">
+        <CloudArrowUp className="w-10 h-10 text-[#666] mb-3" />
+        <p className="text-sm font-semibold text-[#111]">
           {fileName ? `Selected: ${fileName}` : "Drag & drop your CSV file here"}
         </p>
-        <p className="text-xs text-zinc-500 mt-1">Supports files up to 10,000 accounts. Must include company_name, domain headers.</p>
+        <p className="text-xs text-[#666] mt-1">Supports files up to 10,000 accounts. Must include company_name, domain headers.</p>
         
         {fileName && (
-          <div className="mt-4 px-3 py-1 bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400 rounded-lg flex items-center space-x-1">
-            <FileText className="w-3 h-3 text-violet-400" />
+          <div className="mt-4 px-3 py-1 bg-[#fafafa] border border-black/10 text-[11px] font-mono text-[#555] rounded-lg flex items-center space-x-1">
+            <FileText className="w-3 h-3 text-[#111]" />
             <span>Ready to process.</span>
           </div>
         )}
       </div>
 
       {errorMsg && (
-        <p className="text-xs text-red-400 text-center font-medium mt-3">{errorMsg}</p>
+        <p className="text-xs text-red-500 text-center font-medium mt-3">{errorMsg}</p>
       )}
 
       {/* Action Utilities */}
@@ -443,7 +443,7 @@ export default function Stage5Import() {
         <button
           type="button"
           onClick={downloadSampleCSV}
-          className="text-xs font-semibold text-zinc-400 hover:text-white flex items-center space-x-1.5 transition"
+          className="text-xs font-semibold text-[#888] hover:text-[#111] flex items-center space-x-1.5 transition"
         >
           <Download className="w-3.5 h-3.5" />
           <span>Download Sample CSV template</span>
@@ -452,7 +452,7 @@ export default function Stage5Import() {
         <button
           type="button"
           onClick={handleLoadDemo}
-          className="text-xs font-semibold text-violet-400 hover:text-violet-300 flex items-center space-x-1.5 transition"
+          className="text-xs font-semibold text-[#555] hover:text-[#111] flex items-center space-x-1.5 transition"
         >
           <Play className="w-3.5 h-3.5" />
           <span>Or, Load Pre-loaded Demo Dataset (12 companies)</span>
@@ -460,11 +460,11 @@ export default function Stage5Import() {
       </div>
 
       {/* Nav Buttons */}
-      <div className="flex justify-between mt-8 pt-4 border-t border-zinc-800/80">
+      <div className="flex justify-between mt-8 pt-4 border-t border-black/10">
         <button
           type="button"
           onClick={() => setStep(4)}
-          className="px-5 py-2.5 rounded-xl border border-zinc-800 hover:bg-zinc-800 text-zinc-300 font-medium text-sm flex items-center space-x-2 transition font-outfit"
+          className="px-5 py-2.5 rounded-xl border border-black/10 hover:bg-black/5 text-[#555] font-medium text-sm flex items-center space-x-2 transition font-outfit"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back</span>
