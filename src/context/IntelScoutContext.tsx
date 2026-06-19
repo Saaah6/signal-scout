@@ -533,9 +533,32 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
 
       // Select a signal that this account doesn't have yet or trigger a new one
       const possibleSignals = signals.filter(s => s.enabled && !acc.signalsDetected.includes(s.id));
-      if (possibleSignals.length === 0) return;
+      
+      let randomSig: SignalConfig;
+      let isCustomUrlSignal = false;
 
-      const randomSig = possibleSignals[Math.floor(Math.random() * possibleSignals.length)];
+      if (possibleSignals.length === 0) {
+        // Fallback: If all signals are turned off, dynamically generate real-time signals based on the provided URL
+        const domain = offer.websiteUrl || "the product";
+        const customUrlSignals = [
+          { name: `Evaluating competitor alternatives against ${domain}`, type: "medium" as const, reason: `Web traffic detected routing from ${domain} competitor landing pages.` },
+          { name: `Internal documentation mentions ${domain}`, type: "strong" as const, reason: `Company intranet/wiki recently indexed keywords matching ${domain}.` },
+          { name: `Procurement search for ${domain} category`, type: "medium" as const, reason: `Buying intent search patterns match ${domain} core category.` }
+        ];
+        
+        const custom = customUrlSignals[Math.floor(Math.random() * customUrlSignals.length)];
+        randomSig = {
+          id: `custom_url_${Date.now()}`,
+          name: custom.name,
+          description: "Dynamic URL-based signal detection.",
+          category: custom.type,
+          weight: 15,
+          enabled: true
+        };
+        isCustomUrlSignal = true;
+      } else {
+        randomSig = possibleSignals[Math.floor(Math.random() * possibleSignals.length)];
+      }
       
       // Update account signals in state
       setAccounts((prev) =>
@@ -546,7 +569,7 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
             // Recalculate score specifically for this company
             const computedSignals = updatedSignals.reduce((sum, sigId) => {
               const cfg = signals.find((s) => s.id === sigId && s.enabled);
-              return sum + (cfg ? cfg.weight : 0);
+              return sum + (cfg ? cfg.weight : (isCustomUrlSignal ? 15 : 0));
             }, 0);
             const newSignalScore = Math.round(Math.min(100, Math.max(0, computedSignals * 2.2)));
             const newOppScore = Math.round((a.icpFit * 0.4) + (a.intent * 0.25) + (a.timing * 0.15) + (newSignalScore * 0.2));
@@ -564,7 +587,13 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
             const updatedReasons = [...a.reasons];
             let reasonText = `Detected trigger: ${randomSig.name}`;
 
-            if (randomSig.id === "dept_hiring") {
+            if (isCustomUrlSignal) {
+               // We already generated the reason logic in customUrlSignals, let's extract it by matching name (a bit hacky but works for mock)
+               const domain = offer.websiteUrl || "the product";
+               if (randomSig.name.includes("competitor")) reasonText = `Web traffic detected routing from ${domain} competitor landing pages.`;
+               else if (randomSig.name.includes("Internal")) reasonText = `Company intranet/wiki recently indexed keywords matching ${domain}.`;
+               else reasonText = `Buying intent search patterns match ${domain} core category.`;
+            } else if (randomSig.id === "dept_hiring") {
               if (category === "compliance") reasonText = "Detected hiring for 2+ Security Engineering positions.";
               else if (category === "hr") reasonText = "Detected hiring for Talent Recruiters & Sourcers.";
               else if (category === "sales") reasonText = "Detected hiring for 3+ Account Executives.";
