@@ -38,7 +38,7 @@ export default function NewsletterSection() {
   const onEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value), []);
 
   return (
-    <section id="newsletter" className="relative py-24 lg:py-32 bg-white overflow-hidden">
+    <section id="newsletter" className="relative py-24 lg:py-32 bg-transparent overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
         <div className="max-w-2xl mx-auto text-center flex flex-col items-center justify-center">
           <span className="inline-flex flex-wrap justify-center items-center gap-3 text-sm font-roboto-mono text-[#888888] mb-6">
@@ -53,25 +53,24 @@ export default function NewsletterSection() {
             Weekly B2B signal crawling techniques, qualification frameworks, and outbound strategies. No spam.
           </p>
 
-          <form onSubmit={handleNewsletterSubmit} className="flex flex-wrap w-full gap-3 items-center justify-center mt-4 sm:mt-8">
+          <form onSubmit={handleNewsletterSubmit} className="relative flex w-full max-w-md mx-auto items-center mt-8 bg-white/80 backdrop-blur-md border border-black/10 rounded-full p-1.5 shadow-sm hover:shadow-md hover:border-black/30 transition-all duration-300">
             <input
               type="email"
-              placeholder="Work email"
+              placeholder="Enter your work email"
               value={email}
               disabled={newsletterSubmitting || newsletterSuccess}
               onChange={onEmailChange}
-              className="w-full sm:w-auto flex-1 min-w-[260px] max-w-sm h-12 px-5 rounded-full text-sm font-roboto text-black placeholder-[#aaaaaa] bg-white transition focus:outline-none"
-              style={{ border: "1.5px solid rgba(0,0,0,0.15)" }}
+              className="flex-1 h-11 px-5 rounded-full text-sm font-roboto text-black placeholder-[#888] bg-transparent focus:outline-none"
             />
             <button
               type="submit"
               disabled={newsletterSubmitting || newsletterSuccess}
-              className="w-full sm:w-auto h-12 px-8 bg-black hover:bg-[#1a1a1a] text-white font-bold text-sm rounded-full transition-all duration-200 flex items-center justify-center gap-2 shrink-0 disabled:opacity-50 font-roboto"
+              className="h-11 px-8 bg-black hover:bg-[#222] text-white font-bold text-sm rounded-full transition-all duration-200 flex items-center justify-center gap-2 shrink-0 disabled:opacity-50 font-roboto"
             >
               {newsletterSubmitting ? (
                 <CircleNotch className="w-4 h-4 animate-spin" />
               ) : newsletterSuccess ? (
-                <><CheckCircle className="w-4 h-4 text-green-400" /> Subscribed!</>
+                <><CheckCircle className="w-4 h-4 text-emerald-400" /> Subscribed</>
               ) : "Subscribe"}
             </button>
           </form>
