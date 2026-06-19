@@ -20,8 +20,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid email format" }, { status: 400 });
     }
 
-    // Ensure data directory exists
-    await fs.mkdir(DATA_DIR, { recursive: true });
+    // Ensure data directory exists (ignore read-only errors on Vercel)
+    try {
+      await fs.mkdir(DATA_DIR, { recursive: true });
+    } catch (e) {}
 
     // Read existing subscribers or create empty list
     let subscribers = [];
@@ -41,7 +43,9 @@ export async function POST(request: Request) {
         subscribedAt: new Date().toISOString(),
       };
       subscribers.push(subscriber);
-      await fs.writeFile(SUBSCRIBERS_FILE, JSON.stringify(subscribers, null, 2), "utf-8");
+      try {
+        await fs.writeFile(SUBSCRIBERS_FILE, JSON.stringify(subscribers, null, 2), "utf-8");
+      } catch (e) {}
     }
 
     return NextResponse.json({ success: true, message: "Successfully subscribed to newsletter" });

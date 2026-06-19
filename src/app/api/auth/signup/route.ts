@@ -14,8 +14,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
-    // Ensure data directory exists
-    await fs.mkdir(DATA_DIR, { recursive: true });
+    // Ensure data directory exists (ignore read-only errors on Vercel)
+    try {
+      await fs.mkdir(DATA_DIR, { recursive: true });
+    } catch (e) {}
 
     // Read existing users or create empty list
     let users = [];
@@ -37,7 +39,9 @@ export async function POST(request: Request) {
         createdAt: new Date().toISOString(),
       };
       users.push(user);
-      await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2), "utf-8");
+      try {
+        await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2), "utf-8");
+      } catch (e) {}
     }
 
     return NextResponse.json({ success: true, user });
