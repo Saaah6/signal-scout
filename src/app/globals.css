@@ -11,6 +11,19 @@
   --grid-color: rgba(0, 0, 0, 0.04);
 }
 
+.dark {
+  --background: #050505;
+  --foreground: #f0f0f0;
+  --text-secondary: #bbbbbb;
+  --text-muted: #888888;
+  --border-light: rgba(255, 255, 255, 0.1);
+  --grid-color: rgba(255, 255, 255, 0.05);
+}
+
+.bg-vignette {
+  background: radial-gradient(ellipse at center, transparent 0%, var(--background) 100%);
+}
+
 .grid-bg {
   background-size: 40px 40px;
   background-image: 

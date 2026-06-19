@@ -29,6 +29,8 @@ export const viewport: Viewport = {
   userScalable: true,
 };
 
+import { ThemeProvider } from "@/components/ThemeProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -38,21 +40,29 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${roboto.variable} ${robotoMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full w-full overflow-x-hidden flex flex-col relative noise-overlay bg-white text-black">
-        {/* Global Premium Grid Overlay */}
-        <div className="fixed inset-0 pointer-events-none z-[-2] flex justify-center overflow-hidden">
-          <div className="w-full h-full grid-bg absolute inset-0" />
-          {/* Subtle gradient vignette to fade grid edges */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(255,255,255,0.8)_100%)]" />
-        </div>
-        
-        {/* Premium Cursor Interactive Background */}
-        <CursorGlow />
-        
-        <div className="relative z-10 flex flex-col min-h-screen">
-          {children}
-        </div>
+      <body className="min-h-full w-full overflow-x-hidden flex flex-col relative noise-overlay bg-background text-foreground transition-colors duration-300">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {/* Global Premium Grid Overlay */}
+          <div className="fixed inset-0 pointer-events-none z-[-2] flex justify-center overflow-hidden">
+            <div className="w-full h-full grid-bg absolute inset-0" />
+            {/* Subtle gradient vignette to fade grid edges */}
+            <div className="absolute inset-0 bg-vignette" />
+          </div>
+          
+          {/* Premium Cursor Interactive Background */}
+          <CursorGlow />
+          
+          <div className="relative z-10 flex flex-col min-h-screen">
+            {children}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

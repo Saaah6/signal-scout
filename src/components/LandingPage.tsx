@@ -97,7 +97,7 @@ const FeatureRow = React.memo(function FeatureRow({ num, title, body, delay = 0 
         <span className="font-roboto-mono text-sm text-[#888888]">{num}</span>
       </div>
       <div className="flex-1 grid lg:grid-cols-2 gap-6 items-start">
-        <h3 className="text-3xl lg:text-4xl font-black tracking-tight text-black group-hover:translate-x-2 transition-transform duration-500 font-roboto leading-tight">
+        <h3 className="text-3xl lg:text-4xl font-black tracking-tight text-foreground group-hover:translate-x-2 transition-transform duration-500 font-roboto leading-tight">
           {title}
         </h3>
         <p className="text-lg text-[#555555] leading-relaxed font-roboto font-normal">{body}</p>
@@ -276,7 +276,7 @@ export default function LandingPage() {
   }, [loginWithEmail]);
 
   return (
-    <div className="relative min-h-screen bg-white text-black overflow-x-hidden noise-overlay font-roboto">
+    <div className="relative min-h-screen bg-transparent text-foreground overflow-x-hidden noise-overlay font-roboto transition-colors duration-300">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON_LD_STR }} />
 
       <Navbar onOpenAuth={openAuth} />
@@ -301,7 +301,7 @@ export default function LandingPage() {
               <span className="leading-[1] md:leading-[0.92] animate-line-in tracking-tight text-[#222]" style={{ animationDelay: "350ms" }}>
                 Qualify B2B
               </span>
-              <span className="leading-[1] md:leading-[0.92] animate-line-in tracking-tighter text-black" style={{ animationDelay: "500ms" }}>
+              <span className="leading-[1] md:leading-[0.92] animate-line-in tracking-tighter text-foreground" style={{ animationDelay: "500ms" }}>
                 accounts to {heroVisible && <AnimatedWord word="win." delay={600} />}
               </span>
             </h1>
@@ -360,16 +360,16 @@ export default function LandingPage() {
       </section>
 
       {/* ── Features ─────────────────────────────────────────────── */}
-      <section id="features" className="relative py-24 bg-white">
+      <section id="features" className="relative py-24 bg-transparent transition-colors duration-300">
         <div className="max-w-[1100px] mx-auto px-6 lg:px-8">
           <div className="mb-16">
             <span className="inline-flex items-center gap-3 text-sm font-roboto-mono text-[#888888] mb-6">
               <span className="w-8 h-px bg-black/25 inline-block" />
               Capabilities
             </span>
-            <motion.h2 {...FADE_UP} className="text-4xl lg:text-5xl font-black tracking-tight font-roboto leading-[1.05] text-black">
+            <motion.h2 {...FADE_UP} className="text-4xl lg:text-5xl font-black tracking-tight font-roboto leading-[1.05] text-foreground">
               Know who&apos;s buying.<br />
-              <span className="text-black/65">Before they tell you.</span>
+              <span className="text-foreground/65">Before they tell you.</span>
             </motion.h2>
           </div>
           <div>
@@ -379,7 +379,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── How it works — black section ─────────────────────────── */}
-      <section id="how-it-works" className="relative py-24 bg-black text-white overflow-hidden">
+      <section id="how-it-works" className="relative py-24 bg-foreground dark:bg-[#0a0a0a] text-background dark:text-white overflow-hidden transition-colors duration-300">
         <div
           className="absolute inset-0 opacity-[0.04] pointer-events-none"
           style={{ backgroundImage: "repeating-linear-gradient(-45deg, transparent, transparent 40px, white 40px, white 41px)" }}
@@ -424,7 +424,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── Transition Layer (Final CTA & Trust Metrics) ─────────────────────────── */}
-      <section className="relative pt-24 pb-12 bg-white overflow-hidden">
+      <section className="relative pt-24 pb-12 bg-transparent transition-colors duration-300 overflow-hidden">
         <div className="max-w-[1100px] mx-auto px-6 lg:px-8">
           <div className="bg-[#fafafa] border border-black/10 rounded-3xl p-10 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-12">
             
@@ -432,7 +432,7 @@ export default function LandingPage() {
               <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#888] mb-4">
                 <Robot className="w-4 h-4" /> Autonomous Intelligence
               </span>
-              <h2 className="text-3xl md:text-4xl font-black tracking-tight font-roboto leading-tight text-black mb-6">
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight font-roboto leading-tight text-foreground mb-6">
                 Stop guessing. Start closing.
               </h2>
               <p className="text-[#555] text-lg font-roboto mb-8">
@@ -476,7 +476,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── Footer ────────────────────────────────────────────────── */}
-      <footer className="pt-12 pb-24 bg-white" style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+      <footer className="pt-12 pb-24 bg-transparent transition-colors duration-300" style={{ borderTop: "1px solid var(--border-light)" }}>
         <div className="w-full max-w-[1100px] mx-auto px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-start gap-16 md:gap-8">
             
@@ -522,8 +522,8 @@ export default function LandingPage() {
               © {new Date().getFullYear()} IntelScout AI Inc. All rights reserved.
             </p>
             <div className="flex items-center gap-6 text-xs text-[#999] font-roboto">
-              <a href="#" className="hover:text-black transition">Privacy Policy</a>
-              <a href="#" className="hover:text-black transition">Terms of Service</a>
+              <a href="#" className="hover:text-foreground transition">Privacy Policy</a>
+              <a href="#" className="hover:text-foreground transition">Terms of Service</a>
             </div>
           </div>
         </div>
@@ -538,8 +538,8 @@ export default function LandingPage() {
           >
             <motion.div
               {...MODAL_VARIANTS}
-              className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 relative"
-              style={{ border: "1px solid rgba(0,0,0,0.1)" }}
+              className="bg-background rounded-2xl shadow-2xl w-full max-w-sm p-6 relative transition-colors duration-300"
+              style={{ border: "1px solid var(--border-light)" }}
             >
               <button
                 onClick={closeAuth}
