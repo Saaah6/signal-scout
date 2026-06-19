@@ -41,11 +41,10 @@ export default function NewsletterSection() {
     <section id="newsletter" className="relative py-24 lg:py-32 bg-transparent overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-14">
         <div className="max-w-[700px] mx-auto text-center flex flex-col items-center justify-center">
-          <span className="inline-flex flex-wrap justify-center items-center gap-3 text-sm font-roboto-mono text-[#888888] mb-6">
-            <span className="w-8 h-px bg-black/25 inline-block" />
-            <span className="text-center">GTM Intelligence Digest</span>
-            <span className="w-8 h-px bg-black/25 inline-block" />
-          </span>
+          <div className="inline-flex items-center gap-2 h-10 px-4 rounded-full border border-black/10 bg-white/60 backdrop-blur-md text-[13px] font-semibold text-[#111] tracking-wide mb-6 shadow-sm font-sans">
+            <span className="text-amber-500">⚡</span>
+            <span>GTM Intelligence Digest</span>
+          </div>
           <motion.h2 {...FADE_UP} className="text-4xl lg:text-6xl font-black tracking-tight font-roboto mb-4 leading-tight text-black text-center w-full">
             Join the GTM<br className="hidden sm:block" /> Intelligence Circle
           </motion.h2>
