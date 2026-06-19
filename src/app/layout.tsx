@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Roboto, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import CursorGlow from "@/components/CursorGlow";
@@ -22,6 +22,13 @@ export const metadata: Metadata = {
   description: "Real-time AI crawler, technographics parser, and account qualification scoring engine.",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,7 +39,7 @@ export default function RootLayout({
       lang="en"
       className={`${roboto.variable} ${robotoMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col relative noise-overlay bg-white text-black">
+      <body className="min-h-full w-full overflow-x-hidden flex flex-col relative noise-overlay bg-white text-black">
         {/* Global Premium Grid Overlay */}
         <div className="fixed inset-0 pointer-events-none z-[-2] flex justify-center overflow-hidden">
           <div className="w-full h-full grid-bg absolute inset-0" />

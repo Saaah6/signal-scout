@@ -157,18 +157,19 @@ export const useIntelScout = () => {
 
 const DEFAULT_SIGNALS: SignalConfig[] = [
   // Strong Signals
-  { id: "sec_hiring", name: "Security Hiring / Expansion", category: "strong", weight: 30, enabled: true },
-  { id: "comp_hiring", name: "Compliance / Legal Hiring", category: "strong", weight: 25, enabled: true },
-  { id: "soc2_ment", name: "SOC2 / HIPAA Mentions in Jobs", category: "strong", weight: 20, enabled: true },
-  { id: "trust_center", name: "Trust Center Added to Website", category: "strong", weight: 20, enabled: true },
-  { id: "ent_pricing", name: "Enterprise Pricing Added", category: "strong", weight: 20, enabled: true },
+  { id: "exec_hire", name: "C-Level Executive Hire", category: "strong", weight: 35, enabled: true },
+  { id: "dept_hiring", name: "Key Department Expansion", category: "strong", weight: 30, enabled: true },
+  { id: "pricing_update", name: "Pricing / Packaging Update", category: "strong", weight: 25, enabled: true },
+  { id: "tech_install", name: "New Premium Tech Stack Install", category: "strong", weight: 20, enabled: true },
+  { id: "compliance_cert", name: "Regulatory / Compliance Update", category: "strong", weight: 20, enabled: true },
+  { id: "specialty_role", name: "Specialized Role Hiring", category: "strong", weight: 25, enabled: true },
   // Medium Signals
+  { id: "regional_exp", name: "Regional Market Expansion", category: "medium", weight: 15, enabled: true },
   { id: "funding", name: "Recently Funded (Last 90 Days)", category: "medium", weight: 15, enabled: true },
-  { id: "eng_hiring", name: "Engineering Expansion (>3 roles)", category: "medium", weight: 12, enabled: true },
-  { id: "new_market", name: "New Regional Presence (e.g. EU)", category: "medium", weight: 10, enabled: true },
+  { id: "headcount_growth", name: "Rapid Headcount Growth (>10%)", category: "medium", weight: 12, enabled: true },
   // Weak Signals
-  { id: "blog_post", name: "Generic Technical Blog Posts", category: "weak", weight: 3, enabled: true },
-  { id: "gen_hiring", name: "General Sales / Marketing Hiring", category: "weak", weight: 2, enabled: true }
+  { id: "content_pub", name: "New Content / Case Study Published", category: "weak", weight: 3, enabled: true },
+  { id: "gen_hiring", name: "General Administrative Hiring", category: "weak", weight: 2, enabled: true }
 ];
 
 export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
@@ -352,6 +353,7 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
     const isHR = sellLower.includes("hr") || sellLower.includes("people") || sellLower.includes("recruiting") || sellLower.includes("hiring") || sellLower.includes("talent");
     const isSalesCRM = sellLower.includes("crm") || sellLower.includes("sales") || sellLower.includes("marketing") || sellLower.includes("revenue") || sellLower.includes("revops");
     const isDevTools = sellLower.includes("dev") || sellLower.includes("developer") || sellLower.includes("infra") || sellLower.includes("cloud") || sellLower.includes("git") || sellLower.includes("ci/cd") || sellLower.includes("caching");
+    const isMarketing = sellLower.includes("agency") || sellLower.includes("seo") || sellLower.includes("ads") || sellLower.includes("content") || sellLower.includes("marketing");
 
     let industry = "B2B SaaS, FinTech, Enterprise Software";
     let technographics = ["AWS", "GitHub Actions", "Salesforce", "Vanta", "Snowflake", "Sentry", "PostgreSQL"];
@@ -471,31 +473,44 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
     setGtmSummary(summary);
 
     // 3. Dynamically adjust signals config categories / naming based on flags
-    const isTech = isCompliance || isDevTools || isHR || isSalesCRM || currentOffer.sell.toLowerCase().includes("ai") || currentOffer.sell.toLowerCase().includes("tech") || currentOffer.sell.toLowerCase().includes("software") || currentOffer.sell.toLowerCase().includes("cyber");
     const customSignals = DEFAULT_SIGNALS.map((s) => {
-      if (!isTech) {
-        if (s.id === "sec_hiring") return { ...s, name: "Marketing Expansion Hiring" };
-        if (s.id === "comp_hiring") return { ...s, name: "Sales Operations Hiring" };
-        if (s.id === "trust_center") return { ...s, name: "Shopify Plus / Tech Upgrade" };
-        if (s.id === "soc2_ment") return { ...s, name: "AdTech Mentioned" };
-      } else {
-        // Customize text for devtools, hr, crm
-        if (isHR) {
-          if (s.id === "sec_hiring") return { ...s, name: "Talent Recruiter Hiring" };
-          if (s.id === "comp_hiring") return { ...s, name: "HR Operations Hiring" };
-          if (s.id === "trust_center") return { ...s, name: "Onboarding Software Added" };
-          if (s.id === "soc2_ment") return { ...s, name: "Headcount Targets Mentioned" };
-        } else if (isSalesCRM) {
-          if (s.id === "sec_hiring") return { ...s, name: "Sales Exec (AE) Hiring" };
-          if (s.id === "comp_hiring") return { ...s, name: "Sales Operations Hiring" };
-          if (s.id === "trust_center") return { ...s, name: "Self-Serve Pricing Added" };
-          if (s.id === "soc2_ment") return { ...s, name: "CRM API Mentions in Jobs" };
-        } else if (isDevTools) {
-          if (s.id === "sec_hiring") return { ...s, name: "DevOps Engineer Hiring" };
-          if (s.id === "comp_hiring") return { ...s, name: "Cloud Architect Hiring" };
-          if (s.id === "trust_center") return { ...s, name: "API Documentation Added" };
-          if (s.id === "soc2_ment") return { ...s, name: "CI/CD Pipeline Mentions" };
-        }
+      // Customize text for different categories
+      if (isMarketing && !isSalesCRM) { // Marketing Agency
+        if (s.id === "exec_hire") return { ...s, name: "Hiring VP of Marketing / CMO" };
+        if (s.id === "dept_hiring") return { ...s, name: "Marketing Expansion Hiring" };
+        if (s.id === "pricing_update") return { ...s, name: "Adding Premium Agency Retainers" };
+        if (s.id === "tech_install") return { ...s, name: "Installed New Ad Tech Stack" };
+        if (s.id === "compliance_cert") return { ...s, name: "Expanding to New Markets" };
+        if (s.id === "specialty_role") return { ...s, name: "Hiring SEO / Growth Specialists" };
+        if (s.id === "content_pub") return { ...s, name: "Publishing New Case Studies" };
+      } else if (isCompliance) {
+        if (s.id === "exec_hire") return { ...s, name: "CISO / VP Security Hire" };
+        if (s.id === "dept_hiring") return { ...s, name: "Security Hiring / Expansion" };
+        if (s.id === "pricing_update") return { ...s, name: "Enterprise Pricing Added" };
+        if (s.id === "tech_install") return { ...s, name: "Trust Center Added to Website" };
+        if (s.id === "compliance_cert") return { ...s, name: "ISO 27001 / SOC2 Preparation" };
+        if (s.id === "specialty_role") return { ...s, name: "Compliance / Legal Hiring" };
+      } else if (isHR) {
+        if (s.id === "exec_hire") return { ...s, name: "Chief People Officer Hire" };
+        if (s.id === "dept_hiring") return { ...s, name: "Talent Recruiter Expansion" };
+        if (s.id === "pricing_update") return { ...s, name: "Compensation Frameworks Update" };
+        if (s.id === "tech_install") return { ...s, name: "Onboarding Software Added" };
+        if (s.id === "compliance_cert") return { ...s, name: "Remote Work Operations Scaling" };
+        if (s.id === "specialty_role") return { ...s, name: "HR Operations Specialists" };
+      } else if (isSalesCRM) {
+        if (s.id === "exec_hire") return { ...s, name: "Chief Revenue Officer Hire" };
+        if (s.id === "dept_hiring") return { ...s, name: "Sales Exec (AE) Expansion" };
+        if (s.id === "pricing_update") return { ...s, name: "Self-Serve Pricing Added" };
+        if (s.id === "tech_install") return { ...s, name: "Outbound Lead Gen Stack Update" };
+        if (s.id === "compliance_cert") return { ...s, name: "Email Deliverability Optimization" };
+        if (s.id === "specialty_role") return { ...s, name: "Sales Operations Analysts" };
+      } else if (isDevTools) {
+        if (s.id === "exec_hire") return { ...s, name: "VP of Engineering Hire" };
+        if (s.id === "dept_hiring") return { ...s, name: "DevOps Engineer Expansion" };
+        if (s.id === "pricing_update") return { ...s, name: "API Usage Pricing Updated" };
+        if (s.id === "tech_install") return { ...s, name: "Zero-trust Infrastructure Deployed" };
+        if (s.id === "compliance_cert") return { ...s, name: "Data Residency Controls Updated" };
+        if (s.id === "specialty_role") return { ...s, name: "Cloud Architect Expansion" };
       }
       return s;
     });
@@ -545,34 +560,40 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
             const updatedReasons = [...a.reasons];
             let reasonText = `Detected trigger: ${randomSig.name}`;
 
-            if (randomSig.id === "sec_hiring") {
+            if (randomSig.id === "dept_hiring") {
               if (category === "compliance") reasonText = "Detected hiring for 2+ Security Engineering positions.";
               else if (category === "hr") reasonText = "Detected hiring for Talent Recruiters & Sourcers.";
               else if (category === "sales") reasonText = "Detected hiring for 3+ Account Executives.";
               else if (category === "devtools") reasonText = "Detected hiring for DevOps & SRE Engineers.";
-              else reasonText = "Detected hiring for Sales & Marketing Directors.";
-            } else if (randomSig.id === "comp_hiring") {
+              else reasonText = "Detected expansion in primary operations department.";
+            } else if (randomSig.id === "specialty_role") {
               if (category === "compliance") reasonText = "Hiring for Compliance/Legal Counsel roles.";
               else if (category === "hr") reasonText = "Hiring for HR Operations Specialists.";
               else if (category === "sales") reasonText = "Hiring for Sales Operations Analysts.";
               else if (category === "devtools") reasonText = "Hiring for Cloud Security Architects.";
-              else reasonText = "Hiring for Operations Managers.";
-            } else if (randomSig.id === "trust_center") {
+              else reasonText = "Hiring for specialized strategic roles.";
+            } else if (randomSig.id === "tech_install") {
               if (category === "compliance") reasonText = "Added secure Trust / Security Center to domain portal.";
               else if (category === "hr") reasonText = "Integrated automated onboarding software to website.";
               else if (category === "sales") reasonText = "Added self-serve Enterprise packages to billing pages.";
               else if (category === "devtools") reasonText = "Added interactive API documentation and developer portal.";
-              else reasonText = "Upgraded digital checkout portal or tech integrations.";
-            } else if (randomSig.id === "soc2_ment") {
+              else reasonText = "Upgraded digital tech stack integrations.";
+            } else if (randomSig.id === "compliance_cert") {
               if (category === "compliance") reasonText = "SOC2/HIPAA audit readiness mentioned in vacancies.";
               else if (category === "hr") reasonText = "Rapid headcount targets mentioned in company press.";
               else if (category === "sales") reasonText = "CRM API and integration needs mentioned in listings.";
               else if (category === "devtools") reasonText = "CI/CD automation pipeline expansion mentioned in job posts.";
-              else reasonText = "New digital marketing tools listed in active jobs.";
+              else reasonText = "Major operational updates listed in active jobs.";
             } else if (randomSig.id === "funding") {
               reasonText = "Announced a new venture capital funding round recently.";
-            } else if (randomSig.id === "ent_pricing") {
+            } else if (randomSig.id === "pricing_update") {
               reasonText = "Added 'Enterprise' package to standard pricing matrix.";
+            } else if (randomSig.id === "exec_hire") {
+              if (category === "compliance") reasonText = "Hiring CISO or VP of Security.";
+              else if (category === "hr") reasonText = "Hiring Chief People Officer (CPO).";
+              else if (category === "sales") reasonText = "Hiring Chief Revenue Officer (CRO).";
+              else if (category === "devtools") reasonText = "Hiring VP of Engineering.";
+              else reasonText = "Hiring VP or C-level Executive.";
             }
 
             updatedReasons.unshift(reasonText);
