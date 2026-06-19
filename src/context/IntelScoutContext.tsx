@@ -450,11 +450,11 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
     // 1. Generate ICP
     const generatedICP: ICP = {
       firmographics: {
-        industry,
-        employeeCount: "50-1000 employees",
-        revenue: currentOffer.dealSize === "<$1,000" || currentOffer.dealSize === "$1,000-$5,000" ? "$5M - $20M" : "$20M - $150M",
-        geography: "United States, Canada, Europe",
-        fundingStage: "Series A to Series D"
+        industry: "",
+        employeeCount: "",
+        revenue: "",
+        geography: "",
+        fundingStage: ""
       },
       technographics,
       growthSignals,

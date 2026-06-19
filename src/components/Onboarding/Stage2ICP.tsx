@@ -190,17 +190,23 @@ export default function Stage2ICP() {
               <select
                 value={icp.firmographics.industry}
                 onChange={(e) => handleFirmoChange("industry", e.target.value)}
-                className="w-full bg-transparent text-[13px] font-semibold text-[#111] leading-snug focus:outline-none cursor-pointer p-0 m-0"
+                className="w-full bg-transparent text-[13px] font-semibold text-[#111] leading-snug focus:outline-none cursor-pointer p-0 m-0 pr-6"
               >
-                <option value="B2B SaaS, FinTech, Enterprise Software">B2B SaaS, FinTech, Enterprise Software</option>
-                <option value="Healthcare, Medical Tech, Life Sciences">Healthcare, Medical Tech, Life Sciences</option>
-                <option value="E-commerce, Retail, Consumer Brands">E-commerce, Retail, Consumer Brands</option>
-                <option value="DevTools, Infrastructure, Cloud Platform SaaS">DevTools, Infrastructure, Cloud Platform SaaS</option>
-                <option value="HR Tech, Talent Management Services">HR Tech, Talent Management Services</option>
-                <option value="EdTech, Higher Education">EdTech, Higher Education</option>
-                <option value="Real Estate, PropTech">Real Estate, PropTech</option>
-                <option value="Manufacturing, Supply Chain, Logistics">Manufacturing, Supply Chain, Logistics</option>
-                <option value={icp.firmographics.industry}>{icp.firmographics.industry}</option>
+                <option value="" disabled>Select Target Industry...</option>
+                <option value="Software Development">Software Development</option>
+                <option value="Information Technology & Services">Information Technology & Services</option>
+                <option value="Financial Services">Financial Services</option>
+                <option value="Hospital & Health Care">Hospital & Health Care</option>
+                <option value="Education Management">Education Management</option>
+                <option value="Real Estate">Real Estate</option>
+                <option value="Manufacturing">Manufacturing</option>
+                <option value="Retail & Consumer Goods">Retail & Consumer Goods</option>
+                <option value="Telecommunications">Telecommunications</option>
+                <option value="Media & Entertainment">Media & Entertainment</option>
+                <option value="Automotive">Automotive</option>
+                {icp.firmographics.industry && !["Software Development", "Information Technology & Services", "Financial Services", "Hospital & Health Care", "Education Management", "Real Estate", "Manufacturing", "Retail & Consumer Goods", "Telecommunications", "Media & Entertainment", "Automotive"].includes(icp.firmographics.industry) && (
+                  <option value={icp.firmographics.industry}>{icp.firmographics.industry}</option>
+                )}
               </select>
             </div>
             <div className="grid grid-cols-2 gap-2.5">
@@ -209,15 +215,17 @@ export default function Stage2ICP() {
                 <select
                   value={icp.firmographics.employeeCount}
                   onChange={(e) => handleFirmoChange("employeeCount", e.target.value)}
-                  className="w-full bg-transparent text-[13px] font-semibold text-[#111] focus:outline-none cursor-pointer p-0 m-0"
+                  className="w-full bg-transparent text-[13px] font-semibold text-[#111] focus:outline-none cursor-pointer p-0 m-0 pr-6"
                 >
-                  <option value="1-10 employees">1-10 employees</option>
-                  <option value="11-50 employees">11-50 employees</option>
-                  <option value="50-1000 employees">50-1000 employees</option>
-                  <option value="200-500 employees">200-500 employees</option>
-                  <option value="500-1000 employees">500-1000 employees</option>
-                  <option value="1000+ employees">1000+ employees</option>
-                  <option value={icp.firmographics.employeeCount}>{icp.firmographics.employeeCount}</option>
+                  <option value="" disabled>Select Size...</option>
+                  <option value="1-10">1-10 employees</option>
+                  <option value="11-50">11-50 employees</option>
+                  <option value="51-200">51-200 employees</option>
+                  <option value="201-500">201-500 employees</option>
+                  <option value="501-1000">501-1,000 employees</option>
+                  <option value="1001-5000">1,001-5,000 employees</option>
+                  <option value="5001-10000">5,001-10,000 employees</option>
+                  <option value="10001+">10,001+ employees</option>
                 </select>
               </div>
               <div className="bg-[#fafafa] border border-black/[0.04] rounded-lg p-3.5 transition-colors hover:bg-black/[0.02]">
@@ -225,15 +233,16 @@ export default function Stage2ICP() {
                 <select
                   value={icp.firmographics.revenue}
                   onChange={(e) => handleFirmoChange("revenue", e.target.value)}
-                  className="w-full bg-transparent text-[13px] font-semibold text-[#111] focus:outline-none cursor-pointer p-0 m-0"
+                  className="w-full bg-transparent text-[13px] font-semibold text-[#111] focus:outline-none cursor-pointer p-0 m-0 pr-6"
                 >
+                  <option value="" disabled>Select Revenue...</option>
                   <option value="<$1M">&lt;$1M</option>
-                  <option value="$1M - $10M">$1M - $10M</option>
-                  <option value="$10M - $50M">$10M - $50M</option>
-                  <option value="$20M - $150M">$20M - $150M</option>
-                  <option value="$50M - $200M">$50M - $200M</option>
-                  <option value="$200M+">$200M+</option>
-                  <option value={icp.firmographics.revenue}>{icp.firmographics.revenue}</option>
+                  <option value="$1M-$10M">$1M - $10M</option>
+                  <option value="$10M-$50M">$10M - $50M</option>
+                  <option value="$50M-$100M">$50M - $100M</option>
+                  <option value="$100M-$250M">$100M - $250M</option>
+                  <option value="$250M-$1B">$250M - $1B</option>
+                  <option value="$1B+">$1B+</option>
                 </select>
               </div>
               <div className="bg-[#fafafa] border border-black/[0.04] rounded-lg p-3.5 transition-colors hover:bg-black/[0.02]">
@@ -241,16 +250,18 @@ export default function Stage2ICP() {
                 <select
                   value={icp.firmographics.geography}
                   onChange={(e) => handleFirmoChange("geography", e.target.value)}
-                  className="w-full bg-transparent text-[13px] font-semibold text-[#111] focus:outline-none cursor-pointer p-0 m-0"
+                  className="w-full bg-transparent text-[13px] font-semibold text-[#111] focus:outline-none cursor-pointer p-0 m-0 pr-6"
                 >
-                  <option value="Global">Global</option>
-                  <option value="United States, Canada, Europe">United States, Canada, Europe</option>
+                  <option value="" disabled>Select Region...</option>
                   <option value="North America">North America</option>
-                  <option value="Europe">Europe</option>
-                  <option value="Asia-Pacific">Asia-Pacific</option>
-                  <option value="Latin America">Latin America</option>
-                  <option value="Middle East & Africa">Middle East & Africa</option>
-                  <option value={icp.firmographics.geography}>{icp.firmographics.geography}</option>
+                  <option value="EMEA">EMEA</option>
+                  <option value="APAC">APAC</option>
+                  <option value="LATAM">LATAM</option>
+                  <option value="United States">United States</option>
+                  <option value="United Kingdom">United Kingdom</option>
+                  <option value="Canada">Canada</option>
+                  <option value="Australia">Australia</option>
+                  <option value="Global">Global</option>
                 </select>
               </div>
               <div className="bg-[#fafafa] border border-black/[0.04] rounded-lg p-3.5 transition-colors hover:bg-black/[0.02]">
@@ -258,15 +269,19 @@ export default function Stage2ICP() {
                 <select
                   value={icp.firmographics.fundingStage}
                   onChange={(e) => handleFirmoChange("fundingStage", e.target.value)}
-                  className="w-full bg-transparent text-[13px] font-semibold text-[#111] focus:outline-none cursor-pointer p-0 m-0"
+                  className="w-full bg-transparent text-[13px] font-semibold text-[#111] focus:outline-none cursor-pointer p-0 m-0 pr-6"
                 >
+                  <option value="" disabled>Select Funding...</option>
+                  <option value="Pre-Seed">Pre-Seed</option>
+                  <option value="Seed">Seed</option>
+                  <option value="Series A">Series A</option>
+                  <option value="Series B">Series B</option>
+                  <option value="Series C">Series C</option>
+                  <option value="Series D">Series D</option>
+                  <option value="Series E+">Series E+</option>
+                  <option value="Private Equity">Private Equity</option>
+                  <option value="Post-IPO">Post-IPO</option>
                   <option value="Bootstrapped">Bootstrapped</option>
-                  <option value="Seed / Angel">Seed / Angel</option>
-                  <option value="Series A to Series D">Series A to Series D</option>
-                  <option value="Series B - C">Series B - C</option>
-                  <option value="Series D+">Series D+</option>
-                  <option value="Public">Public</option>
-                  <option value={icp.firmographics.fundingStage}>{icp.firmographics.fundingStage}</option>
                 </select>
               </div>
             </div>
