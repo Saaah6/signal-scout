@@ -283,33 +283,36 @@ export default function LandingPage() {
       <Navbar onOpenAuth={openAuth} />
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex flex-col justify-center overflow-hidden" style={{ paddingTop: 68 }}>
-        <div className="relative z-10 max-w-[1400px] mx-auto px-8 lg:px-14 py-32 lg:py-40">
+      <section className="relative min-h-[90dvh] lg:min-h-screen flex flex-col justify-center overflow-hidden pt-28 lg:pt-32 pb-40 lg:pb-0">
+        <div className="relative z-10 max-w-[1400px] mx-auto w-full px-6 md:px-12 xl:px-16 flex flex-col md:items-center xl:items-start text-left md:text-center xl:text-left">
 
-          <div className="animate-line-in mb-8" style={{ animationDelay: "200ms" }}>
-            <span className="inline-flex items-center gap-3 text-sm font-roboto-mono text-[#888888]">
-              <span className="w-8 h-px bg-black/25 inline-block" />
+          {/* Eyebrow */}
+          <div className="animate-line-in mb-6 md:mb-8 w-full flex md:justify-center xl:justify-start" style={{ animationDelay: "200ms" }}>
+            <span className="inline-flex items-center gap-3 text-[13px] md:text-sm font-roboto-mono text-[#888888]">
+              <span className="w-6 md:w-8 h-px bg-black/25 inline-block" />
               The GTM intelligence platform
             </span>
           </div>
 
-          <div className="mb-12">
+          {/* Headline */}
+          <div className="mb-8 md:mb-12 xl:mb-16 w-full max-w-[900px] xl:max-w-none mx-auto xl:mx-0">
             <h1
-              className="font-black font-roboto flex flex-col items-start"
-              style={{ fontSize: "clamp(3.5rem, 11vw, 9.5rem)" }}
+              className="font-black font-roboto flex flex-col items-start md:items-center xl:items-start"
+              style={{ fontSize: "clamp(3rem, 10vw, 9.5rem)" }}
             >
-              <span className="leading-[0.92] animate-line-in tracking-normal text-[#222]" style={{ animationDelay: "350ms" }}>
+              <span className="leading-[1] md:leading-[0.92] animate-line-in tracking-tight text-[#222]" style={{ animationDelay: "350ms" }}>
                 Qualify B2B
               </span>
-              <span className="leading-[0.92] animate-line-in tracking-tighter text-black" style={{ animationDelay: "500ms" }}>
+              <span className="leading-[1] md:leading-[0.92] animate-line-in tracking-tighter text-black" style={{ animationDelay: "500ms" }}>
                 accounts to {heroVisible && <AnimatedWord word="win." delay={600} />}
               </span>
             </h1>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-10 lg:gap-20 lg:items-center">
+          {/* Description & CTA Group */}
+          <div className="flex flex-col xl:flex-row gap-8 md:gap-10 xl:gap-20 xl:items-center w-full max-w-[700px] xl:max-w-none mx-auto xl:mx-0">
             <p
-              className="text-xl lg:text-2xl text-[#444444] leading-relaxed max-w-xl font-normal animate-line-in"
+              className="text-[17px] md:text-xl xl:text-2xl text-[#555] leading-relaxed max-w-[540px] xl:max-w-[600px] mx-auto xl:mx-0 font-normal animate-line-in"
               style={{ animationDelay: "500ms" }}
             >
               IntelScout crawls target domains in real-time — tracking hiring signals,
@@ -317,20 +320,20 @@ export default function LandingPage() {
             </p>
 
             <div
-              className="flex flex-col sm:flex-row items-start gap-4 animate-line-in"
+              className="flex flex-col sm:flex-row items-center justify-center xl:justify-start gap-3 md:gap-4 w-full sm:w-auto animate-line-in shrink-0"
               style={{ animationDelay: "620ms" }}
             >
               <button
                 onClick={openAuth}
-                className="inline-flex items-center gap-2.5 bg-black hover:bg-[#1a1a1a] text-white font-bold text-base rounded-full px-8 h-14 transition-all duration-200 group font-roboto"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-black hover:bg-[#1a1a1a] text-white font-bold text-[15px] md:text-base rounded-full px-8 h-12 md:h-14 transition-all duration-200 group font-roboto shadow-sm"
               >
                 Start free trial
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
               <a
                 href="#how-it-works"
-                className="inline-flex items-center gap-2 font-bold text-base rounded-full px-8 h-14 transition-all duration-200 font-roboto text-black"
-                style={{ border: "1.5px solid rgba(0,0,0,0.18)" }}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 font-bold text-[15px] md:text-base rounded-full px-8 h-12 md:h-14 transition-all duration-200 font-roboto text-black hover:bg-black/5"
+                style={{ border: "1.5px solid rgba(0,0,0,0.12)" }}
               >
                 Watch demo
               </a>
