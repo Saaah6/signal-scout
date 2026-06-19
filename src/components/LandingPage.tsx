@@ -210,20 +210,14 @@ const PanelOutreach = React.memo(function PanelOutreach() {
   );
 });
 
-function ScrollStep({ step, index, activeStep, onStepEnter }: { step: any, index: number, activeStep: number, onStepEnter: (i: number) => void }) {
-  const ref = useRef(null);
-  // Trigger when element hits the middle 30% of the viewport
-  const isInView = useInView(ref, { margin: "-35% 0px -35% 0px" });
-
-  useEffect(() => {
-    if (isInView) {
-      onStepEnter(index);
-    }
-  }, [isInView, index, onStepEnter]);
-
+function ProcessStep({ step, index, activeStep, onStepEnter }: { step: any, index: number, activeStep: number, onStepEnter: (i: number) => void }) {
   return (
-    <div ref={ref} className="pb-[20vh] md:pb-[30vh]">
-      <div className={`w-full text-left transition-all duration-700 ${activeStep === index ? "opacity-100" : "opacity-30"}`}>
+    <div 
+      className="py-6 cursor-pointer group"
+      onMouseEnter={() => onStepEnter(index)}
+      onClick={() => onStepEnter(index)}
+    >
+      <div className={`w-full text-left transition-all duration-500 ${activeStep === index ? "opacity-100" : "opacity-30 group-hover:opacity-50"}`}>
         <div className="flex items-start gap-6">
           <span className={`font-black text-3xl font-roboto shrink-0 transition-colors duration-500 ${activeStep === index ? "text-white" : "text-[#555]"}`}>
             {step.roman}
@@ -405,10 +399,10 @@ export default function LandingPage() {
             </motion.h2>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 relative items-start">
-            <div className="pb-32">
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+            <div className="flex flex-col">
               {STEPS.map((step, idx) => (
-                <ScrollStep 
+                <ProcessStep 
                   key={step.roman} 
                   step={step} 
                   index={idx} 
@@ -418,14 +412,12 @@ export default function LandingPage() {
               ))}
             </div>
 
-            <div className="relative">
-              <div className="lg:sticky lg:top-[30vh] w-full border border-white/10 rounded-2xl overflow-hidden bg-[#0a0a0a] shadow-[0_8px_30px_rgba(0,0,0,0.4)] min-h-[350px]">
-                <AnimatePresence mode="wait">
-                  {activeProcessStep === 0 && <PanelICP key="panel0" />}
-                  {activeProcessStep === 1 && <PanelCrawl key="panel1" />}
-                  {activeProcessStep === 2 && <PanelOutreach key="panel2" />}
-                </AnimatePresence>
-              </div>
+            <div className="relative w-full border border-white/10 rounded-2xl overflow-hidden bg-[#0a0a0a] shadow-[0_8px_30px_rgba(0,0,0,0.4)] aspect-[4/3] lg:aspect-auto lg:h-[450px]">
+              <AnimatePresence mode="wait">
+                {activeProcessStep === 0 && <PanelICP key="panel0" />}
+                {activeProcessStep === 1 && <PanelCrawl key="panel1" />}
+                {activeProcessStep === 2 && <PanelOutreach key="panel2" />}
+              </AnimatePresence>
             </div>
           </div>
         </div>
