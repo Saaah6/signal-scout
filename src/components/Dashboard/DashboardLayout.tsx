@@ -128,7 +128,7 @@ export default function DashboardLayout() {
   };
 
   return (
-    <div className="flex h-screen bg-[#fafafa] text-[#333] overflow-hidden font-sans selection:bg-black selection:text-white">
+    <div className="flex h-screen bg-transparent text-[#333] overflow-hidden font-sans selection:bg-black selection:text-white">
       
       {/* Sidebar Navigation */}
       <Sidebar 
@@ -156,7 +156,7 @@ export default function DashboardLayout() {
       </div>
 
       {/* Floating PWA Bottom Dock Navigation for Mobile */}
-      <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md bg-zinc-900/80 border border-zinc-800/85 backdrop-blur-md rounded-full shadow-2xl py-2 px-3 flex items-center justify-around z-45">
+      <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md bg-black/80 border border-white/10 backdrop-blur-xl rounded-full shadow-2xl py-2 px-3 flex items-center justify-around z-45">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -166,13 +166,13 @@ export default function DashboardLayout() {
               onClick={() => setActiveTab(item.id)}
               className={`p-2.5 rounded-full transition relative cursor-pointer ${
                 isActive 
-                  ? "bg-violet-600/20 text-violet-400 border border-violet-500/25" 
-                  : "text-zinc-500 hover:text-zinc-300"
+                  ? "bg-white/20 text-white border border-white/10" 
+                  : "text-[#888] hover:text-white"
               }`}
             >
               <Icon className="w-5 h-5" />
               {item.badge !== undefined && item.badge > 0 && (
-                <span className="absolute -top-1 -right-1 bg-violet-600 text-[8px] font-bold text-white px-1.5 py-0.5 rounded-full leading-none">
+                <span className="absolute -top-1 -right-1 bg-white text-black text-[8px] font-bold px-1.5 py-0.5 rounded-full leading-none">
                   {item.badge}
                 </span>
               )}
