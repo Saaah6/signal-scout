@@ -21,7 +21,15 @@ export default function LiquidCurtain({ children, stageKey }: LiquidCurtainProps
       const timer = setTimeout(() => {
         setDisplayChildren(children);
       }, 450); // Midpoint of the 900ms transition
-      return () => clearTimeout(timer);
+      
+      const finishTimer = setTimeout(() => {
+        setIsTransitioning(false);
+      }, 900); // End of transition
+      
+      return () => {
+        clearTimeout(timer);
+        clearTimeout(finishTimer);
+      };
     } else {
       setDisplayChildren(children);
     }
@@ -78,7 +86,6 @@ export default function LiquidCurtain({ children, stageKey }: LiquidCurtainProps
             exit={{ opacity: 0 }}
             transition={{ delay: 0.9 }}
             className="fixed inset-0 pointer-events-none z-50 w-full h-full"
-            onAnimationComplete={() => setIsTransitioning(false)}
           >
             <svg
               viewBox="0 0 100 100"
