@@ -25,6 +25,7 @@ export function getOfferCategory(sell: string): GtmCategory {
 
 export interface Offer {
   sell: string;
+  websiteUrl: string;
   problem: string;
   dealSize: string;
   salesCycle: string;
@@ -176,6 +177,7 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
   const [step, setStepState] = useState<number | "research" | "dashboard">(1);
   const [offer, setOffer] = useState<Offer>({
     sell: "AI Compliance Platform",
+    websiteUrl: "vanta.com",
     problem: "Reduce compliance effort and automate SOC2 audits",
     dealSize: "$20,000-$100,000",
     salesCycle: "Medium"
@@ -347,6 +349,7 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
   const generateWorkspace = useCallback((customOffer?: Offer) => {
     const currentOffer = customOffer || offer;
     const sellLower = currentOffer.sell.toLowerCase();
+    const domain = currentOffer.websiteUrl.toLowerCase();
 
     // Determine category based on keywords
     const isCompliance = sellLower.includes("compliance") || sellLower.includes("security") || sellLower.includes("cyber") || sellLower.includes("audit") || sellLower.includes("soc2");
@@ -355,14 +358,15 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
     const isDevTools = sellLower.includes("dev") || sellLower.includes("developer") || sellLower.includes("infra") || sellLower.includes("cloud") || sellLower.includes("git") || sellLower.includes("ci/cd") || sellLower.includes("caching");
     const isMarketing = sellLower.includes("agency") || sellLower.includes("seo") || sellLower.includes("ads") || sellLower.includes("content") || sellLower.includes("marketing");
 
-    let industry = "B2B SaaS, FinTech, Enterprise Software";
+    let industry = "Software Development";
     let technographics = ["AWS", "GitHub Actions", "Salesforce", "Vanta", "Snowflake", "Sentry", "PostgreSQL"];
     let growthSignals = ["Engineering expansion (>20% YoY)", "Compliance requirements in job specifications", "Recent funding rounds", "Enterprise landing page launches"];
     let buyingCommittee = ["VP of Engineering", "Head of Security", "Chief Technology Officer (CTO)", "Director of DevOps"];
     
+    // Dynamic Pain Mapping Mock based on parsed Offer
     let pain = [
-      "Security reviews block major enterprise deals",
-      "SOC2/ISO preparation takes engineers away from building the product",
+      `Security reviews block major enterprise deals for ${currentOffer.sell} users`,
+      `Teams using ${domain || "legacy tools"} spend hours on manual processes`,
       "Compliance audits are manual, error-prone, and stress-inducing"
     ];
     let triggers = [
@@ -370,8 +374,8 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
       "Added 'Enterprise Plan' link to website footer",
       "Announced Series A funding (entering enterprise sales cycle)"
     ];
-    let buyingMotivation = "Unlock enterprise revenue and pass security reviews in days rather than months.";
-    let summary = `Active GTM Strategy: Targeting growing B2B SaaS companies undergoing security audits (SOC2/ISO). The GTM engine crawls target domains looking for trust directories, job vacancies in cybersecurity, and enterprise pricing updates to capture buying timing windows.`;
+    let buyingMotivation = `Unlock enterprise revenue and pass security reviews in days using ${currentOffer.sell || "the platform"}.`;
+    let summary = `Active GTM Strategy (Synthesized from ${domain || "provided offer"}): Targeting growing B2B SaaS companies undergoing security audits (SOC2/ISO). The GTM engine crawls target domains looking for trust directories, job vacancies in cybersecurity, and enterprise pricing updates to capture buying timing windows.`;
 
     if (isHR) {
       industry = "HR Tech, B2B SaaS, Talent Management Services";

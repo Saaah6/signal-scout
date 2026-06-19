@@ -5,7 +5,7 @@ import { useIntelScout } from "@/context/IntelScoutContext";
 import { ArrowLeft, ArrowRight, Warning, Lightning, Eye, Lightbulb, TrendUp } from "@phosphor-icons/react";
 
 export default function Stage3Pain() {
-  const { painMap, setStep } = useIntelScout();
+  const { painMap, setStep, offer } = useIntelScout();
 
   if (!painMap) return null;
 
@@ -18,8 +18,13 @@ export default function Stage3Pain() {
             <TrendUp className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold tracking-tight text-[#111] font-outfit">Pain Mapping Blueprint</h2>
-            <p className="text-sm text-[#555]">IntelScout maps core problem statements to operational pains, triggers, and motivations.</p>
+            <div className="flex items-center gap-3">
+              <h2 className="text-2xl font-bold tracking-tight text-[#111] font-outfit">Pain Mapping Blueprint</h2>
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-violet-100 text-violet-800 uppercase tracking-widest font-mono border border-violet-200">
+                Synthesized from {offer?.websiteUrl || "Source URL"}
+              </span>
+            </div>
+            <p className="text-sm text-[#555] mt-1">IntelScout maps core problem statements to operational pains, triggers, and motivations.</p>
           </div>
         </div>
       </div>
