@@ -183,7 +183,7 @@ export default function Stage1Offer() {
                 <span>{getScrapeMessage(scrapeStep)}</span>
               </div>
               <div className="w-full bg-black/5 rounded-full h-1.5 mt-1">
-                <div className="bg-black h-1.5 rounded-full transition-all duration-1000 ease-linear" style={{ width: \`\${(scrapeStep / 60) * 100}%\` }} />
+                <div className="bg-black h-1.5 rounded-full transition-all duration-1000 ease-linear" style={{ width: `${(scrapeStep / 60) * 100}%` }} />
               </div>
             </div>
           ) : (
