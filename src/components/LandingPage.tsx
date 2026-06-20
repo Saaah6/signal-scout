@@ -468,7 +468,7 @@ export default function LandingPage() {
                   {STEPS.map((step, idx) => (
                     <div 
                       key={step.roman} 
-                      className="py-6 transition-all duration-500 cursor-default"
+                      className={`transition-all duration-500 cursor-default ${activeProcessStep === idx ? "py-6" : "py-3"}`}
                     >
                       <div className={`w-full text-left transition-all duration-500 ${activeProcessStep === idx ? "opacity-100" : "opacity-30"}`}>
                         <div className="flex items-start gap-6">
@@ -476,12 +476,20 @@ export default function LandingPage() {
                             {step.roman}
                           </span>
                           <div className="flex-1">
-                            <h3 className={`text-2xl lg:text-3xl font-black mb-3 transition-all duration-500 font-roboto ${activeProcessStep === idx ? "text-foreground translate-x-1" : "text-foreground/60"}`}>
+                            <h3 className={`text-2xl lg:text-3xl font-black transition-all duration-500 font-roboto ${activeProcessStep === idx ? "text-foreground translate-x-1 mb-3" : "text-foreground/60 mb-0"}`}>
                               {step.title}
                             </h3>
-                            <p className={`leading-relaxed font-normal font-roboto transition-colors duration-500 ${activeProcessStep === idx ? "text-foreground/80" : "text-foreground/50"}`}>
-                              {step.body}
-                            </p>
+                            <div 
+                              className="overflow-hidden transition-all duration-500"
+                              style={{ 
+                                height: activeProcessStep === idx ? "auto" : 0,
+                                opacity: activeProcessStep === idx ? 1 : 0 
+                              }}
+                            >
+                              <p className="leading-relaxed font-normal font-roboto text-foreground/80 pb-2">
+                                {step.body}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
