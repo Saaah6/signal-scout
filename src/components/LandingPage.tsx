@@ -481,9 +481,7 @@ export default function LandingPage() {
                     {activeProcessStep === 2 && <PanelOutreach key="panel2" />}
                   </AnimatePresence>
                 </div>
-                </div>
-              </div>
-            </div>
+          </div>
         </div>
       </section>
 
