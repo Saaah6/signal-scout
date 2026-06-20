@@ -8,6 +8,7 @@ export default function Stage2ICP() {
   const { icp, setIcp, setStep, icpAnalysis, isAnalyzingIcp, analyzeBusinessIcp } = useIntelScout();
   const [newTech, setNewTech] = useState("");
   const [newSignal, setNewSignal] = useState("");
+  const [newRole, setNewRole] = useState("");
   const [aiPrompt, setAiPrompt] = useState("");
   const [isRefining, setIsRefining] = useState(false);
 
@@ -44,6 +45,23 @@ export default function Stage2ICP() {
     setIcp({
       ...icp,
       growthSignals: icp.growthSignals.filter((_, i) => i !== index)
+    });
+  };
+
+  const handleAddRole = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newRole.trim()) return;
+    setIcp({
+      ...icp,
+      buyingCommittee: [...icp.buyingCommittee, newRole.trim()]
+    });
+    setNewRole("");
+  };
+
+  const handleRemoveRole = (index: number) => {
+    setIcp({
+      ...icp,
+      buyingCommittee: icp.buyingCommittee.filter((_, i) => i !== index)
     });
   };
 
@@ -295,16 +313,38 @@ export default function Stage2ICP() {
             <h3 className="font-semibold text-[#111] font-outfit">Buying Committee</h3>
           </div>
           <p className="text-xs text-[#666] mb-3">Key decision makers and target personas IntelScout will identify:</p>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5 mb-4 max-h-[140px] overflow-y-auto pr-1">
             {icp.buyingCommittee.map((role, idx) => (
               <span 
                 key={idx} 
-                className="px-3 py-1.5 text-xs text-[#222] bg-[#f5f5f5] border border-black/10 rounded-lg font-medium"
+                className="inline-flex items-center space-x-1 px-2.5 py-1 text-xs text-[#222] bg-[#f5f5f5] border border-black/10 rounded-lg font-medium"
               >
-                {role}
+                <span>{role}</span>
+                <button 
+                  type="button" 
+                  onClick={() => handleRemoveRole(idx)}
+                  className="hover:text-red-500 hover:bg-black/5 rounded transition p-0.5"
+                >
+                  <X className="w-2.5 h-2.5" />
+                </button>
               </span>
             ))}
           </div>
+          <form onSubmit={handleAddRole} className="flex space-x-2">
+            <input
+              type="text"
+              value={newRole}
+              onChange={(e) => setNewRole(e.target.value)}
+              placeholder="Add persona (e.g. CMO)..."
+              className="flex-1 bg-white border border-black/10 rounded-lg px-3 py-1.5 text-xs text-[#111] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
+            />
+            <button 
+              type="submit" 
+              className="px-2.5 py-1.5 bg-black hover:bg-[#222] text-white rounded-lg text-xs font-semibold flex items-center"
+            >
+              <Plus className="w-3.5 h-3.5" />
+            </button>
+          </form>
         </div>
 
         {/* Technographics Card */}
@@ -331,21 +371,40 @@ export default function Stage2ICP() {
               </span>
             ))}
           </div>
-          <form onSubmit={handleAddTech} className="flex space-x-2">
-            <input
-              type="text"
-              value={newTech}
-              onChange={(e) => setNewTech(e.target.value)}
-              placeholder="Add technology (e.g. Vercel)..."
-              className="flex-1 bg-white border border-black/10 rounded-lg px-3 py-1.5 text-xs text-[#111] focus:outline-none focus:border-black focus:ring-1 focus:ring-black"
-            />
-            <button 
-              type="submit" 
-              className="px-2.5 py-1.5 bg-black hover:bg-[#222] text-white rounded-lg text-xs font-semibold flex items-center"
+          <div className="flex space-x-2">
+            <select
+              value=""
+              onChange={(e) => {
+                 if (!e.target.value) return;
+                 if (!icp.technographics.includes(e.target.value)) {
+                    setIcp({
+                      ...icp,
+                      technographics: [...icp.technographics, e.target.value]
+                    });
+                 }
+              }}
+              className="flex-1 bg-white border border-black/10 rounded-lg px-3 py-1.5 text-xs text-[#111] focus:outline-none focus:border-black focus:ring-1 focus:ring-black cursor-pointer"
             >
-              <Plus className="w-3.5 h-3.5" />
-            </button>
-          </form>
+              <option value="">Select technology to add...</option>
+              {Object.entries({
+                "CRM & Sales": ["Salesforce", "HubSpot", "Pipedrive", "Zoho CRM", "Outreach", "SalesLoft", "Apollo.io"],
+                "Marketing Automation": ["Marketo", "Pardot", "ActiveCampaign", "Mailchimp", "Klaviyo", "Braze"],
+                "Cloud & Infrastructure": ["AWS", "Google Cloud", "Microsoft Azure", "Vercel", "DigitalOcean", "Heroku", "Cloudflare"],
+                "DevTools & CI/CD": ["GitHub Actions", "GitLab CI", "Jenkins", "CircleCI", "Sentry", "Datadog", "Docker", "Kubernetes"],
+                "Data & Analytics": ["Snowflake", "Databricks", "Google Analytics", "Mixpanel", "Amplitude", "Segment", "Tableau", "Looker"],
+                "HR & Recruiting": ["Workday", "Greenhouse", "Lever", "BambooHR", "Gusto", "Rippling", "Deel"],
+                "Customer Support": ["Zendesk", "Intercom", "Freshdesk", "Jira Service Desk", "Gorgias"],
+                "E-commerce": ["Shopify", "Magento", "WooCommerce", "BigCommerce", "Stripe"],
+                "Productivity & Collaboration": ["Slack", "Microsoft Teams", "Notion", "Asana", "Monday.com", "Google Workspace"]
+              }).map(([category, tools]) => (
+                <optgroup key={category} label={category}>
+                  {tools.map(tool => (
+                    <option key={tool} value={tool} disabled={icp.technographics.includes(tool)}>{tool}</option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Growth Signals Card */}
