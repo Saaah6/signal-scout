@@ -284,11 +284,15 @@ function ProcessStep({ step, index, activeStep, onStepEnter }: { step: any, inde
 
 // ── Main component ─────────────────────────────────────────────────
 export default function LandingPage() {
-  const { loginWithEmail } = useIntelScout();
+  const { loginWithEmail, signupWithEmail } = useIntelScout();
 
   const [showAuth,        setShowAuth]        = useState(false);
   const [loginSubmitting, setLoginSubmitting] = useState(false);
   const [authEmail,       setAuthEmail]       = useState("");
+  const [authPassword,    setAuthPassword]    = useState("");
+  const [authName,        setAuthName]        = useState("");
+  const [isSignUp,        setIsSignUp]        = useState(false);
+  const [authError,       setAuthError]       = useState("");
   const [heroVisible, setHeroVisible] = useState(false);
   const [activeProcessStep, setActiveProcessStep] = useState(0);
 
@@ -298,28 +302,33 @@ export default function LandingPage() {
     return () => clearTimeout(t);
   }, []);
 
-  const openAuth  = useCallback(() => setShowAuth(true),  []);
+  const openAuth  = useCallback(() => {
+    setShowAuth(true);
+    setAuthError("");
+  },  []);
   const closeAuth = useCallback(() => setShowAuth(false), []);
 
-  const handleEmailLogin = useCallback(async (e: React.FormEvent) => {
+  const handleAuthSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!authEmail) return;
+    setAuthError("");
+    if (!authEmail || !authPassword) {
+      setAuthError("Email and password are required.");
+      return;
+    }
     setLoginSubmitting(true);
-    await loginWithEmail(authEmail, authEmail.split("@")[0]);
-    setLoginSubmitting(false);
-  }, [authEmail, loginWithEmail]);
-
-  const handleGoogleLogin = useCallback(async () => {
-    setLoginSubmitting(true);
-    await loginWithEmail("demo@google.com", "Google User");
-    setLoginSubmitting(false);
-  }, [loginWithEmail]);
-
-  const handleOktaLogin = useCallback(async () => {
-    setLoginSubmitting(true);
-    await loginWithEmail("okta@demo.com", "Okta User");
-    setLoginSubmitting(false);
-  }, [loginWithEmail]);
+    try {
+      if (isSignUp) {
+        await signupWithEmail(authEmail, authPassword, authName || authEmail.split("@")[0]);
+      } else {
+        await loginWithEmail(authEmail, authPassword);
+      }
+      closeAuth();
+    } catch (err: any) {
+      setAuthError(err.message || "Authentication failed.");
+    } finally {
+      setLoginSubmitting(false);
+    }
+  }, [authEmail, authPassword, authName, isSignUp, loginWithEmail, signupWithEmail, closeAuth]);
 
   return (
     <div className="relative min-h-screen bg-transparent text-foreground overflow-x-hidden noise-overlay font-roboto transition-colors duration-300">
@@ -624,43 +633,76 @@ export default function LandingPage() {
 
               {loginSubmitting ? (
                 <div className="flex flex-col items-center py-10 gap-3">
-                  <CircleNotch className="w-7 h-7 text-[#888888] animate-spin" />
-                  <span className="text-sm text-[#888888] font-roboto">Redirecting…</span>
+                  <span className="w-7 h-7 border-2 border-[#888888] border-t-transparent rounded-full animate-spin" />
+                  <span className="text-sm text-[#888888] font-roboto">Authenticating…</span>
                 </div>
               ) : (
-                <div className="space-y-4 w-full">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="h-px bg-black/10 flex-1" />
-                    <span className="text-[10px] uppercase font-roboto-mono text-[#aaaaaa]">Select authentication provider</span>
-                    <div className="h-px bg-black/10 flex-1" />
+                <form onSubmit={handleAuthSubmit} className="space-y-4 w-full">
+                  <div className="text-center mb-6">
+                    <h2 className="text-xl font-bold">{isSignUp ? "Create Account" : "Sign In"}</h2>
+                    <p className="text-xs text-[#888888] mt-1">Enter your credentials to continue</p>
+                  </div>
+                  
+                  {authError && (
+                    <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-xs rounded-xl text-center">
+                      {authError}
+                    </div>
+                  )}
+
+                  {isSignUp && (
+                    <div>
+                      <label className="block text-xs font-medium text-[#888888] mb-1 ml-1">Name</label>
+                      <input 
+                        type="text"
+                        value={authName}
+                        onChange={(e) => setAuthName(e.target.value)}
+                        placeholder="John Doe"
+                        className="w-full bg-white border border-black/10 rounded-xl px-4 py-3 text-sm text-[#111] focus:outline-none focus:border-black/30 transition"
+                      />
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block text-xs font-medium text-[#888888] mb-1 ml-1">Work Email</label>
+                    <input 
+                      type="email"
+                      required
+                      value={authEmail}
+                      onChange={(e) => setAuthEmail(e.target.value)}
+                      placeholder="you@company.com"
+                      className="w-full bg-white border border-black/10 rounded-xl px-4 py-3 text-sm text-[#111] focus:outline-none focus:border-black/30 transition"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-[#888888] mb-1 ml-1">Password</label>
+                    <input 
+                      type="password"
+                      required
+                      value={authPassword}
+                      onChange={(e) => setAuthPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full bg-white border border-black/10 rounded-xl px-4 py-3 text-sm text-[#111] focus:outline-none focus:border-black/30 transition"
+                    />
                   </div>
 
                   <button
-                    type="button"
-                    onClick={handleGoogleLogin}
-                    className="w-full relative z-10 flex items-center gap-3 px-4 py-3.5 bg-white border border-black/10 hover:bg-black/5 text-black rounded-xl transition duration-200 text-sm font-roboto font-medium cursor-pointer"
+                    type="submit"
+                    className="w-full relative z-10 flex justify-center items-center gap-3 px-4 py-3.5 bg-black hover:bg-black/90 text-white rounded-xl transition duration-200 text-sm font-roboto font-bold cursor-pointer mt-6"
                   >
-                    <GoogleLogo className="w-4 h-4 text-black" weight="bold" />
-                    Continue with Google
+                    {isSignUp ? "Create Account" : "Sign In"}
                   </button>
 
-                  <button
-                    type="button"
-                    onClick={handleOktaLogin}
-                    className="w-full relative z-10 flex items-center gap-3 px-4 py-3.5 bg-white border border-black/10 hover:bg-black/5 text-black rounded-xl transition duration-200 text-sm font-roboto font-medium cursor-pointer"
-                  >
-                    <WarningCircle className="w-4 h-4 text-black" />
-                    Continue with Okta SSO
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={closeAuth}
-                    className="w-full text-center pt-2 pb-1 text-[11px] text-[#aaaaaa] hover:text-[#555555] transition font-roboto mt-4"
-                  >
-                    Cancel
-                  </button>
-                </div>
+                  <div className="text-center pt-2">
+                    <button
+                      type="button"
+                      onClick={() => { setIsSignUp(!isSignUp); setAuthError(""); }}
+                      className="text-[11px] text-[#555555] hover:text-black transition font-roboto underline"
+                    >
+                      {isSignUp ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
+                    </button>
+                  </div>
+                </form>
               )}
             </motion.div>
           </div>

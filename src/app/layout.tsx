@@ -39,10 +39,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${roboto.variable} ${robotoMono.variable} h-full antialiased`}
+      className={`${roboto.variable} ${robotoMono.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full w-full overflow-x-hidden flex flex-col relative noise-overlay bg-background text-foreground transition-colors duration-300">
+      <body className="min-h-screen w-full overflow-x-hidden flex flex-col relative noise-overlay bg-background text-foreground transition-colors duration-300">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

@@ -142,7 +142,8 @@ interface IntelScoutContextType {
   user: { email: string; name: string; avatar: string } | null;
   isAuthenticated: boolean;
   isAuthLoading: boolean;
-  loginWithEmail: (email: string, name: string, avatar?: string) => Promise<void>;
+  loginWithEmail: (email: string, password: string) => Promise<void>;
+  signupWithEmail: (email: string, password: string, name: string, avatar?: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -215,20 +216,43 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
 
   const isAuthenticated = !!user;
 
-  const loginWithEmail = useCallback(async (email: string, name: string, avatar?: string) => {
+  const loginWithEmail = useCallback(async (email: string, password: string) => {
     try {
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name, avatar })
+        body: JSON.stringify({ email, password })
       });
       const data = await res.json();
       if (data.success && data.user) {
         setUser(data.user);
         localStorage.setItem("intelscout_user", JSON.stringify(data.user));
+      } else {
+        throw new Error(data.error || "Login failed");
       }
     } catch (e) {
       console.error(e);
+      throw e;
+    }
+  }, []);
+
+  const signupWithEmail = useCallback(async (email: string, password: string, name: string, avatar?: string) => {
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, name, avatar })
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        setUser(data.user);
+        localStorage.setItem("intelscout_user", JSON.stringify(data.user));
+      } else {
+        throw new Error(data.error || "Signup failed");
+      }
+    } catch (e) {
+      console.error(e);
+      throw e;
     }
   }, []);
 
@@ -698,6 +722,7 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
         isAuthenticated,
         isAuthLoading,
         loginWithEmail,
+        signupWithEmail,
         logout
       }}
     >
