@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useIntelScout } from "@/context/IntelScoutContext";
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import { ArrowRight, CheckCircle, Robot, Target, ShieldCheck } from "@phosphor-icons/react";
+import { ArrowRight, CheckCircle, Robot, Target, ShieldCheck, X } from "@phosphor-icons/react";
 import AnimatedLogo from "./AnimatedLogo";
 import Navbar, { NavLink } from "./Navbar";
 
@@ -282,6 +282,40 @@ function ProcessStep({ step, index, activeStep, onStepEnter }: { step: any, inde
   );
 }
 
+function ScrollStep({ step, idx, activeProcessStep, setActiveProcessStep }: { step: any, idx: number, activeProcessStep: number, setActiveProcessStep: (i: number) => void }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { margin: "-40% 0px -40% 0px", amount: 0.1 });
+
+  useEffect(() => {
+    if (isInView) {
+      setActiveProcessStep(idx);
+    }
+  }, [isInView, idx, setActiveProcessStep]);
+
+  return (
+    <div 
+      ref={ref}
+      className="min-h-[40vh] flex flex-col justify-center py-4 cursor-default"
+    >
+      <div className={`w-full text-left transition-all duration-700 ${activeProcessStep === idx ? "opacity-100" : "opacity-30"}`}>
+        <div className="flex items-start gap-6">
+          <span className={`font-black text-3xl font-roboto shrink-0 transition-colors duration-700 ${activeProcessStep === idx ? "text-foreground" : "text-[#555]"}`}>
+            {step.roman}
+          </span>
+          <div className="flex-1">
+            <h3 className={`text-2xl lg:text-3xl font-black mb-3 transition-all duration-700 font-roboto ${activeProcessStep === idx ? "text-foreground translate-x-1" : "text-foreground/60"}`}>
+              {step.title}
+            </h3>
+            <p className={`leading-relaxed font-normal font-roboto transition-colors duration-700 ${activeProcessStep === idx ? "text-foreground/80" : "text-foreground/50"}`}>
+              {step.body}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Main component ─────────────────────────────────────────────────
 export default function LandingPage() {
   const { loginWithGoogle, isAuthLoading } = useIntelScout();
@@ -425,35 +459,20 @@ export default function LandingPage() {
             </motion.h2>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-                <div className="flex flex-col">
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start relative">
+                <div className="flex flex-col relative z-10 pb-[20vh]">
                   {STEPS.map((step, idx) => (
-                    <div 
+                    <ScrollStep 
                       key={step.roman} 
-                      onMouseEnter={() => setActiveProcessStep(idx)}
-                      onClick={() => setActiveProcessStep(idx)}
-                      className="py-2 transition-all duration-500 cursor-pointer"
-                    >
-                      <div className={`w-full text-left transition-all duration-500 ${activeProcessStep === idx ? "opacity-100" : "opacity-30"}`}>
-                        <div className="flex items-start gap-6">
-                          <span className={`font-black text-3xl font-roboto shrink-0 transition-colors duration-500 ${activeProcessStep === idx ? "text-foreground" : "text-[#555]"}`}>
-                            {step.roman}
-                          </span>
-                          <div className="flex-1">
-                            <h3 className={`text-2xl lg:text-3xl font-black mb-3 transition-all duration-500 font-roboto ${activeProcessStep === idx ? "text-foreground translate-x-1" : "text-foreground/60"}`}>
-                              {step.title}
-                            </h3>
-                            <p className={`leading-relaxed font-normal font-roboto transition-colors duration-500 ${activeProcessStep === idx ? "text-foreground/80" : "text-foreground/50"}`}>
-                              {step.body}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                      step={step} 
+                      idx={idx} 
+                      activeProcessStep={activeProcessStep} 
+                      setActiveProcessStep={setActiveProcessStep} 
+                    />
                   ))}
                 </div>
 
-                <div className="relative w-full border border-border-light rounded-2xl overflow-hidden bg-background shadow-2xl aspect-[4/3] lg:aspect-auto lg:h-[450px]">
+                <div className="sticky top-32 w-full border border-border-light rounded-2xl overflow-hidden bg-background shadow-2xl aspect-[4/3] lg:aspect-auto lg:h-[450px]">
                   <AnimatePresence mode="wait">
                     {activeProcessStep === 0 && <PanelICP key="panel0" />}
                     {activeProcessStep === 1 && <PanelCrawl key="panel1" />}
@@ -465,9 +484,9 @@ export default function LandingPage() {
       </section>
 
       {/* ── Pre-Footer (CTA, Newsletter, Trust) ─────────────────────────── */}
-      <section className="relative pt-12 pb-8 bg-transparent transition-colors duration-300 overflow-hidden">
+      <section className="relative pt-12 pb-6 bg-transparent transition-colors duration-300 overflow-hidden">
         <div className="max-w-[1100px] mx-auto px-6 lg:px-8">
-          <div className="bg-foreground/5 dark:bg-foreground/[0.02] border border-border-light rounded-3xl p-10 md:p-14 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-12">
+          <div className="bg-foreground/5 dark:bg-foreground/[0.02] border border-border-light rounded-3xl p-8 md:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
             
             <div className="relative z-10 w-full max-w-xl">
               <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-foreground/50 mb-4">
@@ -522,12 +541,12 @@ export default function LandingPage() {
       </section>
 
       {/* ── Footer ────────────────────────────────────────────────── */}
-      <footer className="pt-8 pb-12 bg-transparent transition-colors duration-300">
+      <footer className="pt-8 pb-8 bg-transparent transition-colors duration-300">
         <div className="w-full max-w-[1100px] mx-auto px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-12">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-8 w-full">
             
             {/* Left Column: Product Identity */}
-            <div className="max-w-sm">
+            <div className="w-full md:max-w-sm">
               <div className="flex items-center gap-2 mb-4">
                 <AnimatedLogo className="w-7 h-7 text-foreground" showText={false} />
                 <span className="text-lg font-black tracking-tight text-foreground font-roboto">IntelScout</span>
@@ -542,7 +561,7 @@ export default function LandingPage() {
             </div>
 
             {/* Right Column: Navigation */}
-            <div className="grid grid-cols-2 gap-16">
+            <div className="grid grid-cols-2 gap-8 md:gap-16 w-full md:w-auto">
               <div>
                 <h4 className="font-bold text-foreground mb-5 text-sm">Product</h4>
                 <ul className="space-y-3 text-[13px] text-foreground/60 font-roboto">
@@ -566,11 +585,11 @@ export default function LandingPage() {
           </div>
 
           {/* Legal Info */}
-          <div className="mt-24 pt-8 border-t border-black/5 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="mt-12 pt-6 border-t border-border-light flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
             <p className="text-xs text-[#999] font-roboto">
               © {new Date().getFullYear()} IntelScout AI Inc. All rights reserved.
             </p>
-            <div className="flex items-center gap-6 text-xs text-[#999] font-roboto">
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-xs text-[#999] font-roboto">
               <a href="#" className="hover:text-foreground transition">Privacy Policy</a>
               <a href="#" className="hover:text-foreground transition">Terms of Service</a>
             </div>
