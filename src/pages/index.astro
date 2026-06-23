@@ -1,0 +1,39 @@
+---
+import { getSession } from 'auth-astro/server';
+import Root from '@/components/Root';
+import '@/app/globals.css';
+
+const session = await getSession(Astro.request);
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <title>IntelScout AI - Enterprise GTM Intelligence & Qualification</title>
+    <meta name="description" content="IntelScout crawls target domains in real-time — tracking hiring signals, pricing changes, and tech stack shifts — then scores every account automatically." />
+    
+    <!-- SEO & Crawlability -->
+    <link rel="canonical" href="https://signal-scout.com/" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="IntelScout AI" />
+    <meta name="keywords" content="B2B intent data, GTM intelligence, account scoring, real-time crawler, technographics, compliance signals, sales pipeline" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://signal-scout.com/" />
+    <meta property="og:title" content="IntelScout AI - Enterprise GTM Intelligence & Qualification" />
+    <meta property="og:description" content="Real-time AI crawler, technographics parser, and account qualification scoring engine. Know who's buying before they tell you." />
+    <meta property="og:image" content="https://signal-scout.com/og-image.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://signal-scout.com/" />
+    <meta property="twitter:title" content="IntelScout AI - Enterprise GTM Intelligence" />
+    <meta property="twitter:description" content="Qualify B2B accounts to win using real-time technographic and behavioral signals." />
+    <meta property="twitter:image" content="https://signal-scout.com/og-image.jpg" />
+  </head>
+  <body class="min-h-screen w-full overflow-x-hidden flex flex-col relative noise-overlay bg-background text-foreground transition-colors duration-300">
+    <Root session={session} client:load />
+  </body>
+</html>

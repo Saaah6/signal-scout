@@ -142,8 +142,7 @@ interface IntelScoutContextType {
   user: { email: string; name: string; avatar: string } | null;
   isAuthenticated: boolean;
   isAuthLoading: boolean;
-  loginWithEmail: (email: string, password: string) => Promise<void>;
-  signupWithEmail: (email: string, password: string, name: string, avatar?: string) => Promise<void>;
+  loginWithGoogle: () => void;
   logout: () => void;
 }
 
@@ -174,7 +173,7 @@ const DEFAULT_SIGNALS: SignalConfig[] = [
   { id: "gen_hiring", name: "General Administrative Hiring", category: "weak", weight: 2, enabled: true }
 ];
 
-export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
+export const IntelScoutProvider = ({ children, initialSession }: { children: ReactNode; initialSession?: any }) => {
   const [step, setStepState] = useState<number | "research" | "dashboard">(1);
   const [offer, setOffer] = useState<Offer>({
     sell: "AI Compliance Platform",
@@ -205,61 +204,33 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("intelscout_user");
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {}
+    if (initialSession && initialSession.user) {
+      setUser({
+        email: initialSession.user.email,
+        name: initialSession.user.name,
+        avatar: initialSession.user.image || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + initialSession.user.email
+      });
+    } else {
+      setUser(null);
     }
     setIsAuthLoading(false);
-  }, []);
+  }, [initialSession]);
 
   const isAuthenticated = !!user;
 
-  const loginWithEmail = useCallback(async (email: string, password: string) => {
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await res.json();
-      if (data.success && data.user) {
-        setUser(data.user);
-        localStorage.setItem("intelscout_user", JSON.stringify(data.user));
-      } else {
-        throw new Error(data.error || "Login failed");
-      }
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
-  }, []);
-
-  const signupWithEmail = useCallback(async (email: string, password: string, name: string, avatar?: string) => {
-    try {
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name, avatar })
-      });
-      const data = await res.json();
-      if (data.success && data.user) {
-        setUser(data.user);
-        localStorage.setItem("intelscout_user", JSON.stringify(data.user));
-      } else {
-        throw new Error(data.error || "Signup failed");
-      }
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
+  // We rely on the Astro Auth client methods which will be imported in LandingPage/Navbar
+  // or we can invoke them dynamically. 
+  // 'auth-astro/client' exposes signIn and signOut.
+  const loginWithGoogle = useCallback(() => {
+    import('auth-astro/client').then(({ signIn }) => {
+      signIn('google');
+    });
   }, []);
 
   const logout = useCallback(() => {
-    setUser(null);
-    localStorage.removeItem("intelscout_user");
-    setStepState(1);
+    import('auth-astro/client').then(({ signOut }) => {
+      signOut();
+    });
   }, []);
 
   // Credit refill loop for simulated AI Rate Limiting
@@ -721,8 +692,7 @@ export const IntelScoutProvider = ({ children }: { children: ReactNode }) => {
         user,
         isAuthenticated,
         isAuthLoading,
-        loginWithEmail,
-        signupWithEmail,
+        loginWithGoogle,
         logout
       }}
     >

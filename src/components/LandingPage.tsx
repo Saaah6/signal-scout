@@ -218,7 +218,7 @@ const PanelOutreach = React.memo(function PanelOutreach() {
             </div>
             <span className="text-white/40">Subj: Streamline SOC2</span>
           </div>
-          <div className="p-4 text-[13px] text-[#ccc] leading-relaxed font-roboto flex-1 overflow-y-auto">
+          <div className="p-4 text-[13px] text-[#ccc] leading-relaxed font-roboto flex-1">
             Hi Alex,<br/><br/>
             Saw the news about your recent appointment as <span className="text-emerald-400 bg-emerald-400/10 px-1 rounded">CISO</span>—congrats!<br/><br/>
             Noticed you are ramping up for a <span className="text-amber-400 bg-amber-400/10 px-1 rounded">SOC2 Type II</span> audit next quarter. Our engine automates the evidence collection, saving typical teams 400+ hours.<br/><br/>
@@ -284,15 +284,9 @@ function ProcessStep({ step, index, activeStep, onStepEnter }: { step: any, inde
 
 // ── Main component ─────────────────────────────────────────────────
 export default function LandingPage() {
-  const { loginWithEmail, signupWithEmail } = useIntelScout();
+  const { loginWithGoogle, isAuthLoading } = useIntelScout();
 
-  const [showAuth,        setShowAuth]        = useState(false);
-  const [loginSubmitting, setLoginSubmitting] = useState(false);
-  const [authEmail,       setAuthEmail]       = useState("");
-  const [authPassword,    setAuthPassword]    = useState("");
-  const [authName,        setAuthName]        = useState("");
-  const [isSignUp,        setIsSignUp]        = useState(false);
-  const [authError,       setAuthError]       = useState("");
+  const [showAuth, setShowAuth] = useState(false);
   const [heroVisible, setHeroVisible] = useState(false);
   const [activeProcessStep, setActiveProcessStep] = useState(0);
 
@@ -304,31 +298,8 @@ export default function LandingPage() {
 
   const openAuth  = useCallback(() => {
     setShowAuth(true);
-    setAuthError("");
-  },  []);
+  }, []);
   const closeAuth = useCallback(() => setShowAuth(false), []);
-
-  const handleAuthSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    setAuthError("");
-    if (!authEmail || !authPassword) {
-      setAuthError("Email and password are required.");
-      return;
-    }
-    setLoginSubmitting(true);
-    try {
-      if (isSignUp) {
-        await signupWithEmail(authEmail, authPassword, authName || authEmail.split("@")[0]);
-      } else {
-        await loginWithEmail(authEmail, authPassword);
-      }
-      closeAuth();
-    } catch (err: any) {
-      setAuthError(err.message || "Authentication failed.");
-    } finally {
-      setLoginSubmitting(false);
-    }
-  }, [authEmail, authPassword, authName, isSignUp, loginWithEmail, signupWithEmail, closeAuth]);
 
   return (
     <div className="relative min-h-screen bg-transparent text-foreground overflow-x-hidden noise-overlay font-roboto transition-colors duration-300">
@@ -631,78 +602,27 @@ export default function LandingPage() {
                 <AnimatedLogo className="w-5 h-5" showText={true} />
               </div>
 
-              {loginSubmitting ? (
+              {isAuthLoading ? (
                 <div className="flex flex-col items-center py-10 gap-3">
                   <span className="w-7 h-7 border-2 border-[#888888] border-t-transparent rounded-full animate-spin" />
-                  <span className="text-sm text-[#888888] font-roboto">Authenticating…</span>
+                  <span className="text-sm text-[#888888] font-roboto">Connecting...</span>
                 </div>
               ) : (
-                <form onSubmit={handleAuthSubmit} className="space-y-4 w-full">
+                <div className="space-y-4 w-full">
                   <div className="text-center mb-6">
-                    <h2 className="text-xl font-bold">{isSignUp ? "Create Account" : "Sign In"}</h2>
-                    <p className="text-xs text-[#888888] mt-1">Enter your credentials to continue</p>
+                    <h2 className="text-xl font-bold">Welcome</h2>
+                    <p className="text-xs text-[#888888] mt-1">Sign in to access the platform</p>
                   </div>
                   
-                  {authError && (
-                    <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-xs rounded-xl text-center">
-                      {authError}
-                    </div>
-                  )}
-
-                  {isSignUp && (
-                    <div>
-                      <label className="block text-xs font-medium text-[#888888] mb-1 ml-1">Name</label>
-                      <input 
-                        type="text"
-                        value={authName}
-                        onChange={(e) => setAuthName(e.target.value)}
-                        placeholder="John Doe"
-                        className="w-full bg-white border border-black/10 rounded-xl px-4 py-3 text-sm text-[#111] focus:outline-none focus:border-black/30 transition"
-                      />
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="block text-xs font-medium text-[#888888] mb-1 ml-1">Work Email</label>
-                    <input 
-                      type="email"
-                      required
-                      value={authEmail}
-                      onChange={(e) => setAuthEmail(e.target.value)}
-                      placeholder="you@company.com"
-                      className="w-full bg-white border border-black/10 rounded-xl px-4 py-3 text-sm text-[#111] focus:outline-none focus:border-black/30 transition"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium text-[#888888] mb-1 ml-1">Password</label>
-                    <input 
-                      type="password"
-                      required
-                      value={authPassword}
-                      onChange={(e) => setAuthPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="w-full bg-white border border-black/10 rounded-xl px-4 py-3 text-sm text-[#111] focus:outline-none focus:border-black/30 transition"
-                    />
-                  </div>
-
                   <button
-                    type="submit"
+                    onClick={() => {
+                      loginWithGoogle();
+                    }}
                     className="w-full relative z-10 flex justify-center items-center gap-3 px-4 py-3.5 bg-black hover:bg-black/90 text-white rounded-xl transition duration-200 text-sm font-roboto font-bold cursor-pointer mt-6"
                   >
-                    {isSignUp ? "Create Account" : "Sign In"}
+                    Continue with Google
                   </button>
-
-                  <div className="text-center pt-2">
-                    <button
-                      type="button"
-                      onClick={() => { setIsSignUp(!isSignUp); setAuthError(""); }}
-                      className="text-[11px] text-[#555555] hover:text-black transition font-roboto underline"
-                    >
-                      {isSignUp ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
-                    </button>
-                  </div>
-                </form>
+                </div>
               )}
             </motion.div>
           </div>
