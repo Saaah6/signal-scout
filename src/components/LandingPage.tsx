@@ -412,8 +412,8 @@ export default function LandingPage() {
           style={{ backgroundImage: "repeating-linear-gradient(-45deg, transparent, transparent 40px, white 40px, white 41px)" }}
         />
         <div className="relative z-10 max-w-[1100px] mx-auto px-6 lg:px-8">
-          <div className="mb-16">
-            <span className="inline-flex items-center gap-3 text-sm font-roboto-mono text-[#888888] mb-6">
+          <div className="mb-8">
+            <span className="inline-flex items-center gap-3 text-sm font-roboto-mono text-[#888888] mb-4">
               <span className="w-8 h-px bg-white/30 inline-block" />
               Process
             </span>
@@ -421,8 +421,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
               className="text-4xl lg:text-5xl font-black tracking-tight font-roboto leading-[1.1]"
             >
-              Three steps.<br />
-              <span className="text-[#666666]">Infinite pipeline.</span>
+              Three steps. <span className="text-[#666666]">Infinite pipeline.</span>
             </motion.h2>
           </div>
 
