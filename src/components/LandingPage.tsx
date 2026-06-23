@@ -432,7 +432,7 @@ export default function LandingPage() {
                       key={step.roman} 
                       onMouseEnter={() => setActiveProcessStep(idx)}
                       onClick={() => setActiveProcessStep(idx)}
-                      className="py-6 transition-all duration-500 cursor-pointer"
+                      className="py-2 transition-all duration-500 cursor-pointer"
                     >
                       <div className={`w-full text-left transition-all duration-500 ${activeProcessStep === idx ? "opacity-100" : "opacity-30"}`}>
                         <div className="flex items-start gap-6">
